@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/logo192x192.png">
+    <meta name="theme-color" content="#ffffff" />
+    <title>@ViewBag.Title - Time Sheet</title>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="~/css/bstrap/bstrap4.css">
+    <link rel="stylesheet" type="text/css" href="~/css/dtable/dtable.bstrap4.css">
+    <link rel="stylesheet" type="text/css" href="~/css/dtable/resp.bstrap4.css">
+    <link rel="stylesheet" type="text/css" href="~/font/css/all.css">
+    <link rel="stylesheet" type="text/css" href="~/tagsinput/tagsinput.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/system.css">
+    <script type="text/javascript" src="~/js/jquery.js"></script>
+    <script type="text/javascript" src="~/js/bstrap/bstrap.js"></script>
+    <script type="text/javascript" src="~/js/dtable/jquery.dtables.js"></script>
+    <script type="text/javascript" src="~/js/dtable/dtables.bstrap4.js"></script>
+    <script type="text/javascript" src="~/js/dtable/dtables.resp.js"></script>
+    <script type="text/javascript" src="~/js/dtable/resp.bstrap4.js"></script>
+    <script type="text/javascript" src="~/js/ckedit/ckeditor.js"></script>
+    <script type="text/javascript" src="~/js/ckedit/pt-br.js"></script>
+    <script type="text/javascript" src="~/js/moment.js"></script>
+    <script type="text/javascript" src="~/js/jquery.maskedinput.js"></script>
+    <script type="text/javascript" src="~/js/jquery.maskMoney.js"></script>
+    <script type="text/javascript" src="~/js/jquery.masknumber.js"></script>
+    <script type="text/javascript" src="~/js/system.js"></script>
+    <script>
+        $(document).on({
+            ajaxStart: function () {
+                $('.loader-overlay').show();
+            },
+            ajaxStop: function () {
+                $('.loader-overlay').hide();
+            },
+            ajaxComplete: function () {
+                $('.loader-overlay').hide();
+            },
+            ajaxSuccess: function () {
+                $('.loader-overlay').hide();
+            }
+        });
+    </script>
+</head>
+<body class="rdo">
+    <div class="loader-overlay">
+        <div class="loader-container">
+            <div class="ln-cinza">
+                <div class="ln-roxa">
+                    <div class="ln-azul"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="@Url.Action("Index", "RelatorioDiarioObra")"><img src="~/images/interna-logoB.svg" alt="Marca BahiaGás"></a>
+            <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Botão Menu">
+                <span class="icon-bar top-bar"></span>
+                <span class="icon-bar middle-bar"></span>
+                <span class="icon-bar bottom-bar"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li><a class="nav-link" href="@Url.Action("Index", "Configuracao")"><i class="fas fa-home fa-lg"></i><span class="link-home">Configuração</span></a></li>
+                    @if (User.CointainsPerfil(Constantes.ADMINRDO))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-clipboard fa-lg"></i><span class="link-cadastros">Cadastros</span></a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="@Url.Action("Index", "Funcao")">Função</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("Index", "Equipamento")">Equipamento</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("Index", "Veiculo")">Veículo</a>
+                            </div>
+                        </li>
+                    }
+                    @if (User.CointainsPerfil(Constantes.ADMINRDO) || User.CointainsPerfil(Constantes.COORDENADORCONTRATADA))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-clipboard fa-lg"></i><span class="link-cadastros"> Associação</span></a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                @if (User.CointainsPerfil(Constantes.ADMINRDO))
+                                {
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Contratada")">Contratada</a>
+                                    <div class="dropdown-divider"></div>
+                                }
+                                <a class="dropdown-item" href="@Url.Action("Index", "Contrato")">Contrato</a>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <ul class="navbar-nav">
+                    <li>
+                        <section class="user-info">
+                            <div class="user-foto-generic">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <span class="user-name">
+                                <small>Bem vindo,</small><br />
+                                @User.Identity.Name
+                            </span>
+                        </section>
+                    </li>
+                    <li><a class="nav-link btn-sair" href="@Url.Action("Logoff", "Login")"><i class="fas fa-sign-out-alt fa-lg"></i><span class="link-sair"> Sair </span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="main">
+        <div class="content">
+            <div class="container-fluid">
+                <div id="alertas" class="alertas col-md-12">
+                    @{
+                        await Html.RenderPartialAsync("_Alert");
+                    }
+                </div>
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/js/push-notifications.js"></script>
+</body>
+</html>

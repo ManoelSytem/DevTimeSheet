@@ -1,0 +1,14 @@
+﻿@foreach (var alert in (TempData.ContainsKey(Alert.TempDataKey) ? TempData.Get<List<Alert>>(Alert.TempDataKey) : new List<Alert>()))
+{
+    var dismissableClass = alert.Dismissable ? "alert-dismissable" : null;
+    <div class="alert alert-@alert.AlertStyle @dismissableClass">
+        <i class="fas @alert.Icon fa-lg"></i>
+        @Html.Raw(alert.Message)
+        @if (alert.Dismissable)
+        {
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        }
+    </div>
+}
