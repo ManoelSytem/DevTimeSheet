@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeSheet", "TimeSheet\Time
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSheet.Domain", "TimeSheet.Domain\TimeSheet.Domain.csproj", "{A0778EE2-4539-4EF1-B603-E4B0A8F10497}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSheet.Infrastructure", "TimeSheet.Infrastructure\TimeSheet.Infrastructure.csproj", "{43E2A5C2-ABE1-4417-BEC5-FF5B9E90D6E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A0778EE2-4539-4EF1-B603-E4B0A8F10497}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0778EE2-4539-4EF1-B603-E4B0A8F10497}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0778EE2-4539-4EF1-B603-E4B0A8F10497}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43E2A5C2-ABE1-4417-BEC5-FF5B9E90D6E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E2A5C2-ABE1-4417-BEC5-FF5B9E90D6E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E2A5C2-ABE1-4417-BEC5-FF5B9E90D6E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E2A5C2-ABE1-4417-BEC5-FF5B9E90D6E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

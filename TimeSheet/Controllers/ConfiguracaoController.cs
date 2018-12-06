@@ -2,23 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TimeSheet.Domain;
+using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers
 {
     public class ConfiguracaoController : Controller
     {
+        private readonly IMapper _mapper;
+        private readonly IConfiguracao  _config;
+
+        public ConfiguracaoController(IConfiguracao config, IMapper mapper)
+        {
+            _config = config;
+            _mapper = mapper;
+        }
+
         // GET: Configuracao
         public ActionResult Index()
         {
             List<ViewModelConfiguracao> listaConfig = new List<ViewModelConfiguracao>();
             ViewModelConfiguracao cfig1 = new ViewModelConfiguracao();
-            ViewModelConfiguracao cfig2 = new ViewModelConfiguracao();
-            ViewModelConfiguracao cfig3 = new ViewModelConfiguracao();
-
-            listaConfig.Add(cfig1); listaConfig.Add(cfig2); listaConfig.Add(cfig3);
+            _config.ObterConfiguracaoPorCodigo("testeManoel");
+            listaConfig.Add(cfig1); 
             return View(listaConfig);
         }
 
@@ -37,12 +47,15 @@ namespace TimeSheet.Controllers
         // POST: Configuracao/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(ViewModelConfiguracao viewConfiguracao)
         {
             try
             {
-                // TODO: Add insert logic here
-
+                if (ModelState.IsValid)
+                {
+                    var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
+                    _config.SalvarConfiguracao(configuracao);
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch

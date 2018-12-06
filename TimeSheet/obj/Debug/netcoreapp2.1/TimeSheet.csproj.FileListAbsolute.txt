@@ -66,3 +66,5 @@ C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\bin\Debug\netcoreapp2.1\
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\TimeSheet.csproj.CopyComplete
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Index.g.cshtml.cs
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Create.g.cshtml.cs
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\bin\Debug\netcoreapp2.1\TimeSheet.Infrastructure.dll
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\bin\Debug\netcoreapp2.1\TimeSheet.Infrastructure.pdb
