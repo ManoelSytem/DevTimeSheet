@@ -24,14 +24,19 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             configRepository.Add(config);
         }
 
-        public IEnumerable<Configuracao> ObterListConfiguracao()
+        public Configuracao ObterConfiguracao()
         {
-            return configRepository.FindAll().ToList();
+            return configRepository.FindAll().ToList().First();
         }
 
         Configuracao IConfiguracao.ObterConfiguracaoPorCodigo(string id)
         {
             throw new NotImplementedException();
+        }
+
+        public void AtualizarConfiguracao(Configuracao config)
+        {
+            configRepository.Update(config);
         }
     }
 }

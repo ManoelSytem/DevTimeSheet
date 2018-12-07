@@ -1,9 +1,10 @@
-﻿@model  IEnumerable<TimeSheet.ViewModel.ViewModelConfiguracao>
+﻿@model IEnumerable<TimeSheet.ViewModel.ViewModelConfiguracao>
 
 @{
     ViewData["Title"] = "Configurações";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 <div class="card azulc-azule">
     <div class="card-header">
@@ -25,17 +26,17 @@
                 {
                     foreach (var item in Model)
                     {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                    <td>@Html.DisplayFor(modelItem => item.DiaInicio)</td>
-                    <td>@Html.DisplayFor(modelItem => item.DiaFim)</td>
-                    <td>@Html.DisplayFor(modelItem => item.CodDivergencia)</td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "Configuracao", new { id = item.Id})'"><i class="fas fa-file"></i></button>
-                        <button type="button" class="btn btn-sm btn-editar" name="editar" onclick="location.href='@Url.Action("Edit", "Equipamento", new { id = item.Id})'"><i class="fas fa-pen"></i></button>
-                        <button type="button" class="btn btn-sm btn-excluir" name="excluir" onclick="location.href='@Url.Action("Delete", "Equipamento", new { id = item.Id})'"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Codigo)</td>
+                            <td>@Html.DisplayFor(modelItem => item.DiaInicio)</td>
+                            <td>@Html.DisplayFor(modelItem => item.DiaFim)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CodDivergencia)</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "Configuracao", new { id = item.Codigo})'"><i class="fas fa-file"></i></button>
+                                <button type="button" class="btn btn-sm btn-editar" name="editar" onclick="location.href='@Url.Action("Edit", "Configuracao", new { id = item.Codigo})'"><i class="fas fa-pen"></i></button>
+                                <button type="button" class="btn btn-sm btn-excluir" name="excluir" onclick="@Url.Action("Delete", "Configuracao", new { id = item.Codigo})"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
                     }
                 }
             </tbody>

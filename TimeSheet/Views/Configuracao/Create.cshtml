@@ -4,7 +4,27 @@
     ViewData["Title"] = "Configurações";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@if (TempData["CreateSucesso"] != null)
+{
+    <div class="card">
+        <div class="body">
+            <div class="alert alert-success">
+                <strong>Configuração realizada com sucesso!</strong>
+            </div>
+        </div>
+    </div>
+}@if (TempData["Createfalse"] != null)
+{
+    <div class="card">
+        <div class="alert alert-danger">
+            <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ops! ocorreu algum problema no sistema.  </font></font></strong><font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                    @TempData["Createfalse"].ToString();
+                </font>
+            </font>
+        </div>
+    </div>
+}
 <div class="my-row">
     <div class="col-md-12">
         <div class="card azulc-azule">
@@ -41,13 +61,8 @@
                         </div>
                         <div class="col-md-2 col-sm-4 coddivergencia">
                             <label for="DiaFim">Código de divergência para atestado</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" />
-                                <span class="input-group-addon">
-                                    <i class="fa fa-search"></i>
-                                </span>
-                            </div>
-                            @Html.ValidationMessageFor(model => model.DiaFim, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
+                            @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <br />
@@ -107,6 +122,6 @@
     <label class="btn-ft-item-open" for="btn-ft-open">
         <span><i class="fas fa-plus"></i></span>
     </label>
-    <a href="#" onclick="$('form').submit();" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></a>
+    <a  onclick="$('form').submit();" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></a>
     <a href="@Url.Action("Index", "Configuracao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
 </div>

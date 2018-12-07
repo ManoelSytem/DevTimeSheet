@@ -15,8 +15,6 @@ namespace TimeSheet.ViewModel.Validation
             RuleFor(x => x.DiaMesLimiteFecha)
                 .NotEmpty().WithMessage("* obrigatório");
 
-            RuleFor(x => x.Frequencia_email).
-                Equal(0).WithMessage("* obrigatório");
 
             RuleFor(x => x.Qtddiadatafechamento)
                            .NotEmpty().WithMessage("* obrigatório");

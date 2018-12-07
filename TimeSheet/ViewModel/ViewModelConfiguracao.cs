@@ -8,7 +8,7 @@ namespace TimeSheet.ViewModel
 {
     public class ViewModelConfiguracao
     {
-        public int Id { get; set; }
+        public int Codigo { get; set; }
         public int DiaMesLimiteFecha { get; set; }
         public int Frequencia_email { get; set; }
         public int Qtddiadatafechamento { get; set; }
@@ -17,18 +17,9 @@ namespace TimeSheet.ViewModel
         public string AssuntoEmail { get; set; }
         public string TextoEmail { get; set; }
         public int CodDivergencia { get; set; }
-        
-
         public  List<CodDivergencia> ListCodDivergencia { get; set; }
 
-
-        public ViewModelConfiguracao(int diainicio, int diafim, int cod)
-        {
-            this.DiaInicio = diainicio;
-            this.DiaFim = diafim;
-            this.CodDivergencia = cod;
-        }
-
+      
         public ViewModelConfiguracao()
         {
             

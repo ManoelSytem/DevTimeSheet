@@ -26,8 +26,8 @@ namespace TimeSheet.Controllers
         public ActionResult Index()
         {
             List<ViewModelConfiguracao> listaConfig = new List<ViewModelConfiguracao>();
-            ViewModelConfiguracao cfig1 = new ViewModelConfiguracao(1,2,2018);
-            listaConfig.Add(cfig1); 
+            var viewModelConfiguracao = _mapper.Map<ViewModelConfiguracao>(_config.ObterConfiguracao());
+            listaConfig.Add(viewModelConfiguracao);
             return View(listaConfig);
         }
 
@@ -52,13 +52,17 @@ namespace TimeSheet.Controllers
             {
                 if (ModelState.IsValid)
                 {
+
                     var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
                     _config.SalvarConfiguracao(configuracao);
+                    TempData["CreateSucesso"] = true;
+                    return View();
                 }
                 return View(viewConfiguracao);
             }
-            catch
+            catch(Exception e)
             {
+                TempData["Createfalse"] = e.Message;
                 return View();
             }
         }
@@ -66,22 +70,41 @@ namespace TimeSheet.Controllers
         // GET: Configuracao/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            try
+            {
+                List<ViewModelConfiguracao> listaConfig = new List<ViewModelConfiguracao>();
+                var viewModelConfiguracao = _mapper.Map<ViewModelConfiguracao>(_config.ObterConfiguracao());
+                 listaConfig.Add(viewModelConfiguracao);
+                return View(viewModelConfiguracao);
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
         }
+
 
         // POST: Configuracao/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(ViewModelConfiguracao viewConfiguracao)
         {
             try
             {
-                // TODO: Add update logic here
+                if (ModelState.IsValid)
+                {
 
-                return RedirectToAction(nameof(Index));
+                    var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
+                    _config.AtualizarConfiguracao(configuracao);
+                    TempData["CreateSucesso"] = true;
+                    return View(viewConfiguracao);
+                }
+                return View(viewConfiguracao);
             }
-            catch
+            catch (Exception e)
             {
+                TempData["Createfalse"] = e.Message;
                 return View();
             }
         }

@@ -1,0 +1,129 @@
+﻿@model TimeSheet.ViewModel.ViewModelConfiguracao
+
+@{
+    ViewData["Title"] = "Edição de Configuração";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["CreateSucesso"] != null)
+{
+    <div class="card">
+        <div class="body">
+            <div class="alert alert-success">
+                <strong>Atualização realizada com sucesso!</strong>
+            </div>
+        </div>
+    </div>
+}@if (TempData["Createfalse"] != null)
+{
+    <div class="card">
+        <div class="alert alert-danger">
+            <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ops! ocorreu algum problema no sistema.  </font></font></strong><font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                    @TempData["Createfalse"].ToString();
+                </font>
+            </font>
+        </div>
+    </div>
+}
+<div class="my-row">
+    <div class="col-md-12">
+        <div class="card azulc-azule">
+            <div class="card-header">
+                @ViewBag.Title
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-2"></div>
+                        <div class="col-xs-6 col-sm-4">Dia inícial e final do período de marcações:</div>
+                        <!-- Optional: clear the XS cols if their content doesn't match in height -->
+                        <div class="clearfix visible-xs-block"></div>
+                        <div class="col-xs-6 col-sm-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-2">
+                            <label for="DiaMesLimiteFecha">Dia do mês limite fechamento</label>
+                            @Html.HiddenFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control", @placeholder = "",} })
+                            @Html.EditorFor(model => model.DiaMesLimiteFecha, new { htmlAttributes = new { @class = "form-control col-md-6", @placeholder = "Dia do Mês" } })
+                            <span asp-validation-for="DiaMesLimiteFecha" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-1 col-sm-4">
+                            <label for="DiaFim">Ínicio</label>
+                            @Html.EditorFor(model => model.DiaInicio, new { htmlAttributes = new { @class = "form-control col-md-12", @placeholder = "Ínicio" } })
+                            <span asp-validation-for="DiaInicio" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                            <label for="DiaFim">Fim</label>
+                            @Html.EditorFor(model => model.DiaFim, new { htmlAttributes = new { @class = "form-control  col-md-6", @placeholder = "Fim" } })
+                            @Html.ValidationMessageFor(model => model.DiaFim, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-2 col-sm-4 coddivergencia">
+                            <label for="DiaFim">Código de divergência para atestado</label>
+                            @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
+                            @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-2"> <b>Configurações de Email:</b></div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-2">
+                            <label for="FrequenciaEmail">
+                                Frequência de envio de email
+                            </label>
+                            @Html.DropDownListFor(model => model.Frequencia_email, new List<SelectListItem>
+                             {
+                               new SelectListItem { Text="Escolha a opção..", Value = "0"},
+                                new SelectListItem{ Text="Diário", Value = "1"},
+                                new SelectListItem{ Text="Semanal", Value = "2"}}, new { @class = "form-control grid-control" })
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <label for="DiasEnvioEmail">
+                                Dias para início do envio do e-mail
+                            </label>
+                            @Html.EditorFor(model => model.Qtddiadatafechamento, new { htmlAttributes = new { @class = "form-control col-md-4", @placeholder = "Ínicio envio" } })
+                            @Html.ValidationMessageFor(model => model.Qtddiadatafechamento, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6">
+                            <label for="TextoEmail">
+                                Assunto
+                            </label>
+                            @Html.EditorFor(model => model.AssuntoEmail, new { htmlAttributes = new { @class = "form-control  col-md-12", @placeholder = "Assunto" } })
+                            @Html.ValidationMessageFor(model => model.AssuntoEmail, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6">
+                            <label for="TextoEmail">
+                                Texto
+                            </label>
+                            @Html.TextAreaFor(model => model.TextoEmail, new { @class = "form-control required", @cols = 50, @rows = 7 })
+                            @Html.ValidationMessageFor(model => model.TextoEmail, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="btn-ft">
+    <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
+    <label class="btn-ft-item-open" for="btn-ft-open">
+        <span><i class="fas fa-plus"></i></span>
+    </label>
+    <a onclick="$('form').submit();" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></a>
+    <a href="@Url.Action("Index", "Configuracao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
+</div>

@@ -7,7 +7,8 @@ namespace TimeSheet.Domain.Enty.Interface
 {
     public interface IConfiguracao
     {
-        IEnumerable<Configuracao> ObterListConfiguracao();
+        void AtualizarConfiguracao(Configuracao config);
+        Configuracao ObterConfiguracao();
         Configuracao ObterConfiguracaoPorCodigo(string id);
         void SalvarConfiguracao(Configuracao config);
     }

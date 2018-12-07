@@ -106,3 +106,4 @@ C:\DevTimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\TimeSheet.Views.p
 C:\DevTimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\TimeSheet.csproj.CopyComplete
 C:\DevTimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\TimeSheet.dll
 C:\DevTimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\TimeSheet.pdb
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Edit.g.cshtml.cs
