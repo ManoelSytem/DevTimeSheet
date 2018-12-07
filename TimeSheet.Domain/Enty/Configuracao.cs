@@ -7,7 +7,6 @@ namespace TimeSheet.Domain
     {
         public string Id { get; set; }
         public string FilialProtheus { get; set; }
-        public string CodigoProtheus { get; set; }
         public string MatriculaUsuario { get; set; }
         public int DiaMesLimiteFecha { get; set; }
         public int Frequencia_email { get; set; }

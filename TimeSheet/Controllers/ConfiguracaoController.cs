@@ -26,8 +26,7 @@ namespace TimeSheet.Controllers
         public ActionResult Index()
         {
             List<ViewModelConfiguracao> listaConfig = new List<ViewModelConfiguracao>();
-            ViewModelConfiguracao cfig1 = new ViewModelConfiguracao();
-            _config.ObterConfiguracaoPorCodigo("testeManoel");
+            ViewModelConfiguracao cfig1 = new ViewModelConfiguracao(1,2,2018);
             listaConfig.Add(cfig1); 
             return View(listaConfig);
         }
@@ -56,7 +55,7 @@ namespace TimeSheet.Controllers
                     var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
                     _config.SalvarConfiguracao(configuracao);
                 }
-                return RedirectToAction(nameof(Index));
+                return View(viewConfiguracao);
             }
             catch
             {

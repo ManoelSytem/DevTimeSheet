@@ -16,7 +16,6 @@
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
                     <div class="row">
                         <div class="col-xs-6 col-sm-2"></div>
                         <div class="col-xs-6 col-sm-4">Dia inícial e final do período de marcações:</div>
@@ -28,12 +27,12 @@
                         <div class="col-xs-6 col-sm-2">
                             <label for="DiaMesLimiteFecha">Dia do mês limite fechamento</label>
                             @Html.EditorFor(model => model.DiaMesLimiteFecha, new { htmlAttributes = new { @class = "form-control col-md-6", @placeholder = "Dia do Mês" } })
-                            @Html.ValidationMessageFor(model => model.DiaMesLimiteFecha, "", new { @class = "text-danger" })
+                            <span asp-validation-for="DiaMesLimiteFecha" class="text-danger"></span>
                         </div>
                         <div class="col-md-1 col-sm-4">
                             <label for="DiaFim">Ínicio</label>
                             @Html.EditorFor(model => model.DiaInicio, new { htmlAttributes = new { @class = "form-control col-md-12", @placeholder = "Ínicio" } })
-                            @Html.ValidationMessageFor(model => model.DiaInicio, "", new { @class = "text-danger" })
+                            <span asp-validation-for="DiaInicio" class="text-danger"></span>
                         </div>
                         <div class="col-md-2 col-sm-4">
                             <label for="DiaFim">Fim</label>
@@ -62,8 +61,9 @@
                             <label for="FrequenciaEmail">
                                 Frequência de envio de email
                             </label>
-                            @Html.DropDownList("Email", new List<SelectListItem>
+                            @Html.DropDownListFor(model => model.Frequencia_email, new List<SelectListItem>
                              {
+                               new SelectListItem { Text="Escolha a opção..", Value = "0"},
                                 new SelectListItem{ Text="Diário", Value = "1"},
                                 new SelectListItem{ Text="Semanal", Value = "2"}}, new { @class = "form-control grid-control" })
                         </div>
@@ -92,10 +92,10 @@
                                 Texto
                             </label>
                             @Html.TextAreaFor(model => model.TextoEmail, new { @class = "form-control required", @cols = 50, @rows = 7 })
-                            @Html.ValidationMessageFor(model => model.TextoEmail)
+                            @Html.ValidationMessageFor(model => model.TextoEmail, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                
+
                 }
             </div>
         </div>
@@ -108,5 +108,5 @@
         <span><i class="fas fa-plus"></i></span>
     </label>
     <a href="#" onclick="$('form').submit();" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></a>
-    <a href="@Url.Action("Index", "Configuração")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
+    <a href="@Url.Action("Index", "Configuracao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
 </div>

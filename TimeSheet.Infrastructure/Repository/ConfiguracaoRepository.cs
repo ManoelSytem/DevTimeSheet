@@ -16,21 +16,40 @@ namespace TimeSheet.Infrastructure.Repository
 
         public override void Add(Configuracao item)
         {
-            using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+            try
             {
-                string sQuery = "INSERT INTO ZYX010 (ZYX_FILIAL, ZYX_DLIFEC,ZYX_FEMAIL,ZYX_DEMAIL,ZYX_INIMAR,ZYX_FINMAR,"
-                                + "VALUES('01', 25, '1', 1, 05, 30, '218', '124546')";
-                dbConnection.Open();
-                dbConnection.Execute(sQuery, item);
+                using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+                {
+                    string sQuery = "INSERT INTO ZYX010 (ZYX_FILIAL, ZYX_DLIFEC,ZYX_FEMAIL,ZYX_DEMAIL,ZYX_INIMAR,ZYX_FINMAR,"
+                                    + "VALUES(@ZYX_FILIAL, @ZYX_DLIFEC, @ZYX_FEMAIL,@ZYX_DEMAIL,@ZYX_INIMAR,@ZYX_FINMAR)";
+                    dbConnection.Open();
+                    dbConnection.Execute(sQuery, item);
+                }
             }
+            catch (Exception ex)
+            {
+                // Handle exception
+            }
+          
         }
 
         public override IEnumerable<Configuracao> FindAll()
         {
-            using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+            try
             {
-                dbConnection.Open();
-                return dbConnection.Query<Configuracao>("SELECT * FROM ZYX010");
+                using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+                {
+                    dbConnection.Open();
+                    return  dbConnection.Query<Configuracao>("SELECT * FROM ZYX010");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                
             }
         }
 

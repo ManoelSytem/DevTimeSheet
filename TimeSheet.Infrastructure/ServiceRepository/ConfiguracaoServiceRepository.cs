@@ -19,21 +19,19 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             configRepository = new ConfiguracaoRepository(configuration);
         }
 
-
-        public Task<Domain.Configuracao> ObterConfiguracaoPorUsuario(string matUser)
+        public void SalvarConfiguracao(Configuracao config)
         {
-            throw new NotImplementedException();
+            configRepository.Add(config);
         }
 
-
-        public IEnumerable<Configuracao> ObterConfiguracaoPorCodigo(string id)
+        public IEnumerable<Configuracao> ObterListConfiguracao()
         {
             return configRepository.FindAll().ToList();
         }
 
-        public void SalvarConfiguracao(Configuracao config)
+        Configuracao IConfiguracao.ObterConfiguracaoPorCodigo(string id)
         {
-           
+            throw new NotImplementedException();
         }
     }
 }

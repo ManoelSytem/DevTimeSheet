@@ -7,3 +7,12 @@ C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcore
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.AssemblyInfo.cs
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.dll
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.pdb
+C:\DevTimeSheet\DevTimeSheet\TimeSheet.Domain\bin\Debug\netcoreapp2.1\TimeSheet.Domain.deps.json
+C:\DevTimeSheet\DevTimeSheet\TimeSheet.Domain\bin\Debug\netcoreapp2.1\TimeSheet.Domain.dll
+C:\DevTimeSheet\DevTimeSheet\TimeSheet.Domain\bin\Debug\netcoreapp2.1\TimeSheet.Domain.pdb
+C:\DevTimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.csprojAssemblyReference.cache
+C:\DevTimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.csproj.CoreCompileInputs.cache
+C:\DevTimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.AssemblyInfoInputs.cache
+C:\DevTimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.AssemblyInfo.cs
+C:\DevTimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.dll
+C:\DevTimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.pdb
