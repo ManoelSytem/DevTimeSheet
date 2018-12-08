@@ -26,3 +26,17 @@ C:\DevTimeSheet\DevTimeSheet\TimeSheet.Infrastructure\obj\Debug\netcoreapp2.1\Ti
 C:\DevTimeSheet\DevTimeSheet\TimeSheet.Infrastructure\obj\Debug\netcoreapp2.1\TimeSheet.Infrastructure.csproj.CopyComplete
 C:\DevTimeSheet\DevTimeSheet\TimeSheet.Infrastructure\obj\Debug\netcoreapp2.1\TimeSheet.Infrastructure.dll
 C:\DevTimeSheet\DevTimeSheet\TimeSheet.Infrastructure\obj\Debug\netcoreapp2.1\TimeSheet.Infrastructure.pdb
+C:\DevTimeSheet\TimeSheet.Infrastructure\bin\Debug\netcoreapp2.1\TimeSheet.Infrastructure.deps.json
+C:\DevTimeSheet\TimeSheet.Infrastructure\bin\Debug\netcoreapp2.1\TimeSheet.Infrastructure.dll
+C:\DevTimeSheet\TimeSheet.Infrastructure\bin\Debug\netcoreapp2.1\TimeSheet.Infrastructure.pdb
+C:\DevTimeSheet\TimeSheet.Infrastructure\bin\Debug\netcoreapp2.1\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\DevTimeSheet\TimeSheet.Infrastructure\bin\Debug\netcoreapp2.1\TimeSheet.Domain.dll
+C:\DevTimeSheet\TimeSheet.Infrastructure\bin\Debug\netcoreapp2.1\TimeSheet.Domain.pdb
+C:\DevTimeSheet\TimeSheet.Infrastructure\bin\Debug\netcoreapp2.1\Microsoft.Extensions.Configuration.Abstractions.xml
+C:\DevTimeSheet\TimeSheet.Infrastructure\obj\Debug\netcoreapp2.1\TimeSheet.Infrastructure.csprojAssemblyReference.cache
+C:\DevTimeSheet\TimeSheet.Infrastructure\obj\Debug\netcoreapp2.1\TimeSheet.Infrastructure.csproj.CoreCompileInputs.cache
+C:\DevTimeSheet\TimeSheet.Infrastructure\obj\Debug\netcoreapp2.1\TimeSheet.Infrastructure.AssemblyInfoInputs.cache
+C:\DevTimeSheet\TimeSheet.Infrastructure\obj\Debug\netcoreapp2.1\TimeSheet.Infrastructure.AssemblyInfo.cs
+C:\DevTimeSheet\TimeSheet.Infrastructure\obj\Debug\netcoreapp2.1\TimeSheet.Infrastructure.csproj.CopyComplete
+C:\DevTimeSheet\TimeSheet.Infrastructure\obj\Debug\netcoreapp2.1\TimeSheet.Infrastructure.dll
+C:\DevTimeSheet\TimeSheet.Infrastructure\obj\Debug\netcoreapp2.1\TimeSheet.Infrastructure.pdb

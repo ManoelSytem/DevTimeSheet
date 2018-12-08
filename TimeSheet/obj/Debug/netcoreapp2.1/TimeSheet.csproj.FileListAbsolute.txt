@@ -107,3 +107,10 @@ C:\DevTimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\TimeSheet.csproj.
 C:\DevTimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\TimeSheet.dll
 C:\DevTimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\TimeSheet.pdb
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Edit.g.cshtml.cs
+C:\DevTimeSheet\TimeSheet\bin\Debug\netcoreapp2.1\TimeSheet.Domain.dll
+C:\DevTimeSheet\TimeSheet\bin\Debug\netcoreapp2.1\TimeSheet.Infrastructure.dll
+C:\DevTimeSheet\TimeSheet\bin\Debug\netcoreapp2.1\TimeSheet.Domain.pdb
+C:\DevTimeSheet\TimeSheet\bin\Debug\netcoreapp2.1\TimeSheet.Infrastructure.pdb
+C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Create.g.cshtml.cs
+C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Edit.g.cshtml.cs
+C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Index.g.cshtml.cs

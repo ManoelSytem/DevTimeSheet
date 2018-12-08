@@ -5,7 +5,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+@if (TempData["Createfalse"] != null)
+{
+    <div class="card">
+        <div class="alert alert-danger">
+            <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Erro.  </font></font></strong><font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                    @TempData["Createfalse"].ToString();
+                </font>
+            </font>
+        </div>
+    </div>
+}
 <div class="card azulc-azule">
     <div class="card-header">
         @ViewBag.Title
@@ -22,7 +33,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.Count() > 0)
+                @if (Model !=null)
                 {
                     foreach (var item in Model)
                     {

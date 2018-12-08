@@ -25,10 +25,20 @@ namespace TimeSheet.Controllers
         // GET: Configuracao
         public ActionResult Index()
         {
+            try
+            {
+
             List<ViewModelConfiguracao> listaConfig = new List<ViewModelConfiguracao>();
             var viewModelConfiguracao = _mapper.Map<ViewModelConfiguracao>(_config.ObterConfiguracao());
             listaConfig.Add(viewModelConfiguracao);
             return View(listaConfig);
+
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
         }
 
         // GET: Configuracao/Details/5
@@ -52,7 +62,8 @@ namespace TimeSheet.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
+                    viewConfiguracao.ValidarDiaInicioFim();
+                    viewConfiguracao.ValidarDatalimiteEntrePeriodo();
                     var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
                     _config.SalvarConfiguracao(configuracao);
                     TempData["CreateSucesso"] = true;

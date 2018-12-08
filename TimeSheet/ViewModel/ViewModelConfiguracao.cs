@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TimeSheet.ViewModel
 {
-    public class ViewModelConfiguracao
+    public class ViewModelConfiguracao 
     {
         public int Codigo { get; set; }
         public int DiaMesLimiteFecha { get; set; }
@@ -25,6 +25,27 @@ namespace TimeSheet.ViewModel
             
         }
 
+        public void ValidarDiaInicioFim()
+        {
+
+            if (this.DiaInicio <= this.DiaFim & this.DiaFim >= this.DiaInicio);
+            else
+                throw new Exception("Período informado estar incorreto");
+        }
+
+        public void ValidarDatalimiteEntrePeriodo()
+        {
+            if (this.DiaMesLimiteFecha <= this.DiaFim);
+            else
+                throw new Exception("Dia mês limite fechamento fora do período");
+        }
+
+        public void ValidarDiaEnvioEmail()
+        {
+            if (this.DiaMesLimiteFecha <= this.DiaFim);
+            else
+                throw new Exception("Dia envio email fora do período");
+        }
 
     }
 

@@ -8,25 +8,28 @@ namespace TimeSheet.ViewModel.Validation
 {
     public class ConfiguracaoVmValidation : AbstractValidator<ViewModelConfiguracao>
     {
-
+        public ViewModelConfiguracao viewModelConfig;
         public ConfiguracaoVmValidation()
         {
             //Aqui adicionamos as validações de entrada
             RuleFor(x => x.DiaMesLimiteFecha)
-                .NotEmpty().WithMessage("* obrigatório");
-
+                .NotEmpty().WithMessage("* obrigatório")
+                .Must(DiaLimiteMesExiste).WithMessage("Dia calêndario não existe");
 
             RuleFor(x => x.Qtddiadatafechamento)
-                           .NotEmpty().WithMessage("* obrigatório");
+                           .NotEmpty().WithMessage("* obrigatório")
+                           .Must(EmailEnvio).WithMessage("Dia calêndario não existe");
 
             RuleFor(x => x.DiaInicio)
-                          .NotEmpty().WithMessage("* obrigatório");
+                          .NotEmpty().WithMessage("* obrigatório")
+                          .Must(DiaInicio).WithMessage("Dia calêndario não existe");
 
             RuleFor(x => x.CodDivergencia)
                           .NotEmpty().WithMessage("* obrigatório");
-
+            
             RuleFor(x => x.DiaFim)
-                    .NotEmpty().WithMessage("* obrigatório");
+                    .NotEmpty().WithMessage("* obrigatório")
+                    .Must(DiaFim).WithMessage("Dia calêndario não existe"); 
 
             RuleFor(x => x.AssuntoEmail)
               .NotEmpty().WithMessage("descreva o assunto email.")
@@ -38,9 +41,24 @@ namespace TimeSheet.ViewModel.Validation
 
         }
         //Aqui criamos uma validação customizada
-        private static bool ClienteMaiorDeIdade(DateTime dataNascimento)
+        private static bool DiaLimiteMesExiste(int dialimitefechamento)
         {
-            return dataNascimento <= DateTime.Now.AddYears(-18);
+            return  dialimitefechamento >=1 & dialimitefechamento <= 31;
+        }
+
+        private static bool DiaInicio(int dialimitefechamento)
+        {
+            return dialimitefechamento >= 1 & dialimitefechamento <= 31;
+        }
+
+        private static bool DiaFim(int dialimitefechamento)
+        {
+            return dialimitefechamento >= 1 & dialimitefechamento <= 31;
+        }
+
+        private static bool EmailEnvio(int dialimitefechamento)
+        {
+            return dialimitefechamento >= 1 & dialimitefechamento <= 31;
         }
     }
 }
