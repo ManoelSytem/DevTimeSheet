@@ -1,0 +1,73 @@
+﻿@model TimeSheet.ViewModel.LoginViewModel
+@{
+    Layout = "";
+    ViewBag.Title = "Login";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Time Sheet</title>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="~/css/bstrap/bstrap4.css">
+    <link rel="stylesheet" type="text/css" href="~/css/system.css">
+    <link rel="stylesheet" type="text/css" href="~/font/css/all.css">
+    <script defer type="text/javascript" src="~/js/jquery.js"></script>
+    <script defer type="text/javascript" src="~/js/bstrap/bstrap.js"></script>
+    <script defer type="text/javascript" src="~/js/system.js"></script>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-overlay"></div>
+        <div class="login-form-container">
+            @using (Html.BeginForm("Loginteste", "Login", FormMethod.Post, new { @class = "login-form" }))
+            {
+                @Html.AntiForgeryToken()
+                <header class="text-center">
+                    <h1 class="login-brand"><img src="~/images/login-logoA.svg"></h1>
+                    <h6>Login - Time Sheet</h6>
+                </header>
+                <section class="login-inputs">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-user fa-fw"></i></span>
+                            </div>
+                            @Html.TextBoxFor(x => x.Username, new { @class = "form-control", placeholder = "Digite seu usuário", required = true, autofocus = true })
+                            @Html.ValidationMessageFor(x => x.Username, "", new { @class = "validation" })
+                        </div>
+                    </div>
+                    <article>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                </div>
+                                @Html.PasswordFor(x => x.Password, new { @class = "form-control", placeholder = "Digite sua senha", required = true })
+                                @Html.ValidationMessageFor(x => x.Password, "", new { @class = "validation" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="login-form-check">
+                                @Html.CheckBoxFor(model => model.ManterConectado, new { @class = "login-form-check-input" })
+                                @Html.LabelFor(model => model.ManterConectado, new { @class = "form-check-label login-lembrar" })
+                            </div>
+                        </div>
+                    </article>
+                </section>
+                <footer>
+                    <div class="form-group col-md-12">
+                        <input type="submit" value="Entrar" class="btn btn-primary form-control" />
+                    </div>
+                    @*<div class="form-group forg-password">
+                            Esqueceu a senha? <a href="#">Clique aqui</a>
+                        </div>*@
+                </footer>
+            }
+        </div>
+    </div>
+</body>
+</html>
+

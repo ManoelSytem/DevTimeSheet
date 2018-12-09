@@ -114,3 +114,4 @@ C:\DevTimeSheet\TimeSheet\bin\Debug\netcoreapp2.1\TimeSheet.Infrastructure.pdb
 C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Create.g.cshtml.cs
 C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Edit.g.cshtml.cs
 C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Index.g.cshtml.cs
+C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Login\Index.g.cshtml.cs

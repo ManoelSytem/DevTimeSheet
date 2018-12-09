@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "cb7e71e5d731a919fb694abace2cf98cbeac68ba"
+    "signature": "66fa6123c3c8e16d917bae465919c3046ffbbc35"
   },
   "compilationOptions": {
     "defines": [
@@ -26,6 +26,7 @@
         "dependencies": {
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "5.0.1",
           "FluentValidation.AspNetCore": "8.1.0",
+          "IdentityModel": "3.10.1",
           "Microsoft.AspNetCore.App": "2.1.1",
           "Microsoft.NETCore.App": "2.1.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.1.1",
@@ -114,6 +115,21 @@
         },
         "compile": {
           "lib/netstandard2.0/FluentValidation.AspNetCore.dll": {}
+        }
+      },
+      "IdentityModel/3.10.1": {
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2",
+          "System.Text.Encodings.Web": "4.5.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/IdentityModel.dll": {
+            "assemblyVersion": "3.10.1.0",
+            "fileVersion": "3.10.1.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/IdentityModel.dll": {}
         }
       },
       "Microsoft.CodeAnalysis.CSharp.Workspaces/2.8.0": {
@@ -3609,6 +3625,13 @@
       "sha512": "sha512-fh9WgmttHNTuX73mSP8GV4a3RI3vN3XaidIaxD5EzjbQ4+OyjTqP3ELx+OfBJPpQibMjBuae6O8ep2GzGXSWuQ==",
       "path": "fluentvalidation.aspnetcore/8.1.0",
       "hashPath": "fluentvalidation.aspnetcore.8.1.0.nupkg.sha512"
+    },
+    "IdentityModel/3.10.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ytnbr8YKfLLEuWQPSXwkYi+AQB/wHERjDoW1jm0DYzGFuEE7TsrKRogMlUMx8UP5ZJDZ/XMTSzmF6uum4kX+7A==",
+      "path": "identitymodel/3.10.1",
+      "hashPath": "identitymodel.3.10.1.nupkg.sha512"
     },
     "Microsoft.CodeAnalysis.CSharp.Workspaces/2.8.0": {
       "type": "package",

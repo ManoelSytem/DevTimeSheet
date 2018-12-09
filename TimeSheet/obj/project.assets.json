@@ -69,6 +69,19 @@
           "lib/netstandard2.0/FluentValidation.AspNetCore.dll": {}
         }
       },
+      "IdentityModel/3.10.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.1",
+          "System.Text.Encodings.Web": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/IdentityModel.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/IdentityModel.dll": {}
+        }
+      },
       "Microsoft.AspNet.WebApi.Client/5.2.6": {
         "type": "package",
         "dependencies": {
@@ -4817,6 +4830,26 @@
         "fluentvalidation.aspnetcore.nuspec",
         "lib/netstandard2.0/FluentValidation.AspNetCore.dll",
         "lib/netstandard2.0/FluentValidation.AspNetCore.xml"
+      ]
+    },
+    "IdentityModel/3.10.1": {
+      "sha512": "ytnbr8YKfLLEuWQPSXwkYi+AQB/wHERjDoW1jm0DYzGFuEE7TsrKRogMlUMx8UP5ZJDZ/XMTSzmF6uum4kX+7A==",
+      "type": "package",
+      "path": "identitymodel/3.10.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "identitymodel.3.10.1.nupkg.sha512",
+        "identitymodel.nuspec",
+        "lib/net452/IdentityModel.dll",
+        "lib/net452/IdentityModel.pdb",
+        "lib/net452/IdentityModel.xml",
+        "lib/netstandard1.4/IdentityModel.dll",
+        "lib/netstandard1.4/IdentityModel.pdb",
+        "lib/netstandard1.4/IdentityModel.xml",
+        "lib/netstandard2.0/IdentityModel.dll",
+        "lib/netstandard2.0/IdentityModel.pdb",
+        "lib/netstandard2.0/IdentityModel.xml"
       ]
     },
     "Microsoft.AspNet.WebApi.Client/5.2.6": {
@@ -12618,6 +12651,7 @@
     ".NETCoreApp,Version=v2.1": [
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 5.0.1",
       "FluentValidation.AspNetCore >= 8.1.0",
+      "IdentityModel >= 3.10.1",
       "Microsoft.AspNetCore.App >= 2.1.1",
       "Microsoft.NETCore.App >= 2.1.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 2.1.1",
@@ -12680,6 +12714,10 @@
           "FluentValidation.AspNetCore": {
             "target": "Package",
             "version": "[8.1.0, )"
+          },
+          "IdentityModel": {
+            "target": "Package",
+            "version": "[3.10.1, )"
           },
           "Microsoft.AspNetCore.App": {
             "suppressParent": "All",
