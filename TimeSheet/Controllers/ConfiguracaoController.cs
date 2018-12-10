@@ -12,16 +12,19 @@ using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers
 {
-    
+    [Authorize]
     public class ConfiguracaoController : Controller
     {
         private readonly IMapper _mapper;
         private readonly IConfiguracao  _config;
+        private readonly IProtheus _prothuesService;
+        private CodDivergenciaViewModel codiv;
 
-        public ConfiguracaoController(IConfiguracao config, IMapper mapper)
+        public ConfiguracaoController(IConfiguracao config, IMapper mapper, IProtheus prothuesService)
         {
             _config = config;
             _mapper = mapper;
+            _prothuesService = prothuesService;
         }
 
         // GET: Configuracao
@@ -66,6 +69,8 @@ namespace TimeSheet.Controllers
                 {
                     viewConfiguracao.ValidarDiaInicioFim();
                     viewConfiguracao.ValidarDatalimiteEntrePeriodo();
+                    var codiviergencia = _mapper.Map<CodDivergenciaViewModel>(_prothuesService.ObterCodigoDivergenciaPorContigo(viewConfiguracao.CodDivergencia));
+                    codiv.ValidaCodigoDivergencia(codiviergencia.codigo);
                     var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
                     _config.SalvarConfiguracao(configuracao);
                     TempData["CreateSucesso"] = true;
@@ -76,7 +81,7 @@ namespace TimeSheet.Controllers
             catch(Exception e)
             {
                 TempData["Createfalse"] = e.Message;
-                return View();
+                return View(viewConfiguracao);
             }
         }
 
@@ -107,8 +112,11 @@ namespace TimeSheet.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
+                    
                     var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
+                    var codiviergencia = _mapper.Map<CodDivergenciaViewModel>(_prothuesService.ObterCodigoDivergenciaPorContigo(viewConfiguracao.CodDivergencia));
+                    codiv = new CodDivergenciaViewModel();
+                    codiv.ValidaCodigoDivergencia(codiviergencia);
                     _config.AtualizarConfiguracao(configuracao);
                     TempData["CreateSucesso"] = true;
                     return View(viewConfiguracao);
@@ -125,22 +133,35 @@ namespace TimeSheet.Controllers
         // GET: Configuracao/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            try
+            {
+                List<ViewModelConfiguracao> listaConfig = new List<ViewModelConfiguracao>();
+                var viewModelConfiguracao = _mapper.Map<ViewModelConfiguracao>(_config.ObterConfiguracao());
+                listaConfig.Add(viewModelConfiguracao);
+                return View(viewModelConfiguracao);
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
         }
 
         // POST: Configuracao/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(ViewModelConfiguracao viewConfiguracao)
         {
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
+                var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
+                _config.DeleteConfiguracao(configuracao);
+                TempData["CreateSucesso"] = true;
+                return RedirectToAction("Index","Configuracao");
             }
-            catch
+            catch (Exception e)
             {
+                TempData["Createfalse"] = e.Message;
                 return View();
             }
         }

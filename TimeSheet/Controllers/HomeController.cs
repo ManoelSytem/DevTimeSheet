@@ -9,7 +9,7 @@ using TimeSheet.Models;
 
 namespace TimeSheet.Controllers
 {
-   
+    [Authorize]
     public class HomeController : Controller
     {
         public IActionResult Index()

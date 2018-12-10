@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TimeSheet.Domain;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Infrastructure.Repository;
+
 
 namespace TimeSheet.Infrastructure.ServiceRepository
 {
@@ -26,7 +24,7 @@ namespace TimeSheet.Infrastructure.ServiceRepository
 
         public Configuracao ObterConfiguracao()
         {
-            return configRepository.FindAll().ToList().First();
+            return configRepository.Find();
         }
 
         Configuracao IConfiguracao.ObterConfiguracaoPorCodigo(string id)
@@ -37,6 +35,11 @@ namespace TimeSheet.Infrastructure.ServiceRepository
         public void AtualizarConfiguracao(Configuracao config)
         {
             configRepository.Update(config);
+        }
+
+        public void DeleteConfiguracao(Configuracao configuracao)
+        {
+            configRepository.Remove(configuracao.Codigo);
         }
     }
 }

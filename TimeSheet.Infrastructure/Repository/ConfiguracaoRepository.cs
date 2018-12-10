@@ -34,7 +34,7 @@ namespace TimeSheet.Infrastructure.Repository
           
         }
 
-        public override IEnumerable<Configuracao> FindAll()
+        public override Configuracao Find()
         {
             try
             {
@@ -50,7 +50,7 @@ namespace TimeSheet.Infrastructure.Repository
                               ,LTRIM(RTRIM(ZYX_DLIFEC)) AS DiaMesLimiteFecha
                             FROM ZYX010
                             WHERE D_E_L_E_T_  <> '*'";
-                    return  dbConnection.Query<Configuracao>(sql);
+                    return  dbConnection.QueryFirstOrDefault<Configuracao>(sql);
                    
                 }
             }
@@ -66,13 +66,13 @@ namespace TimeSheet.Infrastructure.Repository
             throw new NotImplementedException();
         }
 
-        public override void Remove(int id)
+        public override void Remove(string id)
         {
             try
             {
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
-                    string sQuery = @"UPDATE ZYX010 
+                    string sQuery = $@"UPDATE ZYX010 
                                    SET D_E_L_E_T_ = '*',
                                    R_E_C_D_E_L_ = (SELECT MAX(X.R_E_C_D_E_L_)+1 FROM ZYX010 X),
                                    R_E_C_N_O_ = (SELECT X.R_E_C_D_E_L_ FROM ZYX010 X)

@@ -13,6 +13,8 @@ namespace TimeSheet.Mapping
         public MappingProfiles()
         {
             CreateMap<Configuracao, ViewModelConfiguracao>().ReverseMap();
+
+            CreateMap<CodDivergencia, CodDivergenciaViewModel>().ReverseMap();
         }
 
     }

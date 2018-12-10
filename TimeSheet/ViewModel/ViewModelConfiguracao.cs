@@ -17,7 +17,7 @@ namespace TimeSheet.ViewModel
         public string AssuntoEmail { get; set; }
         public string TextoEmail { get; set; }
         public int CodDivergencia { get; set; }
-        public  List<CodDivergencia> ListCodDivergencia { get; set; }
+        
 
       
         public ViewModelConfiguracao()
@@ -50,9 +50,16 @@ namespace TimeSheet.ViewModel
     }
 
 
-    public class CodDivergencia
+    public class CodDivergenciaViewModel
     {
-        public int codigo { get; set; }
+        public int? codigo { get; set; }
         public string Descricao { get; set; }
+
+        public void ValidaCodigoDivergencia(Object codDivergencia) {
+
+            if (codDivergencia != null);
+            else
+                throw new Exception("Código de divergência não encontrado");
+        }
     }
 }

@@ -11,5 +11,7 @@ namespace TimeSheet.Domain.Enty.Interface
         Configuracao ObterConfiguracao();
         Configuracao ObterConfiguracaoPorCodigo(string id);
         void SalvarConfiguracao(Configuracao config);
+        void DeleteConfiguracao(Configuracao configuracao);
+
     }
 }

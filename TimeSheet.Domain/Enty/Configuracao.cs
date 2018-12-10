@@ -21,7 +21,7 @@ namespace TimeSheet.Domain
 
     public class CodDivergencia
     {
-        public int codigo { get; set; }
+        public int? codigo { get; set; }
         public string Descricao { get; set; }
     }
 }

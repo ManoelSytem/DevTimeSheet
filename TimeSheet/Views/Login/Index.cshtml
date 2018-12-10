@@ -21,7 +21,7 @@
     <div class="login-container">
         <div class="login-overlay"></div>
         <div class="login-form-container">
-            @using (Html.BeginForm("Loginteste", "Login", FormMethod.Post, new { @class = "login-form" }))
+            @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { @class = "login-form" }))
             {
                 @Html.AntiForgeryToken()
                 <header class="text-center">
