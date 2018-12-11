@@ -12,7 +12,7 @@ namespace TimeSheet.Domain.Util
         {
             foreach (var dado in user.Claims.Where(c => c.Type == "dados"))
                 if (dado.Value.Split(';')[0] == key)
-                    return dado.Value.Split(';')[1];
+                    return dado.Value.Split(';')[2];
             return null;
         }
 

@@ -12,7 +12,7 @@ using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers
 {
-    [AllowAnonymous]
+    [Authorize]
     public class ConfiguracaoController : Controller
     {
         private readonly IMapper _mapper;

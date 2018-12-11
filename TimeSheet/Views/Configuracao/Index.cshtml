@@ -33,7 +33,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model !=null)
+                @if (Model.First() != null)
                 {
                     foreach (var item in Model)
                     {

@@ -33,7 +33,7 @@ namespace TimeSheet.Controllers
             if (ModelState.IsValid)
             {
                 var disco = await DiscoveryClient.GetAsync("http://localhost:8080");
-                var tokenClient = new TokenClient(disco.TokenEndpoint, "RDO.Client", "rdoSecret");
+                var tokenClient = new TokenClient(disco.TokenEndpoint, "Timesheet.Client", "timesheetSecret");
                 var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(login.Username, login.Password, string.Join(" ", Scopes));
 
                 if (!tokenResponse.IsError)
@@ -96,7 +96,7 @@ namespace TimeSheet.Controllers
         }
 
         private static readonly string[] Scopes = {
-            "RDO",
+            "Timesheet",
             "permissions",
             "dados",
             "openid",
