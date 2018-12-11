@@ -55,6 +55,15 @@ namespace TimeSheet.ViewModel
         public int? codigo { get; set; }
         public string Descricao { get; set; }
 
+        public CodDivergenciaViewModel(int _codigo, string _desc)
+        {
+            this.codigo = _codigo;
+            this.Descricao = _desc;
+        }
+
+        public CodDivergenciaViewModel()
+        {
+        }
         public void ValidaCodigoDivergencia(Object codDivergencia) {
 
             if (codDivergencia != null);

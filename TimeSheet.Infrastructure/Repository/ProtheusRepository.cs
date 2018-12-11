@@ -39,5 +39,23 @@ namespace TimeSheet.Infrastructure.Repository
             }
         }
 
+        public  IEnumerable<CodDivergencia> ObterListaCodigoDivergenciaPorIdDesc(string descId)
+        {
+            try
+            {
+                Conexao.Open();
+                var sql = $@"SELECT P6_CODIGO as Codigo, P6_DESC as Descricao  FROM SP6010
+                                WHERE P6_CODIGO = LTRIM(RTRIM('{descId}')) OR  P6_DESC LTRIM(RTRIM('{descId}')) AND D_E_L_E_T_ <> '*'";
+                return Conexao.Query<CodDivergencia>(sql);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Conexao.Close();
+            }
+        }
     }
 }

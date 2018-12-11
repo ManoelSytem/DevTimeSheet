@@ -12,7 +12,7 @@ using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     public class ConfiguracaoController : Controller
     {
         private readonly IMapper _mapper;
@@ -164,6 +164,22 @@ namespace TimeSheet.Controllers
                 TempData["Createfalse"] = e.Message;
                 return View();
             }
+        }
+
+        
+        public JsonResult GetSearchValue(string search)
+        {
+            List<CodDivergenciaViewModel> codigoDiv = new List<CodDivergenciaViewModel>();
+            codigoDiv.Add(new CodDivergenciaViewModel(50, "Medico"));
+            codigoDiv.Add(new CodDivergenciaViewModel(25, "Feriado"));
+            codigoDiv.Add(new CodDivergenciaViewModel(45, "Afastado"));
+           
+            List<CodDivergenciaViewModel> allsearch = codigoDiv.Where(x => x.codigo == Convert.ToInt32(search)).Select(x => new CodDivergenciaViewModel
+            {   codigo = x.codigo,
+                Descricao = x.Descricao
+            }).ToList();
+
+            return Json(allsearch);
         }
     }
 }

@@ -20,9 +20,9 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             return _prothuesRepository.ObterCodigoDivergenciaPorContigo(cod);
         }
 
-        public List<CodDivergencia> ObterListCodDivergenciaPorCod(int cod)
+        public IEnumerable<CodDivergencia> ObterListCodDivergenciaPordescricao(string cod)
         {
-            throw new NotImplementedException();
+            return _prothuesRepository.ObterListaCodigoDivergenciaPorIdDesc(cod);
         }
     }
 }

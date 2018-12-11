@@ -61,9 +61,28 @@
                         </div>
                         <div class="col-md-2 col-sm-4 coddivergencia">
                             <label for="DiaFim">Código de divergência para atestado</label>
-                            @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
+                            @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @id = "searchInput", @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
                             @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
                         </div>
+                        <script>
+    $("#searchInput").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Action("GetSearchValue","Configuracao")',
+                dataType: "json",
+                data: { search: $("#searchInput").val() },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item.codigo, value: item.Descricao };
+                    }));
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+        }
+    });
+                        </script>
                     </div>
                     <br />
                     <br />
