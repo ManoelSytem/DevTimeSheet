@@ -61,8 +61,13 @@
                         </div>
                         <div class="col-md-2 col-sm-4 coddivergencia">
                             <label for="DiaFim">Código de divergência para atestado</label>
-                            @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @id = "searchInput", @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
-                            @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
+                            <div class="input-group mb-3">
+                                @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "searchInput", @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
+                                @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
                         </div>
                         <script>
     $("#searchInput").autocomplete({
@@ -73,7 +78,7 @@
                 data: { search: $("#searchInput").val() },
                 success: function (data) {
                     response($.map(data, function (item) {
-                        return { label: item.codigo, value: item.Descricao };
+                        return {label: item.codigo+"-"+item.descricao, value: item.codigo};
                     }));
                 },
                 error: function (xhr, status, error) {

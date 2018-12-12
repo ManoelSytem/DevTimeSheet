@@ -169,14 +169,11 @@ namespace TimeSheet.Controllers
         
         public JsonResult GetSearchValue(string search)
         {
-            List<CodDivergenciaViewModel> codigoDiv = new List<CodDivergenciaViewModel>();
-            codigoDiv.Add(new CodDivergenciaViewModel(50, "Medico"));
-            codigoDiv.Add(new CodDivergenciaViewModel(25, "Feriado"));
-            codigoDiv.Add(new CodDivergenciaViewModel(45, "Afastado"));
-           
-            List<CodDivergenciaViewModel> allsearch = codigoDiv.Where(x => x.codigo == Convert.ToInt32(search)).Select(x => new CodDivergenciaViewModel
-            {   codigo = x.codigo,
-                Descricao = x.Descricao
+            List<CodDivergenciaViewModel> allsearch = _prothuesService.ObterListCodDivergenciaPordescricao(search.ToUpper()).ToList().Select(x => new CodDivergenciaViewModel
+            {
+                Descricao = x.Descricao,
+                codigo = x.codigo
+               
             }).ToList();
 
             return Json(allsearch);

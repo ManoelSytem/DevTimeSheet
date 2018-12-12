@@ -6,7 +6,7 @@ namespace TimeSheet.Domain.Enty.Interface
 {
     public interface IProtheus
     {
-        IEnumerable<CodDivergencia> ObterListCodDivergenciaPordescricao(string cod);
+        IEnumerable<CodDivergencia> ObterListCodDivergenciaPordescricao(string descricao);
         CodDivergencia ObterCodigoDivergenciaPorContigo(int cod);
         Usuario ObterMatriculaUserPorCentroCusto(string centroCusto);
     }

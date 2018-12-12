@@ -21,9 +21,9 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             return _prothuesRepository.ObterCodigoDivergenciaPorContigo(cod);
         }
 
-        public IEnumerable<CodDivergencia> ObterListCodDivergenciaPordescricao(string cod)
+        public IEnumerable<CodDivergencia> ObterListCodDivergenciaPordescricao(string descricao)
         {
-            return _prothuesRepository.ObterListaCodigoDivergenciaPorIdDesc(cod);
+            return _prothuesRepository.ObterListaCodigoDivergenciaPorIdDesc(descricao);
         }
 
         public Usuario ObterMatriculaUserPorCentroCusto(string centroCusto)

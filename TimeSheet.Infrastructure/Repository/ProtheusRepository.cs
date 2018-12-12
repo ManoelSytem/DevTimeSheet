@@ -45,7 +45,7 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 Conexao.Open();
                 var sql = $@"SELECT P6_CODIGO as Codigo, P6_DESC as Descricao  FROM SP6010
-                                WHERE P6_CODIGO = LTRIM(RTRIM('{descId}')) OR  P6_DESC LTRIM(RTRIM('{descId}')) AND D_E_L_E_T_ <> '*'";
+                                WHERE  (P6_DESC LIKE LTRIM(RTRIM('%{descId}%')) OR P6_CODIGO = LTRIM(RTRIM('%{descId}%'))) AND D_E_L_E_T_ <> '*'";
                 return Conexao.Query<CodDivergencia>(sql);
             }
             catch (Exception ex)
