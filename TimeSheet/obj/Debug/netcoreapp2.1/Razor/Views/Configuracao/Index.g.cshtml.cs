@@ -23,8 +23,13 @@ using TimeSheet.Models;
 
 #line default
 #line hidden
+#line 3 "C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\Views\_ViewImports.cshtml"
+using TimeSheet.Domain.Util;
+
+#line default
+#line hidden
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"57e019ac34afa1bd6d683eae87c6c9a24a581057", @"/Views/Configuracao/Index.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"1d7036a8495e566242915d53879884387daf7875", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"1ceead436462ab04d0d9f6d82b35d9afd345d5f4", @"/Views/_ViewImports.cshtml")]
     public class Views_Configuracao_Index : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<IEnumerable<TimeSheet.ViewModel.ViewModelConfiguracao>>
     {
         #pragma warning disable 1998

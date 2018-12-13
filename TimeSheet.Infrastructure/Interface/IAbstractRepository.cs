@@ -15,7 +15,7 @@ namespace TimeSheet.Infrastructure.Interface
 
             }
 
-            public abstract void Add(T item);
+            public abstract void Add(T item, string filial, string matricula);
             public abstract void Remove(string id);
             public abstract void Update(T item);
             public abstract T FindByID(int id);

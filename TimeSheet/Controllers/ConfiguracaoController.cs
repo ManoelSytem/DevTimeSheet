@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeSheet.Domain;
 using TimeSheet.Domain.Enty.Interface;
+using TimeSheet.Domain.Util;
 using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers
 {
-    [Authorize]
     public class ConfiguracaoController : Controller
     {
         private readonly IMapper _mapper;
@@ -69,10 +69,13 @@ namespace TimeSheet.Controllers
                 {
                     viewConfiguracao.ValidarDiaInicioFim();
                     viewConfiguracao.ValidarDatalimiteEntrePeriodo();
+                    viewConfiguracao.ValidarFrequenciaSelecionada();
                     var codiviergencia = _mapper.Map<CodDivergenciaViewModel>(_prothuesService.ObterCodigoDivergenciaPorContigo(viewConfiguracao.CodDivergencia));
-                    codiv.ValidaCodigoDivergencia(codiviergencia.codigo);
+                    codiv = new CodDivergenciaViewModel();
+                    codiv.codigo = codiviergencia.codigo;
                     var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
-                    _config.SalvarConfiguracao(configuracao);
+                    _config.SalvarConfiguracao(configuracao, User.GetDados("FILIAL")?.Split(',').First(), User.GetDados("MATRICULA")?.Split(',').First());
+                    _config.SalvarTextoEmail(viewConfiguracao.TextoEmail);
                     TempData["CreateSucesso"] = true;
                     return View();
                 }
@@ -112,12 +115,18 @@ namespace TimeSheet.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    
+                    viewConfiguracao.ValidarDiaInicioFim();
+                    viewConfiguracao.ValidarDatalimiteEntrePeriodo();
+                    viewConfiguracao.ValidarFrequenciaSelecionada();
+               
+                    viewConfiguracao.FilialProtheus = User.GetDados("FILIAL")?.Split(',').First();
+                    viewConfiguracao.MatriculaUsuario = User.GetDados("MATRICULA")?.Split(',').First();
                     var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
                     var codiviergencia = _mapper.Map<CodDivergenciaViewModel>(_prothuesService.ObterCodigoDivergenciaPorContigo(viewConfiguracao.CodDivergencia));
                     codiv = new CodDivergenciaViewModel();
                     codiv.ValidaCodigoDivergencia(codiviergencia);
                     _config.AtualizarConfiguracao(configuracao);
+                    _config.SalvarTextoEmail(viewConfiguracao.TextoEmail);
                     TempData["CreateSucesso"] = true;
                     return View(viewConfiguracao);
                 }

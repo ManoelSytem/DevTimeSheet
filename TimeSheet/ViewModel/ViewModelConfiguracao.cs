@@ -9,6 +9,8 @@ namespace TimeSheet.ViewModel
     public class ViewModelConfiguracao 
     {
         public int Codigo { get; set; }
+        public string FilialProtheus { get; set; }
+        public string MatriculaUsuario { get; set; }
         public int DiaMesLimiteFecha { get; set; }
         public int Frequencia_email { get; set; }
         public int Qtddiadatafechamento { get; set; }
@@ -16,13 +18,13 @@ namespace TimeSheet.ViewModel
         public int DiaFim { get; set; }
         public string AssuntoEmail { get; set; }
         public string TextoEmail { get; set; }
+        public string Matricula { get; set; }
         public int CodDivergencia { get; set; }
         
 
       
         public ViewModelConfiguracao()
         {
-            
         }
 
         public void ValidarDiaInicioFim()
@@ -46,6 +48,14 @@ namespace TimeSheet.ViewModel
             else
                 throw new Exception("Dia envio email fora do período");
         }
+
+        public void ValidarFrequenciaSelecionada()
+        {
+            if (this.Frequencia_email == 0)
+                throw new Exception("Selecione a frequência de envio de email");
+            else;
+        }
+
 
     }
 

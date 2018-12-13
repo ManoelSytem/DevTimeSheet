@@ -15,29 +15,6 @@ namespace TimeSheet.Controllers
     {
         public IActionResult Index()
         {
-            try
-            {
-                var perfis = User.GetPerfil();
-               
-                if (User.GetDados("AREA").ToString() == Constantes.COORDENADOR)
-                {
-                    TempData["Perfil"] = Constantes.COORDENADOR;
-                }
-                if (User.GetDados("AREA").ToString() == Constantes.ENGENHEIRO)
-                {
-                    TempData["Perfil"] = Constantes.ENGENHEIRO;
-                }
-                if (User.GetDados("AREA").ToString() == Constantes.TECNICO)
-                {
-                    TempData["Perfil"] = Constantes.TECNICO;
-                }
-
-            }
-            catch (Exception ex)
-            {
-               
-            }
-          
             return View();
         }
 

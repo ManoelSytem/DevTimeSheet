@@ -10,8 +10,8 @@ namespace TimeSheet.Domain.Enty.Interface
         void AtualizarConfiguracao(Configuracao config);
         Configuracao ObterConfiguracao();
         Configuracao ObterConfiguracaoPorCodigo(string id);
-        void SalvarConfiguracao(Configuracao config);
+        void SalvarConfiguracao(Configuracao config, string filial, string matricula);
         void DeleteConfiguracao(Configuracao configuracao);
-
+        void SalvarTextoEmail(string texto);
     }
 }

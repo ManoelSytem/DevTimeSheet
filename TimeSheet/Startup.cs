@@ -33,6 +33,7 @@ namespace TimeSheet
             services.AddSingleton<IAuthorizationHandler, OperationAuthorizationHandler>();
             services.AddSingleton<IConfiguracao, ConfiguracaoServiceRepository>();
             services.AddSingleton<IProtheus, ProtheusServiceRepository>();
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -56,6 +57,7 @@ namespace TimeSheet
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }
