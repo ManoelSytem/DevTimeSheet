@@ -20,9 +20,9 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
-                    string sQuery = $@"INSERT INTO ZYX010 (ZYX_FILIAL,ZYX_CODIGO, ZYX_DLIFEC,  ZYX_FEMAIL, ZYX_DEMAIL, ZYX_INIMAR, ZYX_FINMAR, ZYX_CODDIV,ZYX_MATUSU)"
+                    string sQuery = $@"INSERT INTO ZYX010 (ZYX_FILIAL,ZYX_CODIGO, ZYX_DLIFEC,  ZYX_FEMAIL, ZYX_DEMAIL, ZYX_INIMAR, ZYX_FINMAR, ZYX_CODDIV,ZYX_MATUSU,ZYX_AEMAIL)"
                                     + "VALUES('" + filial + "'" + ", "+"'"+item.Codigo+ "'" + ", " + item.DiaMesLimiteFecha+ ","+
-                                    "'"+item.Frequencia_email+ "'" + ", " + item.Qtddiadatafechamento+ "" + ", " + item.DiaInicio + "" + "," + item.DiaFim + ","+ " '" + item.CodDivergencia + "'" + "," +" '"+matricula+ "'"+")";
+                                    "'"+item.Frequencia_email+ "'" + ", " + item.Qtddiadatafechamento+ "" + ", " + item.DiaInicio + "" + "," + item.DiaFim + ","+ " '" + item.CodDivergencia + "'" + "," +" '"+matricula+ "'"+"," +" '"+item.AssuntoEmail+ "'"+")";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
                 }
@@ -48,6 +48,7 @@ namespace TimeSheet.Infrastructure.Repository
                               ,LTRIM(RTRIM(ZYX_FEMAIL)) AS Frequencia_email
                               ,LTRIM(RTRIM(ZYX_DEMAIL)) AS Qtddiadatafechamento
                               ,LTRIM(RTRIM(ZYX_DLIFEC)) AS DiaMesLimiteFecha
+                              ,LTRIM(RTRIM(ZYX_AEMAIL)) AS AssuntoEmail 
                             FROM ZYX010
                             WHERE D_E_L_E_T_  <> '*'";
                     return  dbConnection.QueryFirstOrDefault<Configuracao>(sql);
@@ -74,11 +75,14 @@ namespace TimeSheet.Infrastructure.Repository
                 {
                     string sQuery = $@"UPDATE ZYX010 
                                    SET D_E_L_E_T_ = '*',
-                                   R_E_C_D_E_L_ = (SELECT MAX(X.R_E_C_D_E_L_)+1 FROM ZYX010 X),
-                                   R_E_C_N_O_ = (SELECT X.R_E_C_D_E_L_ FROM ZYX010 X)
+                                   R_E_C_D_E_L_ = (SELECT MAX(X.R_E_C_D_E_L_)+1 FROM ZYX010 X)
                                    WHERE ZYX_CODIGO = '{id}'";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
+                    string uQuery = $@"UPDATE ZYX010 
+                                   SET R_E_C_N_O_ = (SELECT X.R_E_C_D_E_L_ FROM ZYX010 X WHERE ZYX_CODIGO = '{id}')
+                                   WHERE ZYX_CODIGO = '{id}'";
+                    dbConnection.Execute(uQuery);
                 }
             }
             catch (Exception ex)
@@ -96,7 +100,8 @@ namespace TimeSheet.Infrastructure.Repository
                     string sQuery = $@"UPDATE ZYX010 
                             SET ZYX_FILIAL = '{item.FilialProtheus}', ZYX_DLIFEC = {item.DiaMesLimiteFecha }, ZYX_FEMAIL = '{item.Frequencia_email}',
                             ZYX_DEMAIL = {item.Qtddiadatafechamento}, ZYX_INIMAR = {item.DiaInicio}, ZYX_FINMAR = {item.DiaFim}, ZYX_CODDIV = '{item.CodDivergencia}',
-                            ZYX_MATUSU = '{item.FilialProtheus}'
+                            ZYX_MATUSU = '{item.FilialProtheus}',
+                            ZYX_AEMAIL = '{item.AssuntoEmail}'
                             WHERE ZYX_CODIGO ='{item.Codigo}'";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery); 

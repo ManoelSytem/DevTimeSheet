@@ -9,7 +9,7 @@
     <div class="card">
         <div class="body">
             <div class="alert alert-success">
-                <strong>Configuração realizada com sucesso!</strong>
+                <strong>Configuração excluída!</strong>
             </div>
         </div>
     </div>
@@ -46,53 +46,30 @@
                     <div class="row">
                         <div class="col-xs-6 col-sm-2">
                             <label for="DiaMesLimiteFecha">Dia do mês limite fechamento</label>
-                            @Html.EditorFor(model => model.DiaMesLimiteFecha, new { htmlAttributes = new { @class = "form-control col-md-6", @placeholder = "Dia do Mês" } })
+                            @Html.HiddenFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control", @placeholder = "", } })
+                            @Html.EditorFor(model => model.DiaMesLimiteFecha, new { htmlAttributes = new { @class = "form-control col-md-6", @disabled = "disabled", @placeholder = "Dia do Mês" } })
                             <span asp-validation-for="DiaMesLimiteFecha" class="text-danger"></span>
                         </div>
                         <div class="col-md-1 col-sm-4">
                             <label for="DiaFim">Ínicio</label>
-                            @Html.EditorFor(model => model.DiaInicio, new { htmlAttributes = new { @class = "form-control col-md-12", @placeholder = "Ínicio" } })
+                            @Html.EditorFor(model => model.DiaInicio, new { htmlAttributes = new { @class = "form-control col-md-12", @disabled = "disabled", @placeholder = "Ínicio" } })
                             <span asp-validation-for="DiaInicio" class="text-danger"></span>
                         </div>
                         <div class="col-md-2 col-sm-4">
                             <label for="DiaFim">Fim</label>
-                            @Html.EditorFor(model => model.DiaFim, new { htmlAttributes = new { @class = "form-control  col-md-6", @placeholder = "Fim" } })
+                            @Html.EditorFor(model => model.DiaFim, new { htmlAttributes = new { @class = "form-control  col-md-6", @disabled = "disabled", @placeholder = "Fim" } })
                             @Html.ValidationMessageFor(model => model.DiaFim, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-md-2 col-sm-4 coddivergencia">
                             <label for="DiaFim">Código de divergência para atestado</label>
-                            <div class="input-group mb-3">
-                                @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "searchInput", @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
-                                @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
-                                </div>
-                            </div>
+                            @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @class = "form-control  col-md-12", @disabled = "disabled", @placeholder = "Código divergência..." } })
+                            @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
                         </div>
-                        <script>
-    $("#searchInput").autocomplete({
-        source: function (request, response) {
-            $.ajax({
-                url: '@Url.Action("GetSearchValue","Configuracao")',
-                dataType: "json",
-                data: { search: $("#searchInput").val() },
-                success: function (data) {
-                    response($.map(data, function (item) {
-                        return {label: item.codigo+"-"+item.descricao, value: item.codigo};
-                    }));
-                },
-                error: function (xhr, status, error) {
-                    alert("Error");
-                }
-            });
-        }
-    });
-                        </script>
                     </div>
                     <br />
                     <br />
                     <div class="row">
-                        <div class="col-xs-6 col-sm-2"> <b>Configurações de Email:</b></div>
+                        <div class="col-xs-6 col-sm-2"> <b>Configurações de email:</b></div>
                     </div>
                     <br />
                     <div class="row">
@@ -104,13 +81,13 @@
                              {
                                new SelectListItem { Text="Escolha a opção..", Value = "0"},
                                 new SelectListItem{ Text="Diário", Value = "1"},
-                                new SelectListItem{ Text="Semanal", Value = "2"}}, new { @class = "form-control grid-control" })
+                                new SelectListItem{ Text="Semanal", Value = "2"}}, new { @class = "form-control grid-control" , @disabled = "disabled" })
                         </div>
                         <div class="col-md-4 col-sm-4">
                             <label for="DiasEnvioEmail">
                                 Dias para início do envio do e-mail
                             </label>
-                            @Html.EditorFor(model => model.Qtddiadatafechamento, new { htmlAttributes = new { @class = "form-control col-md-4", @placeholder = "Ínicio envio" } })
+                            @Html.EditorFor(model => model.Qtddiadatafechamento, new { htmlAttributes = new { @class = "form-control col-md-4", @disabled = "disabled", @placeholder = "Ínicio envio" } })
                             @Html.ValidationMessageFor(model => model.Qtddiadatafechamento, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -121,7 +98,7 @@
                             <label for="TextoEmail">
                                 Assunto
                             </label>
-                            @Html.EditorFor(model => model.AssuntoEmail, new { htmlAttributes = new { @class = "form-control  col-md-12", @placeholder = "Assunto" } })
+                            @Html.EditorFor(model => model.AssuntoEmail, new { htmlAttributes = new { @class = "form-control  col-md-12", @disabled = "disabled", @placeholder = "Assunto" } })
                             @Html.ValidationMessageFor(model => model.AssuntoEmail, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -130,11 +107,10 @@
                             <label for="TextoEmail">
                                 Texto
                             </label>
-                               @Html.TextAreaFor(model => model.TextoEmail, new { @class = "form-control input-lg textarea-editor", @cols = 50, @rows = 7 })
+                            @Html.TextAreaFor(model => model.TextoEmail, new { @disabled = "disabled", @class = "form-control input-lg textarea-editor", @cols = 50, @rows = 7 })
                             @Html.ValidationMessageFor(model => model.TextoEmail, "", new { @class = "text-danger" })
                         </div>
                     </div>
-
                 }
             </div>
         </div>
@@ -146,6 +122,5 @@
     <label class="btn-ft-item-open" for="btn-ft-open">
         <span><i class="fas fa-plus"></i></span>
     </label>
-    <a  onclick="$('form').submit();" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></a>
     <a href="@Url.Action("Index", "Configuracao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
 </div>

@@ -15,7 +15,7 @@ namespace TimeSheet.Infrastructure.ServiceRepository
     {
         private readonly ConfiguracaoRepository configRepository;
         private static string Local = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase).Replace("\\", "/").Replace("file:/", "") + "/";
-        private static string Arquivo = "textEmail.txt";
+        private static string Arquivo = "textEmail.rdf";
 
         public ConfiguracaoServiceRepository(IConfiguration configuration)
         {
@@ -42,23 +42,28 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             configRepository.Update(config);
         }
 
-        public void DeleteConfiguracao(Configuracao configuracao)
+        public void DeleteConfiguracao(string codigo)
         {
-            configRepository.Remove(configuracao.Codigo);
+            configRepository.Remove(codigo);
         }
 
         public void SalvarTextoEmail(string texto)
         {
-            Leitura(texto);
+            WriteLine(texto);
         }
 
-        public static string WriteLine(string pLine)
+        public string[] ObterTextoEmail()
+        {
+           return Leitura();
+        }
+
+        public static void WriteLine(string pLine)
         {
             string lLine = string.Empty;
             try
             {
                 CreateLog();
-                using (StreamWriter file = new StreamWriter(Local + Arquivo, true))
+                using (StreamWriter file = new StreamWriter(Local + Arquivo, false))
                 {
                     lLine = String.Format(pLine);
                     file.WriteLine(lLine);
@@ -67,10 +72,9 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                Console.Read();
+              
             }
-            return lLine;
+          
         }
 
         private static void CreateLog()
@@ -80,16 +84,17 @@ namespace TimeSheet.Infrastructure.ServiceRepository
         }
 
 
-        public string[] Leitura(string pLine)
+        public string[] Leitura()
         {
             string[] lines = null;
-            if (Directory.Exists(Local))
+            if (!Directory.Exists(Local+Arquivo))
             {
-                lines = File.ReadAllLines(Local);
+                lines = File.ReadAllLines(Local+Arquivo);
                 return lines;
             }
 
             return lines;
         }
+
     }
 }

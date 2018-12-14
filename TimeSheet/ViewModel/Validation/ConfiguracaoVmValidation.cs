@@ -33,7 +33,7 @@ namespace TimeSheet.ViewModel.Validation
 
             RuleFor(x => x.AssuntoEmail)
               .NotEmpty().WithMessage("descreva o assunto email.")
-              .Length(1,250).WithMessage("O campo nome deve ter entre 1 e 250 caracteres");
+              .Length(1,26).WithMessage("O campo assunto deve ter entre 1 e 26 caracteres");
 
             RuleFor(c => c.TextoEmail)
              .NotEmpty().WithMessage("descreva o texto email.")

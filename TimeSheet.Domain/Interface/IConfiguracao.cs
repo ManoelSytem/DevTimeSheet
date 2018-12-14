@@ -11,7 +11,8 @@ namespace TimeSheet.Domain.Enty.Interface
         Configuracao ObterConfiguracao();
         Configuracao ObterConfiguracaoPorCodigo(string id);
         void SalvarConfiguracao(Configuracao config, string filial, string matricula);
-        void DeleteConfiguracao(Configuracao configuracao);
+        void DeleteConfiguracao(string codigo);
         void SalvarTextoEmail(string texto);
+        string[] ObterTextoEmail();
     }
 }

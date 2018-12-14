@@ -47,7 +47,7 @@
                     <div class="row">
                         <div class="col-xs-6 col-sm-2">
                             <label for="DiaMesLimiteFecha">Dia do mês limite fechamento</label>
-                            @Html.HiddenFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control", @placeholder = "",} })
+                            @Html.HiddenFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control", @placeholder = "", } })
                             @Html.EditorFor(model => model.DiaMesLimiteFecha, new { htmlAttributes = new { @class = "form-control col-md-6", @placeholder = "Dia do Mês" } })
                             <span asp-validation-for="DiaMesLimiteFecha" class="text-danger"></span>
                         </div>
@@ -63,10 +63,35 @@
                         </div>
                         <div class="col-md-2 col-sm-4 coddivergencia">
                             <label for="DiaFim">Código de divergência para atestado</label>
-                            @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
-                            @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
+                            <div class="input-group mb-3">
+                                @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "searchInput", @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
+                                @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <script>
+    $("#searchInput").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Action("GetSearchValue","Configuracao")',
+                dataType: "json",
+                data: { search: $("#searchInput").val() },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return {label: item.codigo+"-"+item.descricao, value: item.codigo};
+                    }));
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+        }
+    });
+                    </script>
+
                     <br />
                     <br />
                     <div class="row">
@@ -108,7 +133,7 @@
                             <label for="TextoEmail">
                                 Texto
                             </label>
-                            @Html.TextAreaFor(model => model.TextoEmail, new { @class = "form-control required", @cols = 50, @rows = 7 })
+                            @Html.TextAreaFor(model => model.TextoEmail, new { @class = "form-control input-lg textarea-editor", @cols = 50, @rows = 7 })
                             @Html.ValidationMessageFor(model => model.TextoEmail, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -118,7 +143,7 @@
         </div>
     </div>
 </div>
-
+ 
 <div class="btn-ft">
     <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
     <label class="btn-ft-item-open" for="btn-ft-open">

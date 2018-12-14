@@ -9,7 +9,7 @@
     <div class="card">
         <div class="body">
             <div class="alert alert-success">
-                <strong>Configuração excluida!</strong>
+                <strong>Configuração excluída!</strong>
             </div>
         </div>
     </div>
@@ -46,6 +46,7 @@
                     <div class="row">
                         <div class="col-xs-6 col-sm-2">
                             <label for="DiaMesLimiteFecha">Dia do mês limite fechamento</label>
+                            @Html.HiddenFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control", @placeholder = "", } })
                             @Html.EditorFor(model => model.DiaMesLimiteFecha, new { htmlAttributes = new { @class = "form-control col-md-6", @disabled = "disabled", @placeholder = "Dia do Mês" } })
                             <span asp-validation-for="DiaMesLimiteFecha" class="text-danger"></span>
                         </div>
@@ -65,6 +66,25 @@
                             @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <script>
+    $("#searchInput").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Action("GetSearchValue","Configuracao")',
+                dataType: "json",
+                data: { search: $("#searchInput").val() },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return {label: item.codigo+"-"+item.descricao, value: item.codigo};
+                    }));
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+        }
+    });
+                    </script>
                     <br />
                     <br />
                     <div class="row">
@@ -106,7 +126,7 @@
                             <label for="TextoEmail">
                                 Texto
                             </label>
-                            @Html.TextAreaFor(model => model.TextoEmail, new { @class = "form-control required", @disabled = "disabled", @cols = 50, @rows = 7 })
+                            @Html.TextAreaFor(model => model.TextoEmail, new { @disabled = "disabled", @class = "form-control input-lg textarea-editor", @cols = 50, @rows = 7 })
                             @Html.ValidationMessageFor(model => model.TextoEmail, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -122,5 +142,5 @@
         <span><i class="fas fa-plus"></i></span>
     </label>
     <a href="#" onclick="$('form').submit();" class="btn-ft-item" tooltip="Excluir"><i class="fas fa-trash"></i></a>
-    <a href="@Url.Action("Delete", "Configuracao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
+    <a href="@Url.Action("Index", "Configuracao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
 </div>

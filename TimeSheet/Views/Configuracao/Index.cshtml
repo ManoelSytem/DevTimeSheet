@@ -43,9 +43,9 @@
                             <td>@Html.DisplayFor(modelItem => item.DiaFim)</td>
                             <td>@Html.DisplayFor(modelItem => item.CodDivergencia)</td>
                             <td>
-                                <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("#", "Configuracao", new { id = item.Codigo})'"><i class="fas fa-file"></i></button>
+                                <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "Configuracao", new { id = item.Codigo})'"><i class="fas fa-file"></i></button>
                                 <button type="button" class="btn btn-sm btn-editar" name="editar" onclick="location.href='@Url.Action("Edit", "Configuracao", new { id = item.Codigo})'"><i class="fas fa-pen"></i></button>
-                                <button type="button" class="btn btn-sm btn-excluir" name="excluir" onclick="location.href=@Url.Action("Delete", "Configuracao", new { id = item.Codigo})"><i class="fas fa-trash"></i></button>
+                                <button type="button" class="btn btn-sm btn-excluir" name="excluir" onclick="location.href='@Url.Action("Delete", "Configuracao", new { id = item.Codigo})'"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>
                     }

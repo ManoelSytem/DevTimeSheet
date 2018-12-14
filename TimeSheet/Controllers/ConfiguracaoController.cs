@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,7 +50,22 @@ namespace TimeSheet.Controllers
         // GET: Configuracao/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            try
+            {
+                List<ViewModelConfiguracao> listaConfig = new List<ViewModelConfiguracao>();
+                var viewModelConfiguracao = _mapper.Map<ViewModelConfiguracao>(_config.ObterConfiguracao());
+                foreach (string value in _config.ObterTextoEmail())
+                {
+                    viewModelConfiguracao.TextoEmail += value;
+                }
+                listaConfig.Add(viewModelConfiguracao);
+                return View(viewModelConfiguracao);
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
         }
 
         // GET: Configuracao/Create
@@ -96,6 +112,10 @@ namespace TimeSheet.Controllers
                 List<ViewModelConfiguracao> listaConfig = new List<ViewModelConfiguracao>();
                 var viewModelConfiguracao = _mapper.Map<ViewModelConfiguracao>(_config.ObterConfiguracao());
                  listaConfig.Add(viewModelConfiguracao);
+                foreach (string value in _config.ObterTextoEmail())
+                {
+                    viewModelConfiguracao.TextoEmail += value;
+                }
                 return View(viewModelConfiguracao);
             }
             catch (Exception e)
@@ -146,6 +166,10 @@ namespace TimeSheet.Controllers
             {
                 List<ViewModelConfiguracao> listaConfig = new List<ViewModelConfiguracao>();
                 var viewModelConfiguracao = _mapper.Map<ViewModelConfiguracao>(_config.ObterConfiguracao());
+                foreach (string value in _config.ObterTextoEmail())
+                {
+                    viewModelConfiguracao.TextoEmail += value;
+                }
                 listaConfig.Add(viewModelConfiguracao);
                 return View(viewModelConfiguracao);
             }
@@ -163,8 +187,7 @@ namespace TimeSheet.Controllers
         {
             try
             {
-                var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
-                _config.DeleteConfiguracao(configuracao);
+                _config.DeleteConfiguracao(Convert.ToString(viewConfiguracao.Codigo));
                 TempData["CreateSucesso"] = true;
                 return RedirectToAction("Index","Configuracao");
             }
