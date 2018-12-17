@@ -24,4 +24,3 @@ C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcore
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.AssemblyInfo.cs
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.dll
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.pdb
-C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.csprojAssemblyReference.cache

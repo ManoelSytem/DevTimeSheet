@@ -20,14 +20,14 @@ namespace TimeSheet.Infrastructure.Repository
             Conexao = new OracleConnection(ConnectionString);
         }
 
-        public CodDivergencia ObterCodigoDivergenciaPorContigo(int cod)
+        public CodDivergencia ObterCodigoDivergenciaPorCodigo(string cod)
         {
             try
             {
                    Conexao.Open();
                     var sql = $@"SELECT P6_CODIGO as Codigo, P6_DESC as Descricao  FROM SP6010
-                                WHERE P6_CODIGO = LTRIM(RTRIM('{cod}')) AND D_E_L_E_T_ <> '*'";
-                  return Conexao.QueryFirstOrDefault<CodDivergencia>(sql);
+                                WHERE P6_CODIGO LIKE LTRIM(RTRIM('%{cod}%')) AND D_E_L_E_T_ <> '*'";
+                   return Conexao.QueryFirstOrDefault<CodDivergencia>(sql);
             }
             catch (Exception ex)
             {
@@ -44,12 +44,13 @@ namespace TimeSheet.Infrastructure.Repository
             try
             {
                 Conexao.Open();
-                var sql = $@"SELECT P6_CODIGO as Codigo, P6_DESC as Descricao  FROM SP6010
-                                WHERE  (P6_DESC LIKE LTRIM(RTRIM('%{descId}%')) OR P6_CODIGO = LTRIM(RTRIM('%{descId}%'))) AND D_E_L_E_T_ <> '*'";
+                 var sql = $@"SELECT P6_CODIGO as Codigo, P6_DESC as Descricao  FROM SP6010
+                                WHERE (P6_DESC LIKE LTRIM(RTRIM('%{descId}%')) OR P6_CODIGO LIKE LTRIM(RTRIM('%{descId}%'))) AND D_E_L_E_T_ <> '*'";
                 return Conexao.Query<CodDivergencia>(sql);
             }
             catch (Exception ex)
             {
+
                 throw ex;
             }
             finally

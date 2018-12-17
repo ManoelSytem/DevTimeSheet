@@ -39,3 +39,4 @@ C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\TimeSheet.csproj.CopyComplete
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\TimeSheet.dll
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\TimeSheet.pdb
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\Configuracao\Details.g.cshtml.cs

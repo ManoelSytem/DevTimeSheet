@@ -14,22 +14,22 @@ namespace TimeSheet.ViewModel.Validation
             //Aqui adicionamos as validações de entrada
             RuleFor(x => x.DiaMesLimiteFecha)
                 .NotEmpty().WithMessage("* obrigatório")
-                .Must(DiaLimiteMesExiste).WithMessage("Dia calêndario não existe");
+                .Must(DiaLimiteMesExiste).WithMessage("Dia calendário não existe");
 
             RuleFor(x => x.Qtddiadatafechamento)
                            .NotEmpty().WithMessage("* obrigatório")
-                           .Must(EmailEnvio).WithMessage("Dia calêndario não existe");
+                           .Must(EmailEnvio).WithMessage("Dia calendário não existe");
 
             RuleFor(x => x.DiaInicio)
                           .NotEmpty().WithMessage("* obrigatório")
-                          .Must(DiaInicio).WithMessage("Dia calêndario não existe");
+                          .Must(DiaInicio).WithMessage("Dia calendário não existe");
 
             RuleFor(x => x.CodDivergencia)
                           .NotEmpty().WithMessage("* obrigatório");
-            
+                 
             RuleFor(x => x.DiaFim)
                     .NotEmpty().WithMessage("* obrigatório")
-                    .Must(DiaFim).WithMessage("Dia calêndario não existe"); 
+                    .Must(DiaFim).WithMessage("Dia calendário não existe"); 
 
             RuleFor(x => x.AssuntoEmail)
               .NotEmpty().WithMessage("descreva o assunto email.")

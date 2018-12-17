@@ -79,27 +79,36 @@ namespace TimeSheet.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ViewModelConfiguracao viewConfiguracao)
         {
+            TempData["CreateSucesso"] = null;
             try
             {
                 if (ModelState.IsValid)
                 {
+
                     viewConfiguracao.ValidarDiaInicioFim();
                     viewConfiguracao.ValidarDatalimiteEntrePeriodo();
                     viewConfiguracao.ValidarFrequenciaSelecionada();
-                    var codiviergencia = _mapper.Map<CodDivergenciaViewModel>(_prothuesService.ObterCodigoDivergenciaPorContigo(viewConfiguracao.CodDivergencia));
+                    var codiviergencia = _mapper.Map<CodDivergenciaViewModel>(_prothuesService.ObterCodigoDivergenciaPorCodigo(viewConfiguracao.CodDivergencia));
                     codiv = new CodDivergenciaViewModel();
+                    codiv.ValidaCodigoDivergencia(codiviergencia);
                     codiv.codigo = codiviergencia.codigo;
                     var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
                     _config.SalvarConfiguracao(configuracao, User.GetDados("FILIAL")?.Split(',').First(), User.GetDados("MATRICULA")?.Split(',').First());
                     _config.SalvarTextoEmail(viewConfiguracao.TextoEmail);
                     TempData["CreateSucesso"] = true;
-                    return View();
+                    return RedirectToAction("Index", "Configuracao");
                 }
                 return View(viewConfiguracao);
             }
             catch(Exception e)
             {
-                TempData["Createfalse"] = e.Message;
+                if (codiv.ValidaConfiguracaoExiste(e.Message) != null)
+                {
+                    TempData["Createfalse"] = codiv.ValidaConfiguracaoExiste(e.Message);
+                }else
+                {
+                    TempData["Createfalse"] = e.Message;
+                }
                 return View(viewConfiguracao);
             }
         }
@@ -107,6 +116,7 @@ namespace TimeSheet.Controllers
         // GET: Configuracao/Edit/5
         public ActionResult Edit(int id)
         {
+            TempData["CreateSucesso"] = null;
             try
             {
                 List<ViewModelConfiguracao> listaConfig = new List<ViewModelConfiguracao>();
@@ -131,6 +141,7 @@ namespace TimeSheet.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ViewModelConfiguracao viewConfiguracao)
         {
+            TempData["CreateSucesso"] = null;
             try
             {
                 if (ModelState.IsValid)
@@ -142,7 +153,7 @@ namespace TimeSheet.Controllers
                     viewConfiguracao.FilialProtheus = User.GetDados("FILIAL")?.Split(',').First();
                     viewConfiguracao.MatriculaUsuario = User.GetDados("MATRICULA")?.Split(',').First();
                     var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
-                    var codiviergencia = _mapper.Map<CodDivergenciaViewModel>(_prothuesService.ObterCodigoDivergenciaPorContigo(viewConfiguracao.CodDivergencia));
+                    var codiviergencia = _mapper.Map<CodDivergenciaViewModel>(_prothuesService.ObterCodigoDivergenciaPorCodigo(viewConfiguracao.CodDivergencia));
                     codiv = new CodDivergenciaViewModel();
                     codiv.ValidaCodigoDivergencia(codiviergencia);
                     _config.AtualizarConfiguracao(configuracao);

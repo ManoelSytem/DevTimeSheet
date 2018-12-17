@@ -15,7 +15,7 @@ namespace TimeSheet.Domain
         public int Qtddiadatafechamento { get; set; }
         public int DiaInicio { get; set; }
         public int DiaFim { get; set; }
-        public int CodDivergencia { get; set; }
+        public string CodDivergencia { get; set; }
 
     }
 

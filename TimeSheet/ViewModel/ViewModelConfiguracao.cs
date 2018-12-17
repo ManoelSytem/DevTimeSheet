@@ -19,7 +19,7 @@ namespace TimeSheet.ViewModel
         public string AssuntoEmail { get; set; }
         public string TextoEmail { get; set; }
         public string Matricula { get; set; }
-        public int CodDivergencia { get; set; }
+        public string CodDivergencia { get; set; }
         
 
       
@@ -79,6 +79,14 @@ namespace TimeSheet.ViewModel
             if (codDivergencia != null);
             else
                 throw new Exception("Código de divergência não encontrado");
+        }
+
+        public string ValidaConfiguracaoExiste(string erro)
+        {
+            if (erro.Substring(0, 9) == "ORA-00001") {
+                return "Já existe uma configuração ativa";
+            }                
+            return null;
         }
     }
 }
