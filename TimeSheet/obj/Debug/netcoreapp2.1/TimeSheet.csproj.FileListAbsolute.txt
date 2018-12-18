@@ -119,3 +119,5 @@ C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Delete.g.cshtml.cs
 C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Delete.g.cshtml.cs
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Configuracao\Details.g.cshtml.cs
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Marcacao\CadastrarHora.g.cshtml.cs
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Marcacao\Index.g.cshtml.cs

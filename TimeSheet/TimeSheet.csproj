@@ -17,8 +17,4 @@
     <ProjectReference Include="..\TimeSheet.Infrastructure\TimeSheet.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Marcacao\" />
-  </ItemGroup>
-
 </Project>

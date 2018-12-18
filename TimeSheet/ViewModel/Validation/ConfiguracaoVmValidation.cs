@@ -8,7 +8,6 @@ namespace TimeSheet.ViewModel.Validation
 {
     public class ConfiguracaoVmValidation : AbstractValidator<ViewModelConfiguracao>
     {
-        public ViewModelConfiguracao viewModelConfig;
         public ConfiguracaoVmValidation()
         {
             //Aqui adicionamos as validações de entrada

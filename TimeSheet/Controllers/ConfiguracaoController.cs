@@ -14,6 +14,7 @@ using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers
 {
+    [Authorize]
     public class ConfiguracaoController : Controller
     {
         private readonly IMapper _mapper;

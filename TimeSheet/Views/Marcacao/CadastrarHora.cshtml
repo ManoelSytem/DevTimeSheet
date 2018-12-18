@@ -1,0 +1,153 @@
+﻿@model TimeSheet.ViewModel.ViewModelCadastroHora
+
+@{
+    ViewData["Title"] = "Cadastro de Horas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["CreateSucesso"] != null)
+{
+    <div class="card">
+        <div class="body">
+            <div class="alert alert-success">
+                <strong>Cadastro realizado com sucesso!</strong>
+            </div>
+        </div>
+    </div>
+}@if (TempData["Createfalse"] != null)
+{
+    <div class="card">
+        <div class="alert alert-danger">
+            <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ops!  </font></font></strong><font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                    @TempData["Createfalse"].ToString();
+                </font>
+            </font>
+        </div>
+    </div>
+}
+<div class="my-row">
+    <div class="col-md-12">
+        <div class="card azulc-azule">
+            <div class="card-header">
+                @ViewBag.Title
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-4"></div>
+                        <div class="col-xs-6 col-sm-4">Período da Jornada:</div>
+                        <!-- Optional: clear the XS cols if their content doesn't match in height -->
+                        <div class="clearfix visible-xs-block"></div>
+                        <div class="col-xs-6 col-sm-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-4">
+                            <label for="DescricaodaJornada">Descrição da Jornada</label>
+                            @Html.EditorFor(model => model.DescJornada, new { htmlAttributes = new { @class = "form-control col-md-12", @placeholder = "Descrição da Jornada..." } })
+                            <span asp-validation-for="DescJornada" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                            <label for="DataInicio">Data início</label>
+                            @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                            <span asp-validation-for="DataInicio" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                            <label for="DataFim">Data fim</label>
+                            @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                            @Html.ValidationMessageFor(model => model.DataFim, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-2">
+                            <label for="JornadaDiaria">
+                                Jornada diária
+                            </label>
+                            @Html.EditorFor(model => model.JornadaDiaria, new { htmlAttributes = new { @class = "form-control col-md-6", @placeholder = "horas..." } })
+                            <span asp-validation-for="JornadaDiaria" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="row">
+                        <img src="~/images/relogio.png" alt="Smiley face" width="42" height="42">
+                        <div class="col-xs-6 col-sm-2"><h3>Horários</h3></div>
+                    </div>
+                    <br />
+                    <div style="align-content='center'" class="row">
+                        <div class="col-xs-6 col-sm-1">
+                            <label for="HoraInicioDe">
+                                Hora início de
+                            </label>
+                            @Html.EditorFor(model => model.HoraInicioDe, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-12", @placeholder = "..." } })
+                            <span asp-validation-for="HoraInicioDe" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-1 col-sm-4">
+                            <label for="HoraInicioAte">
+                                Hora início até
+                            </label>
+                            @Html.EditorFor(model => model.HoraInicioAte, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-12", @placeholder = "..." } })
+                            <span asp-validation-for="HoraInicioAte" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-1 col-sm-4">
+                            <label for="HoraFinal">
+                                Hora final
+                            </label>
+                            @Html.EditorFor(model => model.HoraFinal, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-12", @placeholder = "..." } })
+                            <span asp-validation-for="HoraFinal" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <img src="~/images/intervalo.png" alt="Smiley face" width="42" height="42">
+                        <div class="col-xs-6 col-sm-2"><h3>Intervalos</h3></div>
+                    </div>
+                    <br />
+                    <div style="align-content='center'" class="row">
+                        <div class="col-xs-6 col-sm-1">
+                            <label for="interInicio">
+                                Início
+                            </label>
+                            @Html.EditorFor(model => model.InterInicio, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-12", @placeholder = "..." } })
+                            <span asp-validation-for="InterInicio" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-1 col-sm-4">
+                            <label for="interFim">
+                                Fim
+                            </label>
+                            @Html.EditorFor(model => model.InterFim, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-12", @placeholder = "..." } })
+                            <span asp-validation-for="InterFim" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-1 col-sm-4">
+                            <label for="interMin">
+                                Mínimo
+                            </label>
+                            @Html.EditorFor(model => model.InterMin, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-12", @placeholder = "..." } })
+                            <span asp-validation-for="InterMin" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-1 col-sm-4">
+                            <label for="interMax">
+                                Máximo
+                            </label>
+                            @Html.EditorFor(model => model.InterMax, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-12", @placeholder = "..." } })
+                           <span asp-validation-for="InterMax" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="btn-ft">
+    <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
+    <label class="btn-ft-item-open" for="btn-ft-open">
+        <span><i class="fas fa-plus"></i></span>
+    </label>
+    <a onclick="$('form').submit();" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></a>
+    <a href="@Url.Action("Index", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
+</div>
