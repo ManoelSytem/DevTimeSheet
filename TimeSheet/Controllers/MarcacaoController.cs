@@ -6,7 +6,7 @@ using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     public class MarcacaoController : Controller
     {
         public IActionResult Index()
