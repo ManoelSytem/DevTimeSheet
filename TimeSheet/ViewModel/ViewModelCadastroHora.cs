@@ -21,7 +21,20 @@ namespace TimeSheet.ViewModel
 
         public ViewModelCadastroHora()
         {
+            this.Codigo = "1";
+            this.DescJornada = "Bahia Gás";
+            this.DataInicio = DateTime.Now.Date;
+            this.DataFim = DateTime.Now.Date;
+            this.JornadaDiaria = 8;
+            this.HoraInicioDe = TimeSpan.Parse("08:00:00");
+            this.HoraInicioAte = TimeSpan.Parse("12:00:00");
+            this.HoraFinal = TimeSpan.Parse("18:00:00");
 
+            this.InterInicio = TimeSpan.Parse("12:00:00");
+            this.InterFim = TimeSpan.Parse("14:00:00");
+
+            this.InterMin = TimeSpan.Parse("01:00:00");
+            this.InterMax = TimeSpan.Parse("12:00:00");
         }
 
         public void ValidaHorario()

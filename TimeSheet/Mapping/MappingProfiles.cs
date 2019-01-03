@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeSheet.Domain;
+using TimeSheet.Domain.Enty;
 using TimeSheet.ViewModel;
 
 namespace TimeSheet.Mapping
@@ -15,6 +16,8 @@ namespace TimeSheet.Mapping
             CreateMap<Configuracao, ViewModelConfiguracao>().ReverseMap();
 
             CreateMap<CodDivergencia, CodDivergenciaViewModel>().ReverseMap();
+
+            CreateMap<JornadaTrabalho, ViewModelCadastroHora>().ReverseMap();
         }
 
     }

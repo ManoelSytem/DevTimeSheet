@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TimeSheet.Authorization;
 using TimeSheet.Domain.Enty.Interface;
+using TimeSheet.Domain.Interface;
 using TimeSheet.Infrastructure.ServiceRepository;
 
 namespace TimeSheet
@@ -33,6 +34,7 @@ namespace TimeSheet
             services.AddSingleton<IAuthorizationHandler, OperationAuthorizationHandler>();
             services.AddSingleton<IConfiguracao, ConfiguracaoServiceRepository>();
             services.AddSingleton<IProtheus, ProtheusServiceRepository>();
+            services.AddSingleton<IJornadaTrabalho, JornadaTrbServiceRepository>();
 
         }
 

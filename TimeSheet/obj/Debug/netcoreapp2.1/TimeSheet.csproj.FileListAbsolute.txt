@@ -126,3 +126,4 @@ C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Marcacao\Cadastrar
 C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Marcacao\Index.g.cshtml.cs
 C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\JornadaTrabalho\Index.g.cshtml.cs
 C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\JornadaTrabalho\CadastrarHora.g.cshtml.cs
+C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\JornadaTrabalho\Edit.g.cshtml.cs
