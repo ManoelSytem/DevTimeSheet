@@ -16,20 +16,26 @@ namespace TimeSheet.Controllers
     {
         private readonly IJornadaTrabalho _jornadaTrbServiceRepository;
         private readonly IMapper _mapper;
-        private List<ViewModelCadastroHora> _jrtbList;
 
         public JornadaTrabalhoController(IJornadaTrabalho jornadaTrb, IMapper mapper)
         {
             _jornadaTrbServiceRepository = jornadaTrb;
             _mapper = mapper;
-            _jrtbList = new List<ViewModelCadastroHora>();
+         
         }
         public IActionResult Index()
         {
-            
-            var cadhoras = new ViewModelCadastroHora();
-            _jrtbList.Add(cadhoras);
-            return View(_jrtbList);
+            try
+            {
+              
+                return View(_jornadaTrbServiceRepository.ObterListJornada());
+
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
         }
 
         public IActionResult CadastrarHora()
@@ -51,10 +57,10 @@ namespace TimeSheet.Controllers
                     viewModelCadastroHora.ValidaIntervalo();
                     viewModelCadastroHora.ValidaJornadaDiaria();
                     viewModelCadastroHora.ValidaData();
-                    _jrtbList.Add(viewModelCadastroHora);
+                    
 
-                  //  var JornadaTrb = _mapper.Map<JornadaTrabalho>(viewModelCadastroHora);
-                  //  _jornadaTrbServiceRepository.SalvarJornada(JornadaTrb);
+                    var JornadaTrb = _mapper.Map<JornadaTrabalho>(viewModelCadastroHora);
+                    _jornadaTrbServiceRepository.SalvarJornada(JornadaTrb);
                     TempData["CreateSucesso"] = true;
                     return RedirectToAction("Index", "JornadaTrabalho");
                 }
@@ -74,8 +80,7 @@ namespace TimeSheet.Controllers
             {
                 //var viewMJrtb = _mapper.Map<ViewModelConfiguracao>(_jornadaTrbServiceRepository.ObterJornadaPorCodigo(id));
                 var cadhoras = new ViewModelCadastroHora();
-                _jrtbList.Add(cadhoras);
-                return View(_jrtbList.First());
+                return View();
             }
             catch (Exception e)
             {

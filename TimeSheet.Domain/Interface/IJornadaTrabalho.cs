@@ -8,7 +8,7 @@ namespace TimeSheet.Domain.Interface
         void SalvarJornada(JornadaTrabalho item);
         void AtualizarJornada(JornadaTrabalho item);
         void DeleteJornada(string codigo);
-        IEnumerable<JornadaTrabalho> ObterListJornada();
+        List<JornadaTrabalho> ObterListJornada();
         JornadaTrabalho ObterJornadaPorCodigo(string codigo);
     }
 }

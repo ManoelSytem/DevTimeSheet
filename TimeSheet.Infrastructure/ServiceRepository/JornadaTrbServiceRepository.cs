@@ -37,9 +37,9 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             throw new NotImplementedException();
         }
 
-        public IEnumerable<JornadaTrabalho> ObterListJornada()
+        public List<JornadaTrabalho> ObterListJornada()
         {
-            throw new NotImplementedException();
+            return _jornadaTrbRepository.FindAll();
         }
 
     }

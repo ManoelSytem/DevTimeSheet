@@ -11,7 +11,8 @@ namespace TimeSheet.ViewModel.Validation
         public CadastroVmValidation()
         {
             RuleFor(x => x.DescJornada)
-              .NotEmpty().WithMessage("* obrigatório");
+             .NotEmpty().WithMessage("* obrigatório")
+            .Length(1, 30).WithMessage("O campo não deve ser maior que 30 caracteres");
 
             RuleFor(x => x.DataInicio)
                                .NotEmpty().WithMessage("* obrigatório");

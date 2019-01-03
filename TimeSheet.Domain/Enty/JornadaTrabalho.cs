@@ -19,4 +19,20 @@ namespace TimeSheet.Domain.Enty
         public TimeSpan InterMin { get; set; }
         public TimeSpan InterMax { get; set; }
     }
+
+    public class JornadaTrabalhoDb
+    {
+        public string Codigo { get; set; }
+        public string DescJornada { get; set; }
+        public DateTime DataInicio { get; set; }
+        public DateTime DataFim { get; set; }
+        public double JornadaDiaria { get; set; }
+        public string HoraInicioDe { get; set; }
+        public string HoraInicioAte { get; set; }
+        public string HoraFinal { get; set; }
+        public string InterInicio { get; set; }
+        public string InterFim { get; set; }
+        public string InterMin { get; set; }
+        public string InterMax { get; set; }
+    }
 }
