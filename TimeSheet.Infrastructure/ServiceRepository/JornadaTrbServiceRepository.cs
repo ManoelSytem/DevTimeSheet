@@ -24,7 +24,7 @@ namespace TimeSheet.Infrastructure.ServiceRepository
 
         public void AtualizarJornada(JornadaTrabalho item)
         {
-            throw new NotImplementedException();
+            _jornadaTrbRepository.Update(item);
         }
 
         public void DeleteJornada(string codigo)
@@ -34,7 +34,7 @@ namespace TimeSheet.Infrastructure.ServiceRepository
 
         public JornadaTrabalho ObterJornadaPorCodigo(string codigo)
         {
-            throw new NotImplementedException();
+            return _jornadaTrbRepository.FindByID(codigo);
         }
 
         public List<JornadaTrabalho> ObterListJornada()

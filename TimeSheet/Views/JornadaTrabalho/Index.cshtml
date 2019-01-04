@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TimeSheet.ViewModel.ViewModelCadastroHora>
+﻿@model List<TimeSheet.ViewModel.ViewModelCadastroHora>
 
 @{
     ViewData["Title"] = "Jornadas de Trabalho";
@@ -32,7 +32,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.First() != null)
+                @if (Model.SingleOrDefault() != null)
                 {
                     foreach (var item in Model)
                     {

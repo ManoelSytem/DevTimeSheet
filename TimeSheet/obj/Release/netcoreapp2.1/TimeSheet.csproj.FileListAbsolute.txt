@@ -40,3 +40,8 @@ C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\TimeSheet.dll
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\TimeSheet.pdb
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\Configuracao\Details.g.cshtml.cs
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\JornadaTrabalho\CadastrarHora.g.cshtml.cs
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\JornadaTrabalho\Edit.g.cshtml.cs
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\JornadaTrabalho\Index.g.cshtml.cs
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\Marcacao\CadastrarHora.g.cshtml.cs
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\Marcacao\Index.g.cshtml.cs

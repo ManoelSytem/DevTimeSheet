@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace TimeSheet.ViewModel
 {
@@ -7,8 +7,10 @@ namespace TimeSheet.ViewModel
     {
         public string Codigo { get; set; }
         public string DescJornada { get; set; }
-        public DateTime DataInicio { get; set; }
-        public DateTime DataFim { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime? DataInicio { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime? DataFim { get; set; }
         public double JornadaDiaria { get; set; }
         public TimeSpan HoraInicioDe { get; set; }
         public TimeSpan HoraInicioAte { get; set; }
@@ -21,20 +23,7 @@ namespace TimeSheet.ViewModel
 
         public ViewModelCadastroHora()
         {
-            this.Codigo = "1";
-            this.DescJornada = "Bahia Gás";
-            this.DataInicio = DateTime.Now.Date;
-            this.DataFim = DateTime.Now.Date;
-            this.JornadaDiaria = 8;
-            this.HoraInicioDe = TimeSpan.Parse("08:00:00");
-            this.HoraInicioAte = TimeSpan.Parse("12:00:00");
-            this.HoraFinal = TimeSpan.Parse("18:00:00");
-
-            this.InterInicio = TimeSpan.Parse("12:00:00");
-            this.InterFim = TimeSpan.Parse("14:00:00");
-
-            this.InterMin = TimeSpan.Parse("01:00:00");
-            this.InterMax = TimeSpan.Parse("12:00:00");
+           
         }
 
         public void ValidaHorario()
@@ -57,8 +46,8 @@ namespace TimeSheet.ViewModel
 
         public void ValidaJornadaDiaria()
         {
-            if (!(this.JornadaDiaria == calcularJornadaDiaria()))
-                throw new Exception("Total jornada diária "+this.JornadaDiaria+"h, Total horário "+calcularJornadaDiaria()+"h! Favor verificar");
+            if (!(this.JornadaDiaria <=24))
+                throw new Exception("Total jornada diária maior que "+this.JornadaDiaria+"hs!Favor verificar");
         }
 
         public void ValidaData()

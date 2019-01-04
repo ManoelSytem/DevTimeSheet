@@ -25,7 +25,7 @@ namespace TimeSheet.Infrastructure.Repository
                 {
                     string sQuery = $@"INSERT INTO ZYV010 (ZYV_DESCR, ZYV_DTINI, ZYV_DTFIN, ZYV_JORNAD, ZYV_HRINI, ZYV_HRIFIN,ZYV_HFINAL, ZYV_INTINI,ZYV_INTFIN, ZYV_INTMIN,ZYV_INTMAX)
                                     VALUES('{item.DescJornada}', replace('{item.DataInicio.ToString("dd/MM/yyyy")}','/'), replace('{item.DataFim.ToString("dd/MM/yyyy")}','/'), {item.JornadaDiaria}, '{item.HoraInicioDe}','{item.HoraInicioAte}',
-                                               '{item.HoraFinal}',  '{item.InterInicio}', '{item.InterFim}',{item.InterMin.Hours}, {item.InterMax.Hours})";
+                                               '{item.HoraFinal}',  '{item.InterInicio}', '{item.InterFim}','{item.InterMin}', '{item.InterMax}')";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
                 }
@@ -93,8 +93,11 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
-                    string sQuery = $@"INSERT INTO ZYX010 (ZYX_FILIAL,ZYX_CODIGO, ZYX_DLIFEC,  ZYX_FEMAIL, ZYX_DEMAIL, ZYX_INIMAR, ZYX_FINMAR, ZYX_CODDIV,ZYX_MATUSU,ZYX_AEMAIL)"
-                                    + "VALUES()";
+                    string sQuery = $@"UPDATE ZYV010
+                            SET ZYV_DESCR = '{item.DescJornada}' , ZYV_DTINI = replace('{item.DataInicio.ToString("dd/MM/yyyy")}','/'), ZYV_DTFIN = replace('{item.DataFim.ToString("dd/MM/yyyy")}','/'),
+                            ZYV_JORNAD = {item.JornadaDiaria}, ZYV_HRINI = '{item.HoraInicioDe}', ZYV_HRIFIN =  '{item.HoraInicioAte}', ZYV_HFINAL =  '{item.HoraFinal}',
+                            ZYV_INTINI= '{item.InterInicio}', ZYV_INTFIN = '{item.InterFim}',  ZYV_INTMIN = '{item.InterFim}', ZYV_INTMAX = '{item.InterMax}'
+                            WHERE ZYV_CODIGO ='{item.Codigo}'";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
                 }
@@ -105,9 +108,42 @@ namespace TimeSheet.Infrastructure.Repository
             }
         }
 
-        public  JornadaTrabalho FindByID(int id)
+        public JornadaTrabalho FindByID(string codigo)
         {
-            throw new NotImplementedException();
+            JornadaTrabalho jornadaTrabalho = new JornadaTrabalho();
+            using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+            {
+                dbConnection.Open();
+                var sQuery = $@"Select LTRIM(RTRIM(ZYV_CODIGO)) AS Codigo,
+                                     LTRIM(RTRIM(ZYV_DESCR)) AS DescJornada,
+                                    TO_DATE(LTRIM(RTRIM(ZYV_DTINI)),'DD/MM/RRRR') AS DataInicio,
+                                    TO_DATE(LTRIM(RTRIM(ZYV_DTFIN)),'DD/MM/RRRR')  AS DataFim,
+                                     LTRIM(RTRIM(ZYV_JORNAD)) AS JornadaDiaria,
+                                     LTRIM(RTRIM(ZYV_HRINI)) AS HoraInicioDe,
+                                     LTRIM(RTRIM(ZYV_HRIFIN)) AS HoraInicioAte,
+                                     LTRIM(RTRIM(ZYV_HFINAL)) AS HoraFinal,
+                                     LTRIM(RTRIM(ZYV_INTINI)) AS InterInicio,
+                                     LTRIM(RTRIM(ZYV_INTFIN)) AS InterFim,
+                                     LTRIM(RTRIM(ZYV_INTMIN)) AS InterMin,
+                                     LTRIM(RTRIM(ZYV_INTMAX)) AS InterMax 
+                                     from ZYV010
+                                     WHERE ZYV_CODIGO = '{codigo}' AND D_E_L_E_T_  <> '*'";
+                var QueryResult = dbConnection.QueryFirstOrDefault<JornadaTrabalhoDb>(sQuery);
+
+                    jornadaTrabalho.Codigo = QueryResult.Codigo;
+                    jornadaTrabalho.DescJornada = QueryResult.DescJornada;
+                    jornadaTrabalho.DataInicio = QueryResult.DataInicio;
+                    jornadaTrabalho.DataFim = QueryResult.DataFim;
+                    jornadaTrabalho.HoraInicioDe = TimeSpan.Parse(QueryResult.HoraInicioDe);
+                    jornadaTrabalho.HoraInicioAte = TimeSpan.Parse(QueryResult.HoraInicioAte);
+                    jornadaTrabalho.HoraFinal = TimeSpan.Parse(QueryResult.HoraFinal);
+                    jornadaTrabalho.InterInicio = TimeSpan.Parse(QueryResult.InterInicio);
+                    jornadaTrabalho.InterFim = TimeSpan.Parse(QueryResult.InterFim);
+                    jornadaTrabalho.InterMin = TimeSpan.Parse(QueryResult.InterMin);
+                    jornadaTrabalho.InterMax = TimeSpan.Parse(QueryResult.InterMax);
+                    jornadaTrabalho.JornadaDiaria = QueryResult.JornadaDiaria;
+                return jornadaTrabalho;
+            }
         }
 
         public void Remove(string id)
@@ -115,6 +151,5 @@ namespace TimeSheet.Infrastructure.Repository
             throw new NotImplementedException();
         }
 
-        
     }
 }

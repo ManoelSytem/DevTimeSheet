@@ -27,8 +27,9 @@ namespace TimeSheet.Controllers
         {
             try
             {
-              
-                return View(_jornadaTrbServiceRepository.ObterListJornada());
+             
+                var list = _mapper.Map<List<JornadaTrabalho>, List<ViewModelCadastroHora>>(_jornadaTrbServiceRepository.ObterListJornada());
+                return View(list);
 
             }
             catch (Exception e)
@@ -78,9 +79,8 @@ namespace TimeSheet.Controllers
             TempData["CreateSucesso"] = null;
             try
             {
-                //var viewMJrtb = _mapper.Map<ViewModelConfiguracao>(_jornadaTrbServiceRepository.ObterJornadaPorCodigo(id));
-                var cadhoras = new ViewModelCadastroHora();
-                return View();
+                var viewMJrtb = _mapper.Map<ViewModelCadastroHora>(_jornadaTrbServiceRepository.ObterJornadaPorCodigo(id));
+                return View(viewMJrtb);
             }
             catch (Exception e)
             {
