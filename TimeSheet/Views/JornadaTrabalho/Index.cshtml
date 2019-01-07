@@ -1,7 +1,7 @@
 ﻿@model List<TimeSheet.ViewModel.ViewModelCadastroHora>
 
 @{
-    ViewData["Title"] = "Jornadas de Trabalho";
+    ViewData["Title"] = "Cadastro de Jornada";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -32,7 +32,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.SingleOrDefault() != null)
+                @if (Model != null)
                 {
                     foreach (var item in Model)
                     {

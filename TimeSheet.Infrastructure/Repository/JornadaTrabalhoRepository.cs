@@ -23,9 +23,9 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
-                    string sQuery = $@"INSERT INTO ZYV010 (ZYV_DESCR, ZYV_DTINI, ZYV_DTFIN, ZYV_JORNAD, ZYV_HRINI, ZYV_HRIFIN,ZYV_HFINAL, ZYV_INTINI,ZYV_INTFIN, ZYV_INTMIN,ZYV_INTMAX)
+                    string sQuery = $@"INSERT INTO ZYV010 (ZYV_DESCR, ZYV_DTINI, ZYV_DTFIN, ZYV_JORNAD, ZYV_HRINI, ZYV_HRIFIN,ZYV_HFINAL, ZYV_INTINI,ZYV_INTFIN, ZYV_INTMIN,ZYV_INTMAX, R_E_C_N_O_)
                                     VALUES('{item.DescJornada}', replace('{item.DataInicio.ToString("dd/MM/yyyy")}','/'), replace('{item.DataFim.ToString("dd/MM/yyyy")}','/'), {item.JornadaDiaria}, '{item.HoraInicioDe}','{item.HoraInicioAte}',
-                                               '{item.HoraFinal}',  '{item.InterInicio}', '{item.InterFim}','{item.InterMin}', '{item.InterMax}')";
+                                               '{item.HoraFinal}',  '{item.InterInicio}', '{item.InterFim}','{item.InterMin}', '{item.InterMax}', (SELECT MAX(X.R_E_C_N_O_)+1 FROM ZYV010 X))";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
                 }
@@ -40,8 +40,8 @@ namespace TimeSheet.Infrastructure.Repository
         {
             try
             {
-                List<JornadaTrabalho> listJornadaTrabalho = new List<JornadaTrabalho>();
-                JornadaTrabalho jornadaTrabalho = new JornadaTrabalho();
+                   List<JornadaTrabalho> listJornadaTrabalho = new List<JornadaTrabalho>();
+                JornadaTrabalho jornadaTrabalho;
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
                    
@@ -57,12 +57,12 @@ namespace TimeSheet.Infrastructure.Repository
                                      LTRIM(RTRIM(ZYV_INTFIN)) AS InterFim,
                                      LTRIM(RTRIM(ZYV_INTMIN)) AS InterMin,
                                      LTRIM(RTRIM(ZYV_INTMAX)) AS InterMax 
-                                     from ZYV010
-                                     WHERE D_E_L_E_T_  <> '*'";
+                                     from ZYV010 WHERE D_E_L_E_T_  <> '*'";
                       dbConnection.Open();
                     var jtResult =  dbConnection.Query<JornadaTrabalhoDb>(sQuery);
                     foreach (JornadaTrabalhoDb QueryResult in jtResult)
                     {
+                        jornadaTrabalho = new JornadaTrabalho();
                         jornadaTrabalho.Codigo = QueryResult.Codigo;
                         jornadaTrabalho.DescJornada = QueryResult.DescJornada;
                         jornadaTrabalho.DataInicio = QueryResult.DataInicio;
@@ -148,7 +148,15 @@ namespace TimeSheet.Infrastructure.Repository
 
         public void Remove(string id)
         {
-            throw new NotImplementedException();
+                using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+                {
+                    string sQuery = $@"UPDATE ZYV010 
+                                   SET D_E_L_E_T_ = '*',
+                                   R_E_C_D_E_L_ = (SELECT MAX(X.R_E_C_D_E_L_)+1 FROM ZYX010 X)
+                                   WHERE ZYV_CODIGO = '{id}'";
+                    dbConnection.Open();
+                    dbConnection.Execute(sQuery);
+                }
         }
 
     }

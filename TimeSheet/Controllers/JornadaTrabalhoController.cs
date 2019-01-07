@@ -59,7 +59,6 @@ namespace TimeSheet.Controllers
                     viewModelCadastroHora.ValidaJornadaDiaria();
                     viewModelCadastroHora.ValidaData();
                     
-
                     var JornadaTrb = _mapper.Map<JornadaTrabalho>(viewModelCadastroHora);
                     _jornadaTrbServiceRepository.SalvarJornada(JornadaTrb);
                     TempData["CreateSucesso"] = true;
@@ -79,6 +78,7 @@ namespace TimeSheet.Controllers
             TempData["CreateSucesso"] = null;
             try
             {
+
                 var viewMJrtb = _mapper.Map<ViewModelCadastroHora>(_jornadaTrbServiceRepository.ObterJornadaPorCodigo(id));
                 return View(viewMJrtb);
             }
@@ -103,7 +103,7 @@ namespace TimeSheet.Controllers
                 var JornadaTrb = _mapper.Map<JornadaTrabalho>(viewModelCadastroHora);
                 _jornadaTrbServiceRepository.AtualizarJornada(JornadaTrb);
                 TempData["CreateSucesso"] = true;
-                return View();
+                return View(viewModelCadastroHora);
             }
             catch (Exception e)
             {
@@ -111,5 +111,51 @@ namespace TimeSheet.Controllers
                 return View();
             }
         }
+
+        public ActionResult Details(string id)
+        {
+            try
+            {
+                var viewMJrtb = _mapper.Map<ViewModelCadastroHora>(_jornadaTrbServiceRepository.ObterJornadaPorCodigo(id));
+                return View(viewMJrtb);
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
+        }
+
+       
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                var viewMJrtb = _mapper.Map<ViewModelCadastroHora>(_jornadaTrbServiceRepository.ObterJornadaPorCodigo(Convert.ToString(id)));
+                return View(viewMJrtb);
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(string id)
+        {
+            try
+            {
+                _jornadaTrbServiceRepository.DeleteJornada(id);
+                return RedirectToAction("Index", "JornadaTrabalho");
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return RedirectToAction("Index", "JornadaTrabalho");
+            }
+        }
+
     }
 }

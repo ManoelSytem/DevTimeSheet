@@ -74,15 +74,7 @@
                     @if (User.CointainsPerfil(Constantes.ADMINTSHEET))
                     {
                         <li><a class="nav-link" href="@Url.Action("Index", "Configuracao")"><i class="fas fa-home fa-lg"></i><span class="link-home">Configuração</span></a></li>
-                    }
-                    @if (User.CointainsPerfil(Constantes.COORDENADOR))
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-clipboard fa-lg"></i><span class="link-cadastros">Jornada de Trabalho</span></a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="@Url.Action("Index", "JornadaTrabalho")">Cadastro de Horas</a>
-                            </div>
-                        </li>
+                        <li><a class="nav-link" href="@Url.Action("Index", "JornadaTrabalho")"><i class="fas fa-home fa-lg"></i><span class="link-home">Cadastro de Jornada</span></a></li>
                     }
                     @if (User.CointainsPerfil(Constantes.COLABORADOR) || User.CointainsPerfil(Constantes.COORDENADOR))
                     {

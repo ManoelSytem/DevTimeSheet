@@ -29,7 +29,7 @@ namespace TimeSheet.Infrastructure.ServiceRepository
 
         public void DeleteJornada(string codigo)
         {
-            throw new NotImplementedException();
+            _jornadaTrbRepository.Remove(codigo);
         }
 
         public JornadaTrabalho ObterJornadaPorCodigo(string codigo)
@@ -41,6 +41,7 @@ namespace TimeSheet.Infrastructure.ServiceRepository
         {
             return _jornadaTrbRepository.FindAll();
         }
+
 
     }
 }

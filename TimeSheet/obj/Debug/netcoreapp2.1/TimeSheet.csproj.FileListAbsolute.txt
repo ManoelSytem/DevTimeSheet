@@ -130,3 +130,5 @@ C:\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\JornadaTrabalho\Ed
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\JornadaTrabalho\CadastrarHora.g.cshtml.cs
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\JornadaTrabalho\Edit.g.cshtml.cs
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\JornadaTrabalho\Index.g.cshtml.cs
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\JornadaTrabalho\Details.g.cshtml.cs
+C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\JornadaTrabalho\Delete.g.cshtml.cs

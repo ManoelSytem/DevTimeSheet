@@ -1,7 +1,7 @@
 ﻿@model TimeSheet.ViewModel.ViewModelCadastroHora
 
 @{
-    ViewData["Title"] = "Edição de Jornada Trabalho";
+    ViewData["Title"] = "Edição de Jornada";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -47,17 +47,18 @@
                     <div class="row">
                         <div class="col-xs-6 col-sm-4">
                             <label for="DescricaodaJornada">Descrição da Jornada</label>
+                            @Html.HiddenFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control", @placeholder = "", } })
                             @Html.EditorFor(model => model.DescJornada, new { htmlAttributes = new { @class = "form-control col-md-12", @placeholder = "Descrição da Jornada..." } })
                             <span asp-validation-for="DescJornada" class="text-danger"></span>
                         </div>
                         <div class="col-md-2 col-sm-4">
                             <label for="DataInicio">Data início</label>
-                            @Html.EditorFor(model => model.DataInicio, new { htmlAttributes = new { @class = "form -control" } })
+                            <input type="date" value="@Model.DataInicio?.ToString("yyyy-MM-dd")" id="DataInicio" class="form-control" name="DataInicio" />
                             <span asp-validation-for="DataInicio" class="text-danger"></span>
                         </div>
                         <div class="col-md-2 col-sm-4">
                             <label for="DataFim">Data fim</label>
-                            @Html.EditorFor(model => model.DataFim, new { htmlAttributes = new { @class = "form -control"} })
+                            <input type="date" value="@Model.DataFim?.ToString("yyyy-MM-dd")" id="DataFim" class="form-control" name="DataFim" />
                             @Html.ValidationMessageFor(model => model.DataFim, "", new { @class = "text-danger" })
                         </div>
                     </div>
