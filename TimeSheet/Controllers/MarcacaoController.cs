@@ -18,7 +18,7 @@ namespace TimeSheet.Controllers
             return View(listCadHora);
         }
 
-        public IActionResult CadastrarHora()
+        public IActionResult Lancamento()
         {
 
             return View();
@@ -26,14 +26,13 @@ namespace TimeSheet.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CadastrarHora(ViewModelCadastroHora viewModelCadastroHora)
+        public IActionResult Lancamento(ViewModelLancamento viewModelLancamento)
         {
             try
             {
            
             if (ModelState.IsValid)
             {
-                    viewModelCadastroHora.ValidaHorario();
             }
                 return View();
             }

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<TimeSheet.ViewModel.ViewModelCadastroHora>
 
 @{
-    ViewData["Title"] = "Jornadas de Trabalho";
+    ViewData["Title"] = "Marcações";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -25,9 +25,8 @@
         <table id="tbCabecalhoMarcacao" class="table table-striped table-bordered table-hover responsive nowrap" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th>Código</th>
-                    <th>Descrição da Jornada</th>
-                    <th>Período da Jornada</th>
+                    <th style="">Mês/Ano</th>
+                    <th>Status</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -39,7 +38,6 @@
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.Codigo)</td>
                             <td>@Html.DisplayFor(modelItem => item.DescJornada)</td>
-                            <td>@Html.DisplayFor(modelItem => item.DataInicio) / @Html.DisplayFor(modelItem => item.DataFim) </td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-file"></i></button>
                                 <button type="button" class="btn btn-sm btn-editar" name="editar" onclick="location.href='@Url.Action("Edit", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-pen"></i></button>
@@ -59,7 +57,7 @@
     <label class="btn-ft-item-open" for="btn-ft-open">
         <span><i class="fas fa-plus"></i></span>
     </label>
-    <a href="@Url.Action("CadastrarHora", "JornadaTrabalho")" class="btn-ft-item" tooltip="Cadastrar Horas"><i class="fas fa-plus"></i></a>
+    <a href="@Url.Action("Lancamento", "Marcacao")" class="btn-ft-item" tooltip="Nova Marcação Diária"><i class="fas fa-plus"></i></a>
 </div>
 
 <script>
