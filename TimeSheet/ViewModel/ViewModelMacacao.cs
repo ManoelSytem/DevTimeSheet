@@ -16,7 +16,11 @@ namespace TimeSheet.ViewModel
         public string CentroCusto { get; set; }
         public string MesAno { get; set; }
         public string Status { get; set; }
+
+        public ViewModelMacacao()
+        {
+            this.MatUsuario = "01";
+        }
     }
 
-   
 }

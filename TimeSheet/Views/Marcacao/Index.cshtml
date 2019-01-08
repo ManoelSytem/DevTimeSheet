@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TimeSheet.ViewModel.ViewModelCadastroHora>
+﻿@model IEnumerable<TimeSheet.ViewModel.ViewModelMacacao>
 
 @{
     ViewData["Title"] = "Marcações";
@@ -37,7 +37,7 @@
                     {
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.Codigo)</td>
-                            <td>@Html.DisplayFor(modelItem => item.DescJornada)</td>
+                            <td>@Html.DisplayFor(modelItem => item.MatUsuario)</td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-file"></i></button>
                                 <button type="button" class="btn btn-sm btn-editar" name="editar" onclick="location.href='@Url.Action("Edit", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-pen"></i></button>

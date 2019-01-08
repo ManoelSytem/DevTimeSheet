@@ -12,3 +12,17 @@ C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Infrastructure\obj\Relea
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Infrastructure\obj\Release\netcoreapp2.1\TimeSheet.Infrastructure.csproj.CopyComplete
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Infrastructure\obj\Release\netcoreapp2.1\TimeSheet.Infrastructure.dll
 C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Infrastructure\obj\Release\netcoreapp2.1\TimeSheet.Infrastructure.pdb
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\bin\Release\netcoreapp2.1\TimeSheet.Infrastructure.deps.json
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\bin\Release\netcoreapp2.1\TimeSheet.Infrastructure.dll
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\bin\Release\netcoreapp2.1\TimeSheet.Infrastructure.pdb
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\bin\Release\netcoreapp2.1\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\bin\Release\netcoreapp2.1\TimeSheet.Domain.dll
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\bin\Release\netcoreapp2.1\TimeSheet.Domain.pdb
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\bin\Release\netcoreapp2.1\Microsoft.Extensions.Configuration.Abstractions.xml
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\obj\Release\netcoreapp2.1\TimeSheet.Infrastructure.csprojAssemblyReference.cache
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\obj\Release\netcoreapp2.1\TimeSheet.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\obj\Release\netcoreapp2.1\TimeSheet.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\obj\Release\netcoreapp2.1\TimeSheet.Infrastructure.AssemblyInfo.cs
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\obj\Release\netcoreapp2.1\TimeSheet.Infrastructure.csproj.CopyComplete
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\obj\Release\netcoreapp2.1\TimeSheet.Infrastructure.dll
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Infrastructure\obj\Release\netcoreapp2.1\TimeSheet.Infrastructure.pdb

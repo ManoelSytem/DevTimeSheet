@@ -857,10 +857,11 @@
       ]
     },
     "Microsoft.Win32.Registry/4.4.0": {
-      "sha512": "LsK5GyV3JEhOJGigiVOQVkWPHHWXNJrwK/HrILIN1WhO3LJPW7b69qWtK5sDMp68Uw4cF21nZr5ylRc5s8iawg==",
+      "sha512": "LJh1PSoqdugrCv7t+k2B919GGdq4PyrntPVlMCMrcz59nsjOstYmtGWSCiFZ3UNpxv2dlsZdcLzJ847uyOlaEA==",
       "type": "package",
       "path": "microsoft.win32.registry/4.4.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -1457,10 +1458,11 @@
       ]
     },
     "System.Reflection.TypeExtensions/4.4.0": {
-      "sha512": "JRxOAH6by+wn1gNnZc9jf2HbO/szhMJuLY2w44nEW77354WntXlFzWSVkx6280Uvcl3URZ/At+444vjX0/X1Aw==",
+      "sha512": "BWYdrACMy1Sbq7Kh1oISS+2qKX1dHhXNpRByG3c6M9i2fhU9BZqO3nFYIabmbZuQwd7svR5zfxNHgmgv2XkkIg==",
       "type": "package",
       "path": "system.reflection.typeextensions/4.4.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -1649,10 +1651,11 @@
       ]
     },
     "System.Security.Principal.Windows/4.4.0": {
-      "sha512": "yNxhQZ5oJb2Q7VqNj1Af6e+9KXzHcXJdv+eE+1Lp2+FYBwmVLQs2LfQpeSfz5RxorwlV0EpNbkLatPScb+XEWw==",
+      "sha512": "ynC5BKYwhgON6WH/yPM5ZLKc19wqC13A5fl4hZa5Lf8pQwv1YmbCPKGualWSRhEoOVWH2FzZhOXauER6al4Upg==",
       "type": "package",
       "path": "system.security.principal.windows/4.4.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -1754,10 +1757,11 @@
       ]
     },
     "System.Text.Encoding.CodePages/4.4.0": {
-      "sha512": "epF1P00AFbqPy5jZx3fpEn5qwlBDZ+dck71xYc/jLibfY6BtoFKOqoj84YHcQWV9HcWb7M13aVJ61XCdK8/3XA==",
+      "sha512": "FpAgMC+BX6OOCiRebYqHP3r3aYU7o0lopPOo4zKyGc5LWXFEYRUaKtoXXvAJ3sP+IDOK/KBxZaiVAdi+QdZ0TA==",
       "type": "package",
       "path": "system.text.encoding.codepages/4.4.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -1887,11 +1891,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\manoelneto\\source\\repos\\DevTimeSheet\\TimeSheet.Infrastructure\\TimeSheet.Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Infrastructure\\TimeSheet.Infrastructure.csproj",
       "projectName": "TimeSheet.Infrastructure",
-      "projectPath": "C:\\Users\\manoelneto\\source\\repos\\DevTimeSheet\\TimeSheet.Infrastructure\\TimeSheet.Infrastructure.csproj",
+      "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Infrastructure\\TimeSheet.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\manoelneto\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\manoelneto\\source\\repos\\DevTimeSheet\\TimeSheet.Infrastructure\\obj\\",
+      "outputPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -1910,8 +1914,8 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "C:\\Users\\manoelneto\\source\\repos\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj": {
-              "projectPath": "C:\\Users\\manoelneto\\source\\repos\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj"
+            "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj": {
+              "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj"
             }
           }
         }

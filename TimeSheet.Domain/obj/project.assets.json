@@ -693,11 +693,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\manoelneto\\source\\repos\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj",
+      "projectUniqueName": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj",
       "projectName": "TimeSheet.Domain",
-      "projectPath": "C:\\Users\\manoelneto\\source\\repos\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj",
+      "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj",
       "packagesPath": "C:\\Users\\manoelneto\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\manoelneto\\source\\repos\\DevTimeSheet\\TimeSheet.Domain\\obj\\",
+      "outputPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
