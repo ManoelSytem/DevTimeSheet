@@ -9,7 +9,7 @@ namespace TimeSheet.ViewModel
     {
         public string Filial { get; set; }
         public string Codigo { get; set; }
-        public DateTime DataDia { get; set; }
+        public string DataDia { get; set; }
         public string NomeUsuario { get; set; }
         public string NomeGerencia { get; set; }
         public string MatUsuario { get; set; }

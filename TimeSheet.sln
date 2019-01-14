@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeSheet", "TimeSheet\TimeSheet.csproj", "{082532BA-A4CA-4AFC-B5EC-5142247DC38D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSheet.Domain", "TimeSheet.Domain\TimeSheet.Domain.csproj", "{A0778EE2-4539-4EF1-B603-E4B0A8F10497}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeSheet.Domain", "TimeSheet.Domain\TimeSheet.Domain.csproj", "{A0778EE2-4539-4EF1-B603-E4B0A8F10497}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSheet.Infrastructure", "TimeSheet.Infrastructure\TimeSheet.Infrastructure.csproj", "{43E2A5C2-ABE1-4417-BEC5-FF5B9E90D6E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeSheet.Infrastructure", "TimeSheet.Infrastructure\TimeSheet.Infrastructure.csproj", "{43E2A5C2-ABE1-4417-BEC5-FF5B9E90D6E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

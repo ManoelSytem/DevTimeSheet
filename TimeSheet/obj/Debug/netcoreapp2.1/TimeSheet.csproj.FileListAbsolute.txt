@@ -181,3 +181,4 @@ C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreap
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\TimeSheet.csproj.CopyComplete
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\TimeSheet.dll
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\TimeSheet.pdb
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Lancamento\Index.g.cshtml.cs

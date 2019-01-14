@@ -60,12 +60,21 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public JsonResult ListApontamento(string matricula)
+        public JsonResult ListApontamento(string matricula,  string filial, string data)
         {
             List<Apontamento> apontamento = new List<Apontamento>();
             var ap = new Apontamento();
             apontamento.Add(ap);
             return Json(apontamento);
+        }
+
+        [HttpGet]
+        public JsonResult GetMarcacoes()
+        {
+            List<ViewModelLancamento> Lancamentos = new List<ViewModelLancamento>();
+            var lanca = new ViewModelLancamento();
+            Lancamentos.Add(lanca);
+            return Json(Lancamentos);
         }
     }
 }

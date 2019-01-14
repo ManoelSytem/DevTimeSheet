@@ -1,0 +1,151 @@
+﻿@model TimeSheet.ViewModel.ViewModelLancamento
+
+@{
+    ViewData["Title"] = "Lançamento de Marcações";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["CreateSucesso"] != null)
+{
+    <div class="card">
+        <div class="body">
+            <div class="alert alert-success">
+                <strong>Lançamento realizado com sucesso!</strong>
+            </div>
+        </div>
+    </div>
+}@if (TempData["Createfalse"] != null)
+{
+    <div class="card">
+        <div class="alert alert-danger">
+            <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ops!  </font></font></strong><font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                    @TempData["Createfalse"].ToString();
+                </font>
+            </font>
+        </div>
+    </div>
+}
+<div class="my-row">
+    <div class="col-md-12">
+        <div class="card azulc-azule">
+            <div class="card-header">
+                @ViewBag.Title
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-1">
+                            <label for="HoraInicio">Hora Início</label>
+                            @Html.EditorFor(model => model.HoraInicio, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-18", @placeholder = "Dia do Mês" } })
+                            <span asp-validation-for="HoraInicio" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-1 col-sm-4">
+                            <label for="HoraFim">Hora Fim</label>
+                            @Html.EditorFor(model => model.HoraFim, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-12", @placeholder = "Início" } })
+                            <span asp-validation-for="HoraFim" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 col-sm-2 coddivergencia">
+                            <label for="DiaFim">Emprendimentos</label>
+                            <div class="input-group mb-3">
+                                @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "#nomeEmpreendimentos", @class = "form-control  col-md-8", @placeholder = "Código divergência..." } })
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-2 coddivergencia">
+                            <label for="DiaFim">Código de divergência para atestado</label>
+                            <div class="input-group mb-3">
+                                @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "searchInput", @class = "form-control  col-md-8", @placeholder = "Código divergência..." } })
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6">
+                            <label for="TextoEmail">
+                                Observação
+                            </label>
+                            @Html.TextAreaFor(model => model.Observacao, new { @Id = "comentario", @class = "form-control comment", @cols = 50, @rows = 7 })
+                            @Html.ValidationMessageFor(model => model.Observacao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => model.Empreendimentos) (No caso de seleção múltipla, mantenha a tecla ctrl pressionada)
+                            <div class="input-group mb-3">
+                                <input id="nomeEmpreendimento" type="text" class="form-control">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                            @Html.ListBoxFor(model => model.EmpreendimentoIds, ViewBag.Empreendimentos as List<SelectListItem>, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Empreendimentos, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="btn-ft">
+    <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
+    <label class="btn-ft-item-open" for="btn-ft-open">
+        <span><i class="fas fa-plus"></i></span>
+    </label>
+    <a onclick="$('form').submit();" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></a>
+    <a href="@Url.Action("Lancamento", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
+</div>''
+<script>
+    $("#searchInput").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Action("GetSearchValue", "Lancamento")',
+                dataType: "json",
+                data: { search: $("#searchInput").val() },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item.codigo + "-" + item.descricao, value: item.codigo};
+                    }));
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+        }
+});
+                        function CarregarEmpreendimentos() {
+                            if ($("#nomeEmpreendimento").val().length >= 3) {
+                                $('.loader-overlay').show();
+                                $.ajax({
+                                    url:'@Url.Action("GetEmpreendimentos", "Lancamento")',
+                                    data: { nome: $("#nomeEmpreendimentos").val() },
+                                    type: 'get'
+                                }).done(function (data) {
+                                    CarregarDadosEmpreendimento(data);
+                                    $('.loader-overlay').hide();
+                                });
+                            } else {
+                                Information("Não é possível realizar pesquisa com menos de 3 caracteres.");
+                            }
+    }
+
+    function CarregarDadosEmpreendimento(data) {
+        $('#EmpreendimentoIds option:not(:selected)').remove();
+        for (var i in data) {
+            if ($('#EmpreendimentoIds option[value="' + data[i].id + '"]').val() === undefined) {
+                $('#EmpreendimentoIds').append('<option value="' + data[i].id + '">' + data[i].codigoProtheus + ' - ' + data[i].nome + '</option>');
+            }
+        }
+    }
+</script>
