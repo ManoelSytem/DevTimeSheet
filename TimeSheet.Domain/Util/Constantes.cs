@@ -9,5 +9,7 @@ namespace TimeSheet.Domain.Util
         public const string ADMINTSHEET = "ADMINISTRADORTIMESHEET";
         public const string COORDENADOR = "TSCOORDENADOR";
         public const string COLABORADOR = "TSCOLABORADOR";
+        public const string ABERTO = "1";
+        public const string FECHADO = "2";
     }
 }

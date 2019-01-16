@@ -11,7 +11,7 @@ using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers
 {
-    [AllowAnonymous]
+    [Authorize]
     public class JornadaTrabalhoController : Controller
     {
         private readonly IJornadaTrabalho _jornadaTrbServiceRepository;

@@ -41,7 +41,7 @@
                             <td>@Html.DisplayFor(modelItem => item.DescJornada)</td>
                             <td>@Html.DisplayFor(modelItem => item.DataInicio) / @Html.DisplayFor(modelItem => item.DataFim) </td>
                             <td>
-                                <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "JornadaTrabalho", new { id = item.Codigo})'"><i class="fas fa-file"></i></button>
+                                <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "JornadaTrabalho", new { id = item.Codigo})'"><i class="fas fa-eye"></i></button>
                                 <button type="button" class="btn btn-sm btn-editar" name="editar" onclick="location.href='@Url.Action("Edit", "JornadaTrabalho", new { id = item.Codigo})'"><i class="fas fa-pen"></i></button>
                                 <button type="button" class="btn btn-sm btn-excluir" name="excluir" onclick="location.href='@Url.Action("Delete", "JornadaTrabalho", new { id = item.Codigo})'"><i class="fas fa-trash"></i></button>
                             </td>

@@ -1,26 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace TimeSheet.ViewModel
+﻿namespace TimeSheet.ViewModel
 {
     public class ViewModelMacacao
     {
+
+       
         public string Filial { get; set; }
         public string Codigo { get; set; }
         public string DataDia { get; set; }
         public string NomeUsuario { get; set; }
-        public string NomeGerencia { get; set; }
         public string MatUsuario { get; set; }
-        public string CentroCusto { get; set; }
-        public string MesAno { get; set; }
+        public string Coordenacao { get; set; }
+        public string AnoMes { get; set; }
+        public string AnoMesDescricao { get; set; }
         public string Status { get; set; }
-
-        public ViewModelMacacao()
-        {
-            this.MatUsuario = "01";
-        }
+        public string CodLancamento { get; set; }
+        public virtual ViewModelLancamento Lancamento { get; set; }
     }
-
 }

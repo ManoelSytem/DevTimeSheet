@@ -8,7 +8,8 @@ namespace TimeSheet.Domain.Enty.Interface
     {
         IEnumerable<CodDivergencia> ObterListCodDivergenciaPordescricao(string descricao);
         CodDivergencia ObterCodigoDivergenciaPorCodigo(string cod);
-        Usuario ObterMatriculaUserPorCentroCusto(string centroCusto);
         IEnumerable<Empreendimento> ObterListEmpreendimentos(string nome);
+        List<Apontamento> ObterBatidasDePonto(string mat, string filial, string Data);
+        Usuario ObterUsuarioNome(string mat);
     }
 }

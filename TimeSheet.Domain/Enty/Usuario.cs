@@ -9,6 +9,7 @@ namespace TimeSheet.Domain.Enty
         public string SubjectId { get; set; }
         public string Nome { get; set; }
         public string Endpoint { get; set; }
+        public string Gerencia { get; set; }
         public string Email { get; set; }
     }
 }

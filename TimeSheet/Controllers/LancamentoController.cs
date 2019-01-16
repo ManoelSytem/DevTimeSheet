@@ -5,7 +5,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
+using TimeSheet.Domain.Interface;
+using TimeSheet.Domain.Util;
 using TimeSheet.Models;
 using TimeSheet.ViewModel;
 
@@ -15,22 +18,19 @@ namespace TimeSheet.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IProtheus _prothuesService;
-       
-        public LancamentoController(IConfiguracao config, IMapper mapper, IProtheus prothuesService)
+        private readonly ILancamento _lancamentoServiceRepository;
+        public LancamentoController(IConfiguracao config, IMapper mapper, IProtheus prothuesService , ILancamento lancamentoServiceRepository)
         {
             _mapper = mapper;
             _prothuesService = prothuesService;
+            _lancamentoServiceRepository = lancamentoServiceRepository;
         }
 
         public IActionResult Index()
         {
             try
             {
-                var lancamento = new ViewModelLancamento();
-                lancamento.Empreendimentos = null;
-
-                ViewBag.Empreendimentos = lancamento.Empreendimentos.Select(x => new SelectListItem($"{x.CodigoProtheus} - {x.Nome}", x.CodigoProtheus.ToString(), false))?.ToList() ?? new List<SelectListItem>();
-                return View(lancamento);
+                return View();
             }
             catch (Exception e)
             {
@@ -60,6 +60,28 @@ namespace TimeSheet.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult Edit(string data, string codlancamento)
+        {
+            try
+            {
+                var ano = data.Substring(0, 4);
+                var mes = data.Substring(5, 2);
+                var dia = data.Substring(8, 2);
+                data = ano + mes + dia;
+                ViewModelMacacao viewMarcacao = new ViewModelMacacao();
+                var lancamento = _mapper.Map<ViewModelLancamento>(_lancamentoServiceRepository.ObterLancamentoEdit(data, User.GetDados("Matricula"), codlancamento));
+                viewMarcacao.Lancamento = lancamento;
+                return View(viewMarcacao);
+
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
+
+        }
         public JsonResult GetSearchValue(string search)
         {
             List<CodDivergenciaViewModel> allsearch = _prothuesService.ObterListCodDivergenciaPordescricao(search.ToUpper()).ToList().Select(x => new CodDivergenciaViewModel
@@ -72,9 +94,9 @@ namespace TimeSheet.Controllers
             return Json(allsearch);
         }
 
-        public JsonResult GetEmpreendimentos(string search)
+        public JsonResult GetEmpreendimentos(string nome)
         {
-            return Json(_prothuesService.ObterListEmpreendimentos(search));
+            return Json(_prothuesService.ObterListEmpreendimentos(nome));
         }
 
     }

@@ -16,6 +16,11 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             _prothuesRepository = new ProtheusRepository();
         }
 
+        public List<Apontamento> ObterBatidasDePonto(string mat, string filial, string Data)
+        {
+            return _prothuesRepository.ObterListBatidaDePontoDiario(mat,  filial, Data);
+        }
+
         public CodDivergencia ObterCodigoDivergenciaPorCodigo(string cod)
         {
             return _prothuesRepository.ObterCodigoDivergenciaPorCodigo(cod);
@@ -31,9 +36,9 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             return _prothuesRepository.ObterEmpreendimentos(nome);
         }
 
-        public Usuario ObterMatriculaUserPorCentroCusto(string centroCusto)
+        public Usuario ObterUsuarioNome(string mat)
         {
-            throw new NotImplementedException();
+           return _prothuesRepository.ObterUsuarioPorMatricula(mat);
         }
     }
 }

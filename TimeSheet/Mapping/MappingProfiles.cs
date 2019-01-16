@@ -18,6 +18,10 @@ namespace TimeSheet.Mapping
             CreateMap<CodDivergencia, CodDivergenciaViewModel>().ReverseMap();
 
             CreateMap<JornadaTrabalho, ViewModelCadastroHora>().ReverseMap();
+
+            CreateMap<Marcacao, ViewModelMacacao > ().ReverseMap();
+
+            CreateMap<Lancamento, ViewModelLancamento>().ReverseMap();
         }
 
     }

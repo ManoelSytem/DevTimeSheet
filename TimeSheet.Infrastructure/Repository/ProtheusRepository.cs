@@ -62,10 +62,11 @@ namespace TimeSheet.Infrastructure.Repository
 
         public IEnumerable<Domain.Enty.Empreendimento> ObterEmpreendimentos(string nome)
         {
-          
+
             Conexao.Open();
             try
             {
+               
                 var sql = $@"SELECT LTRIM(RTRIM(SZA010.ZA_COD)) AS CodigoProtheus
                               ,LTRIM(RTRIM(SZA010.ZA_DESC)) AS Nome
                               ,SZA010.ZA_FASE
@@ -93,5 +94,66 @@ namespace TimeSheet.Infrastructure.Repository
                 Conexao.Close();
             }
         }
+
+
+        public List<Domain.Enty.Apontamento> ObterListBatidaDePontoDiario(string mat, string filial, string Data)
+        {
+            Conexao.Open();
+            try
+            {
+                List<Apontamento> listApontamento = new List<Apontamento>();
+                Apontamento apontamento;
+                var sql = $@"Select  P8_HORA AS hora from SP8010
+                         where P8_MAT = LTRIM(RTRIM('{mat}'))  AND P8_FILIAL = LTRIM(RTRIM('{filial}')) 
+                          AND D_E_L_E_T_ <> '*' AND P8_APONTA = 'S' AND P8_DATA = LTRIM(RTRIM('{Data}'))";
+                var QueryResult = Conexao.Query<Apontamento>(sql);
+                foreach (Apontamento ApResult in QueryResult)
+                {
+                    apontamento = new Apontamento();
+                    apontamento.apontamento = TimeSpan.Parse(ApResult.hora.Replace(',',':'));
+                    listApontamento.Add(apontamento);
+                }
+                return listApontamento;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Conexao.Close();
+            }
+
+        }
+
+        public Usuario ObterUsuarioPorMatricula(string mat)
+        {
+            Conexao.Open();
+            try
+            {
+
+                Usuario usuarioGerencia= new Usuario(); ;
+                var sqlUser = $@"Select RA_NOME AS Nome from SRA010
+                          WHERE RA_MAT = LTRIM(RTRIM('{mat}'))";
+                var QueryResult = Conexao.Query<Usuario>(sqlUser);
+
+                foreach (Usuario UserGerenciaResult in QueryResult)
+                {
+                    usuarioGerencia.Nome = UserGerenciaResult.Nome;
+                }
+
+                return usuarioGerencia;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Conexao.Close();
+            }
+
+        }
+
     }
 }

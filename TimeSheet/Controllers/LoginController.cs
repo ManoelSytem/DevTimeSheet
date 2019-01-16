@@ -63,32 +63,6 @@ namespace TimeSheet.Controllers
             return View("Index", login);
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public ActionResult Loginteste(LoginViewModel login)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("Index", login);
-            }
-
-            if (login.Username == "Administrador" && login.Password == "123456")
-            {
-                var identity = new ClaimsIdentity(new[] {
-                    new Claim(ClaimTypes.Name,"Manoel"),
-                    new Claim(ClaimTypes.Email,"manoelcontatosi@gmail.com"),
-                    new Claim(ClaimTypes.Email,"Brasil"),
-                    new Claim(ClaimTypes.NameIdentifier, "userId")
-                }, "ApplicationCookie");
-
-                if (!string.IsNullOrWhiteSpace(login.ReturnUrl))
-                    return Redirect(login.ReturnUrl);
-                return RedirectToAction("Index", "Home");
-            }
-            return View("Index", login);
-        }
-
         [Authorize]
         public async Task<ActionResult> Logoff()
         {

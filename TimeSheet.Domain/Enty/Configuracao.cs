@@ -17,6 +17,15 @@ namespace TimeSheet.Domain
         public int DiaFim { get; set; }
         public string CodDivergencia { get; set; }
 
+
+        public void ValidaConfiguracaoMarcacao(string dataAbertura, string dia)
+        {
+            if(!(Convert.ToDateTime(dataAbertura) <= DateTime.Now & Convert.ToInt32(dia) >= this.DiaInicio & Convert.ToInt32(dia) <= this.DiaFim))
+            {
+                throw new Exception("Data fora do período! Favor verificar.");
+            }
+        }
+
     }
 
     public class CodDivergencia
