@@ -61,16 +61,12 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(string data, string codlancamento)
+        public ActionResult Edit(string data, string seq)
         {
             try
             {
-                var ano = data.Substring(0, 4);
-                var mes = data.Substring(5, 2);
-                var dia = data.Substring(8, 2);
-                data = ano + mes + dia;
                 ViewModelMacacao viewMarcacao = new ViewModelMacacao();
-                var lancamento = _mapper.Map<ViewModelLancamento>(_lancamentoServiceRepository.ObterLancamentoEdit(data, User.GetDados("Matricula"), codlancamento));
+                var lancamento = _mapper.Map<ViewModelLancamento>(_lancamentoServiceRepository.ObterLancamentoEdit(data, User.GetDados("Matricula"), seq));
                 viewMarcacao.Lancamento = lancamento;
                 return View(viewMarcacao);
 

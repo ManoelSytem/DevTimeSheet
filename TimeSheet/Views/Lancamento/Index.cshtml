@@ -4,27 +4,7 @@
     Layout = null;
 }
 
-@if (TempData["CreateSucesso"] != null)
-{
-    <div class="card">
-        <div class="body">
-            <div class="alert alert-success">
-                <strong>Lançamento realizado com sucesso!</strong>
-            </div>
-        </div>
-    </div>
-}@if (TempData["Createfalse"] != null)
-{
-    <div class="card">
-        <div class="alert alert-danger">
-            <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ops!  </font></font></strong><font style="vertical-align: inherit;">
-                <font style="vertical-align: inherit;">
-                    @TempData["Createfalse"].ToString();
-                </font>
-            </font>
-        </div>
-    </div>
-}
+
 <div class="my-row">
     <div class="col-md-12">
         <div class="card azulc-azule">
@@ -35,6 +15,7 @@
                 <div class="row">
                     <div class="col-xs-6 col-sm-1">
                         <label for="HoraInicio">Hora Início</label>
+                        @Html.HiddenFor(model => model.Lancamento.Seq, new { htmlAttributes = new { @class = "form-control", @placeholder = "", } })
                         @Html.EditorFor(model => model.Lancamento.HoraInicio, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-18", @placeholder = "Dia do Mês" } })
                         <span asp-validation-for="Lancamento.HoraInicio" class="text-danger"></span>
                     </div>
@@ -78,14 +59,7 @@
         </div>
     </div>
 </div>
-<div class="btn-ft">
-    <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
-    <label class="btn-ft-item-open" for="btn-ft-open">
-        <span><i class="fas fa-plus"></i></span>
-    </label>
-    <a onclick="$('form').submit();" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></a>
-    <a href="@Url.Action("Lancamento", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
-</div>
+
 <script>
     $("#searchInput").autocomplete({
         source: function (request, response) {

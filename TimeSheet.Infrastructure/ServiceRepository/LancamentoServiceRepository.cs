@@ -18,7 +18,7 @@ namespace TimeSheet.Infrastructure.ServiceRepository
 
         public void AtualizarLancamento(Lancamento item)
         {
-            throw new NotImplementedException();
+            _LancamentoRepository.UpdateLancamento(item);
         }
 
         public void DeleteLancamento(string codigo)
@@ -28,12 +28,17 @@ namespace TimeSheet.Infrastructure.ServiceRepository
 
         public List<Lancamento> ObterLancamento(string data, string matricula)
         {
-            return _LancamentoRepository.ObterListaMarcacaoPorDataMatricula(data, matricula);
+            return _LancamentoRepository.ObterListaLancamentoPorDataMatricula(data, matricula);
         }
 
         public Lancamento ObterLancamentoEdit(string data, string matricula, string codlancamento)
         {
-           return _LancamentoRepository.ObterListaMarcacaoEdit(data,matricula, codlancamento);
+           return _LancamentoRepository.ObterLancamentoEdit(data,matricula, codlancamento);
+        }
+
+        public List<Lancamento> ObterListaLancamentoPorCodMarcacoEMatricula(string codMarcacao, string matricula)
+        {
+            return _LancamentoRepository.ObterListaLancamentoPorCodMarcacao(codMarcacao, matricula);
         }
 
         public void SalvarLancamento(Lancamento item, string filial, string dataProthues)

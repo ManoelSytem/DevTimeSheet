@@ -7,8 +7,9 @@ namespace TimeSheet.Domain.Enty
     public class Lancamento
     {
         public string Codigo { get; set; }
+        public string Seq { get; set; }
         public string CodLancamento { get; set; }
-        public DateTime DateLancamento { get; set; }
+        public string DateLancamento { get; set; }
         public TimeSpan HoraInicio { get; set; }
         public TimeSpan HoraFim { get; set; }
         public string codEmpredimento { get; set; }
@@ -23,6 +24,7 @@ namespace TimeSheet.Domain.Enty
     public class LancamentoDb
     {
         public string Codigo { get; set; }
+        public string Seq { get; set; }
         public string CodLancamento { get; set; }
         public string DateLancamento { get; set; }
         public string HoraInicio { get; set; }

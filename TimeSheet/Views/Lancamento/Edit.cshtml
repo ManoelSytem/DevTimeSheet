@@ -29,12 +29,13 @@
     <div class="col-md-12">
         <div class="card azulc-azule">
             <div class="card-header">
-                Novo Lançamento
+               Edição de Lançamento
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-xs-6 col-sm-1">
                         <label for="HoraInicio">Hora Início</label>
+                        @Html.HiddenFor(model => model.Lancamento.Seq, new { htmlAttributes = new { @class = "form-control", @placeholder = "", } })
                         @Html.EditorFor(model => model.Lancamento.HoraInicio, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-18", @placeholder = "Dia do Mês" } })
                         <span asp-validation-for="Lancamento.HoraInicio" class="text-danger"></span>
                     </div>
@@ -47,7 +48,7 @@
                         <div class="form-group col-md-14">
                             @Html.LabelFor(model => model.Lancamento.Projetos)
                             <div class="input-group mb-3">
-                                <input id="nomeEmpreendimento" type="text" class="form-control">
+                                <input  id="nomeEmpreendimento" type="text" class="form-control">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
                                 </div>
@@ -77,14 +78,6 @@
             </div>
         </div>
     </div>
-</div>
-<div class="btn-ft">
-    <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
-    <label class="btn-ft-item-open" for="btn-ft-open">
-        <span><i class="fas fa-plus"></i></span>
-    </label>
-    <a onclick="$('form').submit();" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></a>
-    <a href="@Url.Action("Lancamento", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
 </div>
 <script>
     $("#searchInput").autocomplete({

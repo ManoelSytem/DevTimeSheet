@@ -1,4 +1,6 @@
-﻿namespace TimeSheet.ViewModel
+﻿using System.Collections.Generic;
+
+namespace TimeSheet.ViewModel
 {
     public class ViewModelMacacao
     {
@@ -14,6 +16,8 @@
         public string AnoMesDescricao { get; set; }
         public string Status { get; set; }
         public string CodLancamento { get; set; }
+        public string codigojornada { get; set; }
         public virtual ViewModelLancamento Lancamento { get; set; }
+        public virtual List<ViewModelLancamento> Lancamentolist { get; set; }
     }
 }

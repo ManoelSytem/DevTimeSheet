@@ -18,6 +18,27 @@ namespace TimeSheet.Domain.Enty
         public TimeSpan InterFim { get; set; }
         public TimeSpan InterMin { get; set; }
         public TimeSpan InterMax { get; set; }
+
+        public string ValidarJornadaTrabalhoExisteParaLancamento(List<JornadaTrabalho> jornadalist, string data)
+        {
+            string codigo ="";
+            foreach (JornadaTrabalho JornadaResult in jornadalist)
+            {
+                if (JornadaResult.DataInicio <= Convert.ToDateTime(data) && JornadaResult.DataFim >= Convert.ToDateTime(data))
+                {
+                    codigo = JornadaResult.Codigo;
+                }
+                
+
+            }
+
+            if (codigo == "")
+            {
+                throw new Exception("Não existe jornada para a data informada! favor verificar.");
+            }
+               
+            return codigo;
+        }
     }
 
     public class JornadaTrabalhoDb

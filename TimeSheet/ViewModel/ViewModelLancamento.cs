@@ -9,8 +9,9 @@ namespace TimeSheet.ViewModel
     public class ViewModelLancamento
     {
         public string Codigo { get; set; }
+        public string Seq { get; set; }
         public string CodLancamento { get; set; }
-        public DateTime DateLancamento { get; set; }
+        public string DateLancamento { get; set; }
         public TimeSpan HoraInicio { get; set; }
         public TimeSpan HoraFim { get; set; }
         public string codEmpredimento { get; set; }
@@ -20,6 +21,8 @@ namespace TimeSheet.ViewModel
         public int CodDivergencia { get; set; }
         public string[] EmpreendimentoIds { get; set; }
         public virtual ICollection<Empreendimento> Projetos { get; set; }
+
+
 
     }
 }

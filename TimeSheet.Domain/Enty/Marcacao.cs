@@ -12,6 +12,7 @@ namespace TimeSheet.Domain.Enty
         public string AnoMes { get; set; }
         public string Status { get; set; }
         public string CodLancamento { get; set; }
+        public string codigojornada { get; set; }
 
         public void ValidarAbeturaMarcacaoExiste(List<Marcacao> listmarcacao, string ano, string mes)
         {
@@ -37,5 +38,15 @@ namespace TimeSheet.Domain.Enty
 
             return codigo;
         }
+
+        public void MarcacaoExiste(string codigoAbertura)
+        {
+            if (codigoAbertura != "0")
+            {
+                throw new Exception("Existe marcação aberta para a data informada! Favor verificar");
+            }
+        }
+
+
     }
 }
