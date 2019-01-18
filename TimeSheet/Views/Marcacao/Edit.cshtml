@@ -125,13 +125,28 @@
             </div>
         </div>
     </div>
+    <div id="sucesso" style="display:none" class="card">
+        <div class="body">
+            <div class="alert alert-success">
+                <strong id="strong">Lancamento realizado com sucesso!</strong>
+            </div>
+        </div>
+    </div>
+    <div id="erro" style="display:none" class="card">
+        <div class="alert alert-danger">
+            <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ops!  </font></font></strong><font style="vertical-align: inherit;">
+                <font id="erromsg" style="vertical-align: inherit;">
+                </font>
+            </font>
+        </div>
+    </div>
     <div class="modal-body" id="modal-body"></div>
     <div class="btn-ft">
         <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
         <label class="btn-ft-item-open" for="btn-ft-open">
             <span><i class="fas fa-plus"></i></span>
         </label>
-        <button type="button"  id="salvarEdicao" class="btn-ft-item" tooltip="Salvar Edição"><i class="fas fa-save"></i></button>
+        <button type="button" id="salvarEdicao" class="btn-ft-item" tooltip="Salvar Edição"><i class="fas fa-save"></i></button>
         <a href="@Url.Action("Index", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
     </div>
 }
@@ -148,7 +163,9 @@
         });
     }
 
-    function edit(id, datalancamento) {   
+    function edit(id, datalancamento) {
+        document.getElementById("sucesso").style.display = 'none';
+        document.getElementById("erro").style.display = 'none';
                 $("#novaMarcacao").removeClass("is-invalid");
                 $.ajax({
                     url: "/Lancamento/Edit",
@@ -161,7 +178,8 @@
     }
 
     var onSelect = function (dateText) {
-        limparCampos();
+        document.getElementById("sucesso").style.display = 'none';
+        document.getElementById("erro").style.display = 'none';
         $.ajax({
             url: '@Url.Action("ListApontamento", "Marcacao")',
             changeMonth: true,
@@ -184,27 +202,32 @@
 
     }
 
-
     $("#salvarEdicao").on("click", function (event) {
+        document.getElementById("sucesso").style.display = 'none';
+        document.getElementById("erro").style.display = 'none';
         $.ajax({
             type: "post",
             dataType: 'json',
-            url: '../Marcacao/Edit',
+            url: '/Marcacao/Edit',
             data: $('form').serialize()
         })
             .done(function (data) {
-                alert(data.sucesso);
-                ObterListaLancamento();
-                $("#novaMarcacao").removeClass("is-invalid");
-                $('#top').scrollView();
+                if (data.erro === true) {
+                    document.getElementById("sucesso").style.display = 'none';
+                    document.getElementById("erro").style.display = 'block';
+                    $('#erromsg').text(data.msg);
+                } else {
+                    document.getElementById("erro").style.display = 'none';
+                    document.getElementById("sucesso").style.display = 'block';
+                    $('#strong').text(data.sucesso);
+                    limparCampos();
+                }
             })
             .fail(function (data) {
                 Danger(data.msg)
             });
         event.preventDefault();
     });
-
-
 
     $("#DateSelect").on('change', onSelect);
 
@@ -219,4 +242,7 @@
         $('#searchInput').val("");
 
     }
+
+    
+  
 </script>

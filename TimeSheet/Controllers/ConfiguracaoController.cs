@@ -94,7 +94,7 @@ namespace TimeSheet.Controllers
                     codiv.ValidaCodigoDivergencia(codiviergencia);
                     codiv.codigo = codiviergencia.codigo;
                     var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
-                    _config.SalvarConfiguracao(configuracao, User.GetDados("FILIAL")?.Split(',').First(), User.GetDados("MATRICULA")?.Split(',').First());
+                    _config.SalvarConfiguracao(configuracao, User.GetDados("Filial")?.Split(',').First(), User.GetDados("Matricula")?.Split(',').First());
                     _config.SalvarTextoEmail(viewConfiguracao.TextoEmail);
                     TempData["CreateSucesso"] = true;
                     return RedirectToAction("Index", "Configuracao");
@@ -151,8 +151,8 @@ namespace TimeSheet.Controllers
                     viewConfiguracao.ValidarDatalimiteEntrePeriodo();
                     viewConfiguracao.ValidarFrequenciaSelecionada();
                
-                    viewConfiguracao.FilialProtheus = User.GetDados("FILIAL")?.Split(',').First();
-                    viewConfiguracao.MatriculaUsuario = User.GetDados("MATRICULA")?.Split(',').First();
+                    viewConfiguracao.FilialProtheus = User.GetDados("Filial")?.Split(',').First();
+                    viewConfiguracao.MatriculaUsuario = User.GetDados("Matricula")?.Split(',').First();
                     var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
                     var codiviergencia = _mapper.Map<CodDivergenciaViewModel>(_prothuesService.ObterCodigoDivergenciaPorCodigo(viewConfiguracao.CodDivergencia));
                     codiv = new CodDivergenciaViewModel();

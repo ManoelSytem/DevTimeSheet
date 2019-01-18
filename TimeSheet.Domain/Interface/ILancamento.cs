@@ -9,7 +9,7 @@ namespace TimeSheet.Domain.Interface
     {
         void SalvarLancamento(Lancamento item, string filial, string dataProtheus);
         void AtualizarLancamento(Lancamento item);
-        void DeleteLancamento(string codigo);
+        void DeleteLancamento(string sequencia);
         List<Lancamento> ObterLancamento(string data, string matricula);
         Lancamento ObterLancamentoEdit(string data, string matricula, string codigo);
         List<Lancamento> ObterListaLancamentoPorCodMarcacoEMatricula(string codMarcacao, string matricula);

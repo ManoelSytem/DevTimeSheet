@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using TimeSheet.Domain.Enty;
+using TimeSheet.Domain.Util;
 using TimeSheet.Infrastructure.Interface;
 
 namespace TimeSheet.Infrastructure.Repository
@@ -24,7 +25,7 @@ namespace TimeSheet.Infrastructure.Repository
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
                     string sQuery = $@"INSERT INTO ZYV010 (ZYV_DESCR, ZYV_DTINI, ZYV_DTFIN, ZYV_JORNAD, ZYV_HRINI, ZYV_HRIFIN,ZYV_HFINAL, ZYV_INTINI,ZYV_INTFIN, ZYV_INTMIN,ZYV_INTMAX, R_E_C_N_O_)
-                                    VALUES('{item.DescJornada}', replace('{item.DataInicio.ToString("dd/MM/yyyy")}','/'), replace('{item.DataFim.ToString("dd/MM/yyyy")}','/'), {item.JornadaDiaria}, '{item.HoraInicioDe}','{item.HoraInicioAte}',
+                                    VALUES('{item.DescJornada}', '{Convert.ToString(item.DataInicio).ToDateProtheusConvert()}', '{Convert.ToString(item.DataFim).ToDateProtheusConvert()}', {item.JornadaDiaria}, '{item.HoraInicioDe}','{item.HoraInicioAte}',
                                                '{item.HoraFinal}',  '{item.InterInicio}', '{item.InterFim}','{item.InterMin}', '{item.InterMax}', (SELECT MAX(X.R_E_C_N_O_)+1 FROM ZYV010 X))";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
@@ -47,8 +48,8 @@ namespace TimeSheet.Infrastructure.Repository
                    
                     string sQuery = $@"Select LTRIM(RTRIM(ZYV_CODIGO)) AS Codigo,
                                      LTRIM(RTRIM(ZYV_DESCR)) AS DescJornada,
-                                    TO_DATE(LTRIM(RTRIM(ZYV_DTINI)),'DD/MM/RRRR') AS DataInicio,
-                                    TO_DATE(LTRIM(RTRIM(ZYV_DTFIN)),'DD/MM/RRRR')  AS DataFim,
+                                     LTRIM(RTRIM(ZYV_DTINI)) AS DataInicio,
+                                     LTRIM(RTRIM(ZYV_DTFIN)) AS DataFim,
                                      LTRIM(RTRIM(ZYV_JORNAD)) AS JornadaDiaria,
                                      LTRIM(RTRIM(ZYV_HRINI)) AS HoraInicioDe,
                                      LTRIM(RTRIM(ZYV_HRIFIN)) AS HoraInicioAte,
@@ -65,8 +66,8 @@ namespace TimeSheet.Infrastructure.Repository
                         jornadaTrabalho = new JornadaTrabalho();
                         jornadaTrabalho.Codigo = QueryResult.Codigo;
                         jornadaTrabalho.DescJornada = QueryResult.DescJornada;
-                        jornadaTrabalho.DataInicio = QueryResult.DataInicio;
-                        jornadaTrabalho.DataFim = QueryResult.DataFim;
+                        jornadaTrabalho.DataInicio = Convert.ToDateTime(QueryResult.DataInicio.ToDateProtheusReverseformate());
+                        jornadaTrabalho.DataFim = Convert.ToDateTime(QueryResult.DataFim.ToDateProtheusReverseformate());
                         jornadaTrabalho.HoraInicioDe = TimeSpan.Parse(QueryResult.HoraInicioDe);
                         jornadaTrabalho.HoraInicioAte = TimeSpan.Parse(QueryResult.HoraInicioAte);
                         jornadaTrabalho.InterInicio = TimeSpan.Parse(QueryResult.InterInicio);
@@ -93,8 +94,8 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
-                    string sQuery = $@"UPDATE ZYV010
-                            SET ZYV_DESCR = '{item.DescJornada}' , ZYV_DTINI = replace('{item.DataInicio.ToString("dd/MM/yyyy")}','/'), ZYV_DTFIN = replace('{item.DataFim.ToString("dd/MM/yyyy")}','/'),
+                    string sQuery = $@"UPDATE ZYV010  
+                            SET ZYV_DESCR = '{item.DescJornada}' , ZYV_DTINI = '{Convert.ToString(item.DataInicio).ToDateProtheusConvert()}', ZYV_DTFIN = '{Convert.ToString(item.DataFim).ToDateProtheusConvert()}',
                             ZYV_JORNAD = {item.JornadaDiaria}, ZYV_HRINI = '{item.HoraInicioDe}', ZYV_HRIFIN =  '{item.HoraInicioAte}', ZYV_HFINAL =  '{item.HoraFinal}',
                             ZYV_INTINI= '{item.InterInicio}', ZYV_INTFIN = '{item.InterFim}',  ZYV_INTMIN = '{item.InterFim}', ZYV_INTMAX = '{item.InterMax}'
                             WHERE ZYV_CODIGO ='{item.Codigo}'";
@@ -116,8 +117,8 @@ namespace TimeSheet.Infrastructure.Repository
                 dbConnection.Open();
                 var sQuery = $@"Select LTRIM(RTRIM(ZYV_CODIGO)) AS Codigo,
                                      LTRIM(RTRIM(ZYV_DESCR)) AS DescJornada,
-                                    TO_DATE(LTRIM(RTRIM(ZYV_DTINI)),'DD/MM/RRRR') AS DataInicio,
-                                    TO_DATE(LTRIM(RTRIM(ZYV_DTFIN)),'DD/MM/RRRR')  AS DataFim,
+                                     LTRIM(RTRIM(ZYV_DTINI)) AS DataInicio,
+                                     LTRIM(RTRIM(ZYV_DTFIN)) AS DataFim,
                                      LTRIM(RTRIM(ZYV_JORNAD)) AS JornadaDiaria,
                                      LTRIM(RTRIM(ZYV_HRINI)) AS HoraInicioDe,
                                      LTRIM(RTRIM(ZYV_HRIFIN)) AS HoraInicioAte,
@@ -132,8 +133,8 @@ namespace TimeSheet.Infrastructure.Repository
 
                     jornadaTrabalho.Codigo = QueryResult.Codigo;
                     jornadaTrabalho.DescJornada = QueryResult.DescJornada;
-                    jornadaTrabalho.DataInicio = QueryResult.DataInicio;
-                    jornadaTrabalho.DataFim = QueryResult.DataFim;
+                    jornadaTrabalho.DataInicio = Convert.ToDateTime(QueryResult.DataInicio.ToDateProtheusReverseformate());
+                    jornadaTrabalho.DataFim = Convert.ToDateTime(QueryResult.DataFim.ToDateProtheusReverseformate());
                     jornadaTrabalho.HoraInicioDe = TimeSpan.Parse(QueryResult.HoraInicioDe);
                     jornadaTrabalho.HoraInicioAte = TimeSpan.Parse(QueryResult.HoraInicioAte);
                     jornadaTrabalho.HoraFinal = TimeSpan.Parse(QueryResult.HoraFinal);

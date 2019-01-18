@@ -25,7 +25,7 @@ namespace TimeSheet.Infrastructure.Repository
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
                     string sQuery = $@"INSERT INTO ZYY010 (ZYY_CODIGO, ZYY_FILIAL, ZYY_DATA , ZYY_HORINI,ZYY_HORFIN, ZYY_PROJET,ZYY_CODDIV, R_E_C_N_O_,  R_E_C_D_E_L_)
-                    VALUES('{item.Codigo}','{filial}', '{dataProthues}', '{item.HoraInicio}','{item.HoraFim}', '{item.codEmpredimento}', '{item.CodDivergencia}', (SELECT MAX(X.R_E_C_N_O_)+1 FROM ZYY010 X),(SELECT MAX(X.R_E_C_N_O_) FROM ZYY010 X))";
+                    VALUES('{item.Codigo}','{filial}', '{dataProthues}', '{item.HoraInicio}','{item.HoraFim}', '{item.codEmpredimento}', '{item.CodDivergencia}', (SELECT NVL(MAX(X.R_E_C_N_O_),0)+1 FROM ZYY010 X),0)";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
                 }
@@ -186,6 +186,20 @@ namespace TimeSheet.Infrastructure.Repository
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public void Delete(string sequencia)
+        {
+
+            using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+            {
+                string sQuery = $@"UPDATE ZYY010 
+                                   SET D_E_L_E_T_ = '*',
+                                   R_E_C_D_E_L_ = R_E_C_N_O_
+                                   WHERE ZYY_SEQ = '{sequencia}'";
+                dbConnection.Open();
+                dbConnection.Execute(sQuery);
             }
         }
 

@@ -21,9 +21,9 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             _LancamentoRepository.UpdateLancamento(item);
         }
 
-        public void DeleteLancamento(string codigo)
+        public void DeleteLancamento(string sequencia)
         {
-            throw new NotImplementedException();
+            _LancamentoRepository.Delete(sequencia);
         }
 
         public List<Lancamento> ObterLancamento(string data, string matricula)

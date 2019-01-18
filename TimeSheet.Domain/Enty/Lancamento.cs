@@ -10,8 +10,8 @@ namespace TimeSheet.Domain.Enty
         public string Seq { get; set; }
         public string CodLancamento { get; set; }
         public string DateLancamento { get; set; }
-        public TimeSpan HoraInicio { get; set; }
-        public TimeSpan HoraFim { get; set; }
+        public TimeSpan? HoraInicio { get; set; }
+        public TimeSpan? HoraFim { get; set; }
         public string codEmpredimento { get; set; }
         public string DescricaoEmp { get; set; }
         public string Observacao { get; set; }
@@ -19,6 +19,17 @@ namespace TimeSheet.Domain.Enty
         public int CodDivergencia { get; set; }
         public string[] EmpreendimentoIds { get; set; }
         public virtual ICollection<Empreendimento> Projetos { get; set; }
+
+
+        public void ValidaHorasLancamentoOutraMarcacao(List<Lancamento> listlancamentoRelizado)
+        {
+            foreach (Lancamento LancamentoResult in listlancamentoRelizado)
+            {
+                if(!(this.HoraInicio < LancamentoResult.HoraInicio && this.HoraFim > LancamentoResult.HoraFim && this.HoraFim < LancamentoResult.HoraInicio && this.HoraInicio > LancamentoResult.HoraFim))
+                    throw new Exception("Não pode existir horas sobrepostas para o mesmo dia.");
+            }
+
+        }
 
     }
     public class LancamentoDb
