@@ -10,7 +10,7 @@ namespace TimeSheet.Domain.Enty
         public string DescJornada { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
-        public double JornadaDiaria { get; set; }
+        public TimeSpan JornadaDiaria { get; set; }
         public TimeSpan HoraInicioDe { get; set; }
         public TimeSpan HoraInicioAte { get; set; }
         public TimeSpan HoraFinal { get; set; }
@@ -39,6 +39,35 @@ namespace TimeSheet.Domain.Enty
                
             return codigo;
         }
+
+
+        public void ValidarJornadaTrabalhoSobreposta(List<JornadaTrabalho> jornadalist)
+        {
+            foreach (JornadaTrabalho JornadaResult in jornadalist)
+            {
+                if (JornadaResult.DataInicio <= this.DataInicio && JornadaResult.DataFim >= this.DataInicio)
+                {
+                    throw new Exception("Jornada sobreposta! Já existe jornada de trabalho para o período informado.");
+                }
+
+                if(this.DataInicio < JornadaResult.DataInicio)
+                {
+                    if (!(this.DataFim < JornadaResult.DataInicio))
+                    {
+                        throw new Exception("Jornada sobreposta! Já existe jornada de trabalho para o período informado.");
+                    }
+                }
+                else
+                {
+                    if (!(this.DataFim > JornadaResult.DataFim))
+                    {
+                        throw new Exception("Jornada sobreposta! Já existe jornada de trabalho para o período informado.");
+                    }
+
+                }
+
+            }
+        }
     }
 
     public class JornadaTrabalhoDb
@@ -47,7 +76,7 @@ namespace TimeSheet.Domain.Enty
         public string DescJornada { get; set; }
         public string DataInicio { get; set; }
         public string DataFim { get; set; }
-        public double JornadaDiaria { get; set; }
+        public string JornadaDiaria { get; set; }
         public string HoraInicioDe { get; set; }
         public string HoraInicioAte { get; set; }
         public string HoraFinal { get; set; }

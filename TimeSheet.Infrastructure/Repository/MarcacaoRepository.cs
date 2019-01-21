@@ -43,7 +43,7 @@ namespace TimeSheet.Infrastructure.Repository
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
                     string sQuery = $@"Select  LTRIM(RTRIM(ZYZ_MATUSU)) as MatUsuario, LTRIM(RTRIM(ZYZ_CODIGO))  as Codigo, ZYZ_ANOMES as AnoMes, ZYZ_STATUS as Status from ZYZ010
-                                        Where ZYZ_MATUSU = '{matricula}'";
+                                        Where ZYZ_MATUSU = '{matricula}' AND D_E_L_E_T_ <> '*' ";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
 

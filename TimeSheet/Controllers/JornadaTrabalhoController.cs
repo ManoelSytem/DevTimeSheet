@@ -41,7 +41,7 @@ namespace TimeSheet.Controllers
 
         public IActionResult CadastrarHora()
         {
-
+            TempData["CreateSucesso"] = null;
             return View();
         }
 
@@ -49,11 +49,15 @@ namespace TimeSheet.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CadastrarHora(ViewModelCadastroHora viewModelCadastroHora)
         {
+            TempData["CreateSucesso"] = null;
             try
             {
 
                 if (ModelState.IsValid)
                 {
+                    JornadaTrabalho jornadaTrabalhoNeogocio = new JornadaTrabalho();
+                    jornadaTrabalhoNeogocio = _mapper.Map<JornadaTrabalho>(viewModelCadastroHora);
+                    jornadaTrabalhoNeogocio.ValidarJornadaTrabalhoSobreposta(_jornadaTrbServiceRepository.ObterListJornada());
                     viewModelCadastroHora.ValidaHorario();
                     viewModelCadastroHora.ValidaIntervalo();
                     viewModelCadastroHora.ValidaJornadaDiaria();

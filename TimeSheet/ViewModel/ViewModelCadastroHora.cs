@@ -11,7 +11,7 @@ namespace TimeSheet.ViewModel
         public DateTime? DataInicio { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? DataFim { get; set; }
-        public double JornadaDiaria { get; set; }
+        public TimeSpan JornadaDiaria { get; set; }
         public TimeSpan HoraInicioDe { get; set; }
         public TimeSpan HoraInicioAte { get; set; }
         public TimeSpan HoraFinal { get; set; }
@@ -46,7 +46,7 @@ namespace TimeSheet.ViewModel
 
         public void ValidaJornadaDiaria()
         {
-            if (!(this.JornadaDiaria <=24))
+            if (!(this.JornadaDiaria.Hours <= 24))
                 throw new Exception("Total jornada diária maior que "+this.JornadaDiaria+"hs!Favor verificar");
         }
 

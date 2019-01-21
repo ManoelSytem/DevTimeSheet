@@ -95,5 +95,25 @@ namespace TimeSheet.Controllers
             return Json(_prothuesService.ObterListEmpreendimentos(nome));
         }
 
+        public JsonResult Excluir(string seq)
+        {
+
+            try
+            {
+                 _lancamentoServiceRepository.DeleteLancamento(seq);
+                return Json(new { sucesso = "Lancamento excluído com sucesso!" });
+            }
+            catch (Exception e)
+            {
+                return Json(new
+                {
+                    msg = string.Join("; ", ModelState.Values
+                                      .SelectMany(x => x.Errors)
+                                      .Select(x => x.ErrorMessage)),
+                    erro = true
+                });
+            }
+           
+        }
     }
 }

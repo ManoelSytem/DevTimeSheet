@@ -99,21 +99,6 @@
         </div>
     </div>
     <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Modal Header</h4>
-                </div>
-                <div class="modal-body">
-                    Deseja mesmo apagar <span class="nome"></span>
-                </div>
-                <div class="modal-footer">
-                    <a href="#" type="button" class="btn btn-default delete-yes">Sim</a>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="modal-body" id="modal-body"></div>
     <div class="btn-ft">
@@ -191,9 +176,11 @@
         $("#myModal").dialog({
             resizable: false,
             height: 140,
+            title: "Exclusão de Lancamento",
             modal: true,
             buttons: {
-                "Delete all items": function () {
+                "Excluir": function () {
+                    ExcluirRegistroLancamento(id);
                     $(this).dialog("close");
                 },
                 Cancel: function () {
@@ -326,7 +313,35 @@
         $('#Lancamento_EmpreendimentoIds').empty();
         $('#comentario').val("");
         $('#searchInput').val("");
+        document.getElementById("salvar").style.display = 'block';
+        document.getElementById("salvarEdicao").style.display = 'none';
 
+    }
+
+    function ExcluirRegistroLancamento(seq) {
+        $.ajax({
+            type: "post",
+            dataType: 'json',
+            url: '/Lancamento/Excluir',
+            data: { seq: seq }
+        })
+            .done(function (data) {
+                if (data.erro === true) {
+                    document.getElementById("sucesso").style.display = 'none';
+                    document.getElementById("erro").style.display = 'block';
+                    $('#erromsg').text(data.msg);
+                } else {
+                    document.getElementById("erro").style.display = 'none';
+                    document.getElementById("sucesso").style.display = 'block';
+                    $('#strong').text(data.sucesso);
+                    ObterListaLancamento();
+                    limparCampos();
+                }
+            })
+            .fail(function (data) {
+                Danger(data.msg)
+            });
+        event.preventDefault();
     }
 
 </script>

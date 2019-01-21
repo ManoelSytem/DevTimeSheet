@@ -97,6 +97,7 @@ namespace TimeSheet.Controllers
                     Marcacao aberturaMarcacao = new Marcacao();
                     Lancamento lancameneto = new Lancamento();
                     JornadaTrabalho jornada = new JornadaTrabalho();
+                    CodDivergenciaViewModel codiv = new CodDivergenciaViewModel();
 
                     string codigoAbertura = aberturaMarcacao.AbeturaExiste(_marcacao.ObterListMarcacaoPorMatUser(User.GetDados("Matricula")), marcacao.DataDia.ToDia(), marcacao.DataDia.ToAno());
                     string codJornadaTrabalho = jornada.ValidarJornadaTrabalhoExisteParaLancamento(_jornadaTrbServiceRepository.ObterListJornada(), marcacao.DataDia.ToDateProtheusReverse());
@@ -114,6 +115,8 @@ namespace TimeSheet.Controllers
                     if (marcacao.Lancamento != null)
                     {
                         marcacao.Lancamento.ValidaHoraLancamento();
+                        var codiviergencia = _prothuesService.ObterCodigoDivergenciaPorCodigo(Convert.ToString(marcacao.Lancamento.CodDivergencia));
+                        codiv.ValidaCodigoDivergencia(codiviergencia);
                         lancameneto = _mapper.Map<Lancamento>(marcacao.Lancamento);
                         lancameneto.ValidaHorasLancamentoOutraMarcacao(_lancamentoerviceRepository.ObterLancamento(marcacao.DataDia.ToDateProtheus(), User.GetDados("Matricula")));
                         marcacao.Lancamento.Codigo = aberturaMarcacao.AbeturaExiste(_marcacao.ObterListMarcacaoPorMatUser(User.GetDados("Matricula")), marcacao.DataDia.ToDia(), marcacao.DataDia.ToAno());

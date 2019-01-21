@@ -55,7 +55,7 @@ namespace TimeSheet.Infrastructure.Repository
                                FROM ZYY010 ZA
                                INNER JOIN  ZYZ010  ZB ON (ZB.ZYZ_CODIGO =  ZA.ZYY_CODIGO) 
                                INNER JOIN  SZA010 SZ ON (ZA.ZYY_PROJET =  SZ.ZA_COD) 
-                               WHERE ZB.ZYZ_MATUSU = '{matricula}' AND ZA.ZYY_DATA = '{data}'";
+                               WHERE ZB.ZYZ_MATUSU = '{matricula}' AND ZA.ZYY_DATA = '{data}' AND ZA.D_E_L_E_T_ <> '*'";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
 
@@ -99,7 +99,7 @@ namespace TimeSheet.Infrastructure.Repository
                                ZYY_CODDIV AS CodDivergencia
                                FROM ZYY010 ZA
                                INNER JOIN  ZYZ010  ZB ON (ZB.ZYZ_CODIGO =  ZA.ZYY_CODIGO) 
-                               WHERE ZB.ZYZ_MATUSU = '{matricula}' AND ZA.ZYY_DATA = '{data}'  AND ZYY_SEQ = '{codlancamento}'";
+                               WHERE ZB.ZYZ_MATUSU = '{matricula}' AND ZA.ZYY_DATA = '{data}'  AND ZYY_SEQ = '{codlancamento}' AND ZA.D_E_L_E_T_ <> '*'";
                     var LacamentoResult = dbConnection.QueryFirstOrDefault<LancamentoDb>(sQuery);
 
                         lancamento = new Lancamento();
@@ -140,7 +140,7 @@ namespace TimeSheet.Infrastructure.Repository
                                FROM ZYY010 ZA
                                INNER JOIN  ZYZ010  ZB ON (ZB.ZYZ_CODIGO =  ZA.ZYY_CODIGO) 
                                INNER JOIN  SZA010 SZ ON (ZA.ZYY_PROJET =  SZ.ZA_COD) 
-                               WHERE ZA.ZYY_CODIGO = '{codigoMarcacao}'AND ZB.ZYZ_MATUSU = '{matricula}'";
+                               WHERE ZA.ZYY_CODIGO = '{codigoMarcacao}'AND ZB.ZYZ_MATUSU = '{matricula}' AND ZA.D_E_L_E_T_ <> '*' ";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
 

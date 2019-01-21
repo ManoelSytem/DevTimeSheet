@@ -58,7 +58,7 @@
                             <label for="JornadaDiaria">
                                 Jornada diária
                             </label>
-                            @Html.EditorFor(model => model.JornadaDiaria, new { htmlAttributes = new { @type = "number", @disabled = "disabled", @class = "form-control col-md-6" } })
+                            @Html.EditorFor(model => model.JornadaDiaria, new { htmlAttributes = new { @type = "time", @disabled = "disabled", @class = "form-control col-md-6" } })
                             <span asp-validation-for="JornadaDiaria" class="text-danger"></span>
                         </div>
                     </div>
