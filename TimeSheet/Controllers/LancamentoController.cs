@@ -25,8 +25,8 @@ namespace TimeSheet.Controllers
             _prothuesService = prothuesService;
             _lancamentoServiceRepository = lancamentoServiceRepository;
         }
-
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Index(string horainicio, string horafim)
         {
             try
             {
@@ -68,6 +68,7 @@ namespace TimeSheet.Controllers
                 ViewModelMacacao viewMarcacao = new ViewModelMacacao();
                 var lancamento = _mapper.Map<ViewModelLancamento>(_lancamentoServiceRepository.ObterLancamentoEdit(data, User.GetDados("Matricula"), seq));
                 viewMarcacao.Lancamento = lancamento;
+                ViewBag.descricaoEmprendimento = lancamento.DescricaoEmp;
                 return View(viewMarcacao);
 
             }

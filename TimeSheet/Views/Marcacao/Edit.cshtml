@@ -28,7 +28,7 @@
 }
 @using (Html.BeginForm())
 {
-    <div class="my-row">
+    <div  class="my-row">
         <div class="col-md-12">
             <div class="card azulc-azule">
                 <div class="card-header">
@@ -94,29 +94,7 @@
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-
-                                    @if (Model != null)
-                                    {
-                                        foreach (var item in Model.Lancamentolist)
-                                        {
-                                            <tr>
-
-                                                <td>@item.HoraInicio</td>
-                                                <td>@item.HoraFim</td>
-                                                <td>@item.DescricaoEmp</td>
-                                                <td>@item.Observacao</td>
-                                                <td>@item.CodDivergencia</td>
-                                                <td>
-                                                    <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "Marcacao", new { id = item.Codigo })'"><i class="fas fa-eye"></i></button>
-                                                    <button type="button" class="btn btn-sm btn-editar" name="editar" onclick="edit(@item.Seq, @item.DateLancamento)"><i class="fas fa-pen"></i></button>
-                                                    <button type="button" class="btn btn-sm btn-excluir" name="excluir" onclick="location.href='@Url.Action("Delete", "Marcacao", new { id = item.Codigo })'"><i class="fas fa-trash"></i></button>
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
-
-                                </tbody>
+                                <tbody></tbody>
                             </table>
                         </div>
                     </div>
@@ -140,13 +118,15 @@
             </font>
         </div>
     </div>
+    <div id="myModal" class="modal fade" role="dialog">
+    </div>
     <div class="modal-body" id="modal-body"></div>
     <div class="btn-ft">
         <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
         <label class="btn-ft-item-open" for="btn-ft-open">
             <span><i class="fas fa-plus"></i></span>
         </label>
-        <button type="button" id="salvarEdicao" class="btn-ft-item" tooltip="Salvar Edição"><i class="fas fa-save"></i></button>
+        <button style="display:none" type="button" id="salvarEdicao" class="btn-ft-item" tooltip="Salvar Edição"><i class="fas fa-save"></i></button>
         <a href="@Url.Action("Index", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
     </div>
 }
@@ -166,6 +146,7 @@
     function edit(id, datalancamento) {
         document.getElementById("sucesso").style.display = 'none';
         document.getElementById("erro").style.display = 'none';
+        document.getElementById("salvarEdicao").style.display = 'block';
                 $("#novaMarcacao").removeClass("is-invalid");
                 $.ajax({
                     url: "/Lancamento/Edit",
@@ -174,7 +155,9 @@
                 }).done(function (data) {
                     $("#modal-body").html(data);
                     $('#modal-body').scrollView();
-                });
+                    CarregarEmpreendimentos();
+            });
+        ObterListaLancamento();
     }
 
     var onSelect = function (dateText) {
@@ -196,6 +179,7 @@
                         $('#tbCabecalhoMarcacao tbody').append('<td>' + data[i].apontamento + '</td>' +
                             '</td><td class="actions col-xs-2 align="center">');
                     }
+                    ObterListaLancamento();
                 }
             }
         });
@@ -217,10 +201,9 @@
                     document.getElementById("erro").style.display = 'block';
                     $('#erromsg').text(data.msg);
                 } else {
-                    document.getElementById("erro").style.display = 'none';
-                    document.getElementById("sucesso").style.display = 'block';
-                    $('#strong').text(data.sucesso);
-                    limparCampos();
+                    Success(data.sucesso);
+                    ObterListaLancamento();
+                    $("#modal-body").html("");
                 }
             })
             .fail(function (data) {
@@ -243,6 +226,93 @@
 
     }
 
+    function ObterListaLancamento() {
+          $.ajax({
+                url: '@Url.Action("GetMarcacoes", "Marcacao")',
+                changeMonth: true,
+                changeYear: true,
+                dataType: 'json',
+                type: 'get',
+                data: { data: $("#DateSelect").val() },
+                success: function (data) {
+                    $('#tbLancamento tbody tr').remove();
+                    for (var i = 0; data.length > i; i++) {
+                        if (!(data[i].observacao === null)) {
+                            data[i].observacao = data[i].observacao.substring(0, 20);
+                        }
+                        $('#tbLancamento tbody').append('<tr><td>' + data[i].horaInicio + '</td>' +
+                            '<td>' + data[i].horaFim + '</td>' +
+                            '<td>' + data[i].descricaoEmp + '</td>' +
+                            '<td>' + data[i].observacao +'...' + '</td>' +
+                            '<td>' + data[i].codDivergencia + '</td>' +
+                            '<td>' +
+                            '<button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick=location.href="/Lancamento/Delete/' + data[i].seq + '"><i class="fas fa-eye"></i></button>' +
+                            '<button type="button" class="btn btn-sm btn-editar" name="editar" onclick="edit(' + data[i].seq + ','+data[i].dateLancamento +')"><i class="fas fa-pen"></i></button>' +
+                            '<button type="button" class="btn btn-sm create"  onclick="Delete('+ data[i].seq +')"><i class="fas fa-trash"></i></button>' +
+                            '</td></tr>');
+                    }
+                }
+            });
+    }
+
+    function ExcluirRegistroLancamento(seq) {
+        $.ajax({
+            type: "post",
+            dataType: 'json',
+            url: '/Lancamento/Excluir',
+            data: { seq: seq }
+        })
+            .done(function (data) {
+                if (data.erro === true) {
+                    document.getElementById("sucesso").style.display = 'none';
+                    document.getElementById("erro").style.display = 'block';
+                    $('#erromsg').text(data.msg);
+                } else {
+                    document.getElementById("erro").style.display = 'none';
+                    document.getElementById("sucesso").style.display = 'block';
+                    $('#strong').text(data.sucesso);
+                    ObterListaLancamento();
+                    limparCampos();
+                }
+            })
+            .fail(function (data) {
+                Danger(data.msg)
+            });
+        event.preventDefault();
+    }
+
+    function Delete(id) {
+        $("#myModal").dialog({
+            resizable: false,
+            height: 140,
+            title: "Exclusão de Lancamento",
+            modal: true,
+            buttons: {
+                "Excluir": function () {
+                    ExcluirRegistroLancamento(id);
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    }
+
     
-  
+       function CarregarEmpreendimentos() {
+                            if ($("#nomeEmpreendimento").val().length >= 3) {
+                                $('.loader-overlay').show();
+                                $.ajax({
+                                    url:'@Url.Action("GetEmpreendimentos", "Lancamento")',
+                                    data: { nome: $("#nomeEmpreendimento").val() },
+                                    type: 'get'
+                                }).done(function (data) {
+                                    CarregarDadosEmpreendimento(data);
+                                    $('.loader-overlay').hide();
+                                });
+                            } else {
+                                Information("Não é possível realizar pesquisa com menos de 3 caracteres.");
+                            }
+    }
 </script>

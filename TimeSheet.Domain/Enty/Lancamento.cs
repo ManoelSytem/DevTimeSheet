@@ -25,8 +25,11 @@ namespace TimeSheet.Domain.Enty
         {
             foreach (Lancamento LancamentoResult in listlancamentoRelizado)
             {
-                if(!(this.HoraInicio < LancamentoResult.HoraInicio && this.HoraFim > LancamentoResult.HoraFim && this.HoraFim < LancamentoResult.HoraInicio && this.HoraInicio > LancamentoResult.HoraFim))
-                    throw new Exception("Não pode existir horas sobrepostas para o mesmo dia.");
+                if (LancamentoResult.Seq != this.Seq)
+                {
+                    if (!(this.HoraInicio >= LancamentoResult.HoraFim || this.HoraInicio <= LancamentoResult.HoraInicio && this.HoraFim <= LancamentoResult.HoraInicio))
+                        throw new Exception("Não pode existir horas sobrepostas para o mesmo dia.");
+                }
             }
 
         }

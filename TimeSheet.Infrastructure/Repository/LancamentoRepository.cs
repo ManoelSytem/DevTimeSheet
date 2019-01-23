@@ -24,8 +24,8 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
-                    string sQuery = $@"INSERT INTO ZYY010 (ZYY_CODIGO, ZYY_FILIAL, ZYY_DATA , ZYY_HORINI,ZYY_HORFIN, ZYY_PROJET,ZYY_CODDIV, R_E_C_N_O_,  R_E_C_D_E_L_)
-                    VALUES('{item.Codigo}','{filial}', '{dataProthues}', '{item.HoraInicio}','{item.HoraFim}', '{item.codEmpredimento}', '{item.CodDivergencia}', (SELECT NVL(MAX(X.R_E_C_N_O_),0)+1 FROM ZYY010 X),0)";
+                    string sQuery = $@"INSERT INTO ZYY010 (ZYY_CODIGO, ZYY_FILIAL, ZYY_DATA , ZYY_HORINI,ZYY_HORFIN, ZYY_PROJET,ZYY_CODDIV,ZYY_OBSERV,R_E_C_N_O_,  R_E_C_D_E_L_)
+                    VALUES('{item.Codigo}','{filial}', '{dataProthues}', '{item.HoraInicio}','{item.HoraFim}', '{item.codEmpredimento}', '{item.CodDivergencia}','{item.Observacao}', (SELECT NVL(MAX(X.R_E_C_N_O_),0)+1 FROM ZYY010 X),0)";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
                 }
@@ -50,8 +50,9 @@ namespace TimeSheet.Infrastructure.Repository
                                ZYY_HORINI as  HoraInicio,
                                ZYY_HORFIN as HoraFim,
                                ZYY_PROJET as codEmpredimento,
-                               ZYY_CODDIV AS CodDivergencia,
-                               SZ.ZA_DESC AS DescricaoEmp
+                               ZYY_CODDIV as CodDivergencia,
+                               LTRIM(RTRIM(ZYY_OBSERV)) as Observacao,
+                               SZ.ZA_DESC as DescricaoEmp
                                FROM ZYY010 ZA
                                INNER JOIN  ZYZ010  ZB ON (ZB.ZYZ_CODIGO =  ZA.ZYY_CODIGO) 
                                INNER JOIN  SZA010 SZ ON (ZA.ZYY_PROJET =  SZ.ZA_COD) 
@@ -71,6 +72,7 @@ namespace TimeSheet.Infrastructure.Repository
                         lancamento.CodDivergencia = LacamentoResult.CodDivergencia;
                         lancamento.Seq = LacamentoResult.Seq;
                         lancamento.DateLancamento = LacamentoResult.DateLancamento;
+                        lancamento.Observacao = LacamentoResult.Observacao;
                         listlancamento.Add(lancamento);
                     }
                     return listlancamento;
@@ -95,11 +97,15 @@ namespace TimeSheet.Infrastructure.Repository
                               ZYY_CODIGO as Codigo,
                                ZYY_HORINI as  HoraInicio,
                                ZYY_HORFIN as HoraFim,
+                               LTRIM(RTRIM(ZYY_OBSERV)) as Observacao,
                                ZYY_PROJET as codEmpredimento,
-                               ZYY_CODDIV AS CodDivergencia
+                               ZYY_CODDIV AS CodDivergencia,
+                               LTRIM(RTRIM(SZ.ZA_DESC)) as DescricaoEmp
                                FROM ZYY010 ZA
-                               INNER JOIN  ZYZ010  ZB ON (ZB.ZYZ_CODIGO =  ZA.ZYY_CODIGO) 
-                               WHERE ZB.ZYZ_MATUSU = '{matricula}' AND ZA.ZYY_DATA = '{data}'  AND ZYY_SEQ = '{codlancamento}' AND ZA.D_E_L_E_T_ <> '*'";
+                               INNER JOIN  ZYZ010  ZB ON (ZB.ZYZ_CODIGO =  ZA.ZYY_CODIGO)
+                               INNER JOIN  SZA010 SZ ON (ZA.ZYY_PROJET =  SZ.ZA_COD) 
+                               WHERE ZB.ZYZ_MATUSU = '{matricula}' AND ZA.ZYY_DATA = '{data}'  AND ZYY_SEQ = '{codlancamento}' AND ZA.D_E_L_E_T_ <> '*'
+                               ";
                     var LacamentoResult = dbConnection.QueryFirstOrDefault<LancamentoDb>(sQuery);
 
                         lancamento = new Lancamento();
@@ -111,6 +117,7 @@ namespace TimeSheet.Infrastructure.Repository
                         lancamento.CodDivergencia = LacamentoResult.CodDivergencia;
                         lancamento.Seq = LacamentoResult.Seq;
                         lancamento.DateLancamento = LacamentoResult.DateLancamento;
+                        lancamento.Observacao = LacamentoResult.Observacao;
                     return lancamento;
                 }
             }
@@ -176,7 +183,8 @@ namespace TimeSheet.Infrastructure.Repository
                 {
                     string sQuery = $@"UPDATE ZYY010
                             SET ZYY_HORINI =  '{item.HoraInicio}', ZYY_HORFIN = '{item.HoraFim}',
-                            ZYY_PROJET = '{item.codEmpredimento}', ZYY_CODDIV = '{item.CodDivergencia}'
+                            ZYY_PROJET = '{item.codEmpredimento}', ZYY_CODDIV = '{item.CodDivergencia}',
+                             ZYY_OBSERV = '{item.Observacao}'
                             WHERE ZYY_SEQ  = '{item.Seq}'";
 
                     dbConnection.Open();

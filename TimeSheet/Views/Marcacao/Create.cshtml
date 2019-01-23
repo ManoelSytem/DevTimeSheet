@@ -56,6 +56,7 @@
                                 <tbody></tbody>
                             </table>
                         </div>
+                        <div  class="col-xs-6 col-sm-2"> <button type="button" onclick="ImportarHoras()" class="btn btn-primary">Importar Horas</button></div><br />
                     </div>
 
                     <div class="card azulc-azule">
@@ -106,7 +107,7 @@
         <label class="btn-ft-item-open" for="btn-ft-open">
             <span><i class="fas fa-plus"></i></span>
         </label>
-        <button type="button" id="salvar" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></button>
+        <button type="button" style="display:none" id="salvar" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></button>
         <button type="button" style="display:none" id="salvarEdicao" class="btn-ft-item" tooltip="Salvar Edição"><i class="fas fa-save"></i></button>
         <a href="@Url.Action("Index", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
         <a onclick="Create()" class="btn-ft-item" tooltip="Novo Lançamento"><i class="fas fa-plus"></i></a>
@@ -162,6 +163,7 @@
                 }).done(function (data) {
                     $("#modal-body").html(data);
                     $('#modal-body').scrollView();
+                    CarregarEmpreendimentos();
                 });
 
             } else {
@@ -260,11 +262,10 @@
                     document.getElementById("erro").style.display = 'block';
                     $('#erromsg').text(data.msg);
                 } else {
-                    document.getElementById("erro").style.display = 'none';
-                    document.getElementById("sucesso").style.display = 'block';
-                    $('#strong').text(data.sucesso);
+                    Success(data.sucesso);
                     ObterListaLancamento();
                     limparCampos();
+                    $("#modal-body").html("");
                 }
             })
             .fail(function (data) {
@@ -288,10 +289,13 @@
                 success: function (data) {
                     $('#tbLancamento tbody tr').remove();
                     for (var i = 0; data.length > i; i++) {
+                        if (!(data[i].observacao === null)) {
+                            data[i].observacao = data[i].observacao.substring(0, 20);
+                        }
                         $('#tbLancamento tbody').append('<tr><td>' + data[i].horaInicio + '</td>' +
                             '<td>' + data[i].horaFim + '</td>' +
                             '<td>' + data[i].descricaoEmp + '</td>' +
-                            '<td>' + data[i].observacao + '</td>' +
+                            '<td>' + data[i].observacao +'...'+ '</td>' +
                             '<td>' + data[i].codDivergencia + '</td>' +
                             '<td>' +
                             '<button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick=location.href="/Lancamento/Delete/' + data[i].seq + '"><i class="fas fa-eye"></i></button>' +
@@ -344,4 +348,79 @@
         event.preventDefault();
     }
 
+    function CreateImportacao() {
+        document.getElementById("salvar").style.display = 'block';
+        document.getElementById("salvarEdicao").style.display = 'none';
+        var inputText = $('#DateSelect').val();
+        if (inputText !== undefined) {
+            if (inputText != '') {
+                $("#novaMarcacao").removeClass("is-invalid");
+                $.ajax({
+                    url: "/Lancamento/Index",
+                    type: 'get',
+                    data: { horainicio: $("horainicio").text(), horafim: $("horafim").text()}
+                }).done(function (data) {
+                    $("#modal-body").html(data);
+                    $('#modal-body').scrollView();
+                    
+                });
+
+            } else {
+                Information('A data da marcação não informada!');
+            }
+        } else {
+            Information('Não foi carregado!');
+        }
+    }
+
+    function ImportarHoras() {
+           if ($("#DateSelect").val().length == 10) {
+            $.ajax({
+                url: '@Url.Action("ListApontamento", "Marcacao")',
+                changeMonth: true,
+                changeYear: true,
+                dataType: 'json',
+                type: 'get',
+                data: { data: $("#DateSelect").val() },
+                success: function (data) {
+                    $('#tbLancamento tbody tr').remove();
+                    if (data.length % 2 === 0) {
+                    for (var i = 0; data.length > i; i++) {
+                      
+                            $('#tbLancamento tbody').append('<tr><td id="horainicio">' + data[i].apontamento + '</td>' +
+                                '<td id="horafim">' + data[i + 1].apontamento + '</td>' +
+                                '<td>' + + '</td>' +
+                                '<td>' + + '...' + '</td>' +
+                                '<td>' + + '</td>' +
+                                '<td>' +
+                                '<button type="button" class="btn btn-sm btn-editar" name="editar" onclick="CreateImportacao()"><i class="fas fa-pen"></i></button>' +
+                                '<button type="button" class="btn btn-sm create"  onclick="Delete(' + data[i].seq + ')"><i class="fas fa-trash"></i></button>' +
+                                '</td></tr>');
+                            i++;
+
+                        }
+                    } else {
+
+                        Information('Não é impossivel importar batidas ímpar!');
+                    }
+                }
+            });
+        }
+    }
+
+       function CarregarEmpreendimentos() {
+                            if ($("#nomeEmpreendimento").val().length >= 3) {
+                                $('.loader-overlay').show();
+                                $.ajax({
+                                    url:'@Url.Action("GetEmpreendimentos", "Lancamento")',
+                                    data: { nome: $("#nomeEmpreendimento").val() },
+                                    type: 'get'
+                                }).done(function (data) {
+                                    CarregarDadosEmpreendimento(data);
+                                    $('.loader-overlay').hide();
+                                });
+                            } else {
+                                Information("Não é possível realizar pesquisa com menos de 3 caracteres.");
+                            }
+    }
 </script>

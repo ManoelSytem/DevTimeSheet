@@ -13,12 +13,13 @@ namespace TimeSheet.ViewModel
         public string Seq { get; set; }
         public string CodLancamento { get; set; }
         public string DateLancamento { get; set; }
-        [Required(ErrorMessage = "Hora Inicio é obrigatório.", AllowEmptyStrings = false)]
+        [Required(ErrorMessage = "Hora Início é obrigatório.", AllowEmptyStrings = false)]
         public TimeSpan? HoraInicio { get; set; }
         [Required(ErrorMessage = "Hora Fim é obrigatório. ", AllowEmptyStrings = false)] 
         public TimeSpan? HoraFim { get; set; }
         public string codEmpredimento { get; set; }
         public string DescricaoEmp { get; set; }
+        [StringLength(250, MinimumLength = 0, ErrorMessage = "campo observação máximo 250 caracteres")]
         public string Observacao { get; set; }
         public int? CodObservacao { get; set; }
         public int? CodDivergencia { get; set; }

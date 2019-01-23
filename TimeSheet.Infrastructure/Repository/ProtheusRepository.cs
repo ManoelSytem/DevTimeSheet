@@ -98,22 +98,28 @@ namespace TimeSheet.Infrastructure.Repository
 
         public List<Domain.Enty.Apontamento> ObterListBatidaDePontoDiario(string mat, string filial, string Data)
         {
-            Conexao.Open();
+            
             try
             {
-                List<Apontamento> listApontamento = new List<Apontamento>();
-                Apontamento apontamento;
-                var sql = $@"Select  P8_HORA AS hora from SP8010
+                using (OracleConnection Conexao = new OracleConnection(ConnectionString))
+                {
+                    List<Apontamento> listApontamento = new List<Apontamento>();
+                    Apontamento apontamento;
+                    var sql = $@"Select  P8_HORA AS hora from SP8010
                          where P8_MAT = LTRIM(RTRIM('{mat}'))  AND P8_FILIAL = LTRIM(RTRIM('{filial}')) 
                           AND D_E_L_E_T_ <> '*' AND P8_APONTA = 'S' AND P8_DATA = LTRIM(RTRIM('{Data}'))";
-                var QueryResult = Conexao.Query<Apontamento>(sql);
-                foreach (Apontamento ApResult in QueryResult)
-                {
-                    apontamento = new Apontamento();
-                    apontamento.apontamento = TimeSpan.Parse(ApResult.hora.Replace(',',':'));
-                    listApontamento.Add(apontamento);
-                }
+                    Conexao.Open();
+                    var QueryResult = Conexao.Query<Apontamento>(sql);
+                    foreach (Apontamento ApResult in QueryResult)
+                    {
+                        apontamento = new Apontamento();
+                        apontamento.apontamento = TimeSpan.Parse(ApResult.hora.Replace(',', ':'));
+                        apontamento.horaFim = TimeSpan.Parse(ApResult.hora.Replace(',', ':'));
+                        listApontamento.Add(apontamento);
+                    }
+               
                 return listApontamento;
+                }
             }
             catch (Exception ex)
             {
@@ -121,7 +127,7 @@ namespace TimeSheet.Infrastructure.Repository
             }
             finally
             {
-                Conexao.Close();
+               
             }
 
         }

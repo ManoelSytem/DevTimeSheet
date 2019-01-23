@@ -12,6 +12,7 @@ using TimeSheet.Domain.Interface;
 using TimeSheet.Domain.Util;
 using TimeSheet.Models;
 using TimeSheet.ViewModel;
+using Apontamento = TimeSheet.Models.Apontamento;
 
 namespace TimeSheet.Controllers
 {
@@ -115,6 +116,7 @@ namespace TimeSheet.Controllers
                     if (marcacao.Lancamento != null)
                     {
                         marcacao.Lancamento.ValidaHoraLancamento();
+                        marcacao.Lancamento.Observacao.ReplaceSaveObservacaoProthues();
                         var codiviergencia = _prothuesService.ObterCodigoDivergenciaPorCodigo(Convert.ToString(marcacao.Lancamento.CodDivergencia));
                         codiv.ValidaCodigoDivergencia(codiviergencia);
                         lancameneto = _mapper.Map<Lancamento>(marcacao.Lancamento);
@@ -147,7 +149,7 @@ namespace TimeSheet.Controllers
             {
 
                 ViewModelMacacao marcacao = new ViewModelMacacao();
-                marcacao.Lancamentolist = _mapper.Map<List<Lancamento>, List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")));
+            
 
                 var infoUser = new ViewModelMacacao();
                 var user = new Usuario();
@@ -177,10 +179,14 @@ namespace TimeSheet.Controllers
                     Lancamento lancameneto = new Lancamento();
                     Marcacao aberturaMarcacao = new Marcacao();
                     JornadaTrabalho jornada = new JornadaTrabalho();
+                    CodDivergenciaViewModel codiv = new CodDivergenciaViewModel();
 
                     if (marcacao.Lancamento != null)
                     {
                         marcacao.Lancamento.ValidaHoraLancamento();
+                        marcacao.Lancamento.Observacao = marcacao.Lancamento.Observacao.ReplaceSaveObservacaoProthues();
+                        var codiviergencia = _prothuesService.ObterCodigoDivergenciaPorCodigo(Convert.ToString(marcacao.Lancamento.CodDivergencia));
+                        codiv.ValidaCodigoDivergencia(codiviergencia);
                         lancameneto = _mapper.Map<Lancamento>(marcacao.Lancamento);
                         lancameneto.ValidaHorasLancamentoOutraMarcacao(_lancamentoerviceRepository.ObterLancamento(marcacao.DataDia.ToDateProtheus(), User.GetDados("Matricula")));
                         marcacao.Lancamento.codEmpredimento = marcacao.Lancamento.EmpreendimentoIds[0];
@@ -265,8 +271,9 @@ namespace TimeSheet.Controllers
                 var dia = data.Substring(8, 2);
                 data = ano + mes + dia;
             }
-            return Json(_lancamentoerviceRepository.ObterLancamento(data, User.GetDados("Matricula")));
+            return Json(_lancamentoerviceRepository.ObterLancamento(data, User.GetDados("Matricula")).OrderBy(c => c.HoraInicio).ToList());
         }
+
 
     }
 }

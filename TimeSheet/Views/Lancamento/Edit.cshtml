@@ -48,7 +48,7 @@
                         <div class="form-group col-md-14">
                             @Html.LabelFor(model => model.Lancamento.Projetos)
                             <div class="input-group mb-3">
-                                <input  id="nomeEmpreendimento" type="text" class="form-control">
+                                <input  id="nomeEmpreendimento" value="@ViewBag.descricaoEmprendimento" type="text" class="form-control">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
                                 </div>
