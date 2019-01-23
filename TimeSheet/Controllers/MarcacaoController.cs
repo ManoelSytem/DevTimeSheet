@@ -275,5 +275,24 @@ namespace TimeSheet.Controllers
         }
 
 
+        public JsonResult Excluir(string codigo)
+        {
+
+            try
+            {
+                _marcacaoServiceRepository.DeleteMarcacao(codigo);
+                return Json(new { sucesso = "Marcação excluída com sucesso!" });
+            }
+            catch (Exception e)
+            {
+                return Json(new
+                {
+                    msg = e.Message,
+                    erro = true
+                });
+            }
+
+        }
+
     }
 }

@@ -75,7 +75,7 @@ namespace TimeSheet.Infrastructure.Repository
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
                     string sQuery = $@"Select  ZYZ_ANOMES as AnoMes, ZYZ_STATUS as Status from ZYZ010
-                                        Where ZYZ_CODIGO = '{codigo}'";
+                                        Where ZYZ_CODIGO = '{codigo}' AND  D_E_L_E_T_ <> '*'";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
 
@@ -94,6 +94,24 @@ namespace TimeSheet.Infrastructure.Repository
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public void Delete(string codigo)
+        {
+
+            using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+            {
+                string sQuery = $@"UPDATE ZYZ010 
+                                   SET D_E_L_E_T_ = '*',
+                                   R_E_C_D_E_L_ = R_E_C_N_O_
+                                   WHERE ZYZ_CODIGO = '{codigo}'
+                                   UPDATE ZYY010 
+                                   SET D_E_L_E_T_ = '*',
+                                   R_E_C_D_E_L_ = R_E_C_N_O_
+                                   WHERE ZYY_CODIGO = '{codigo}'";
+                dbConnection.Open();
+                dbConnection.Execute(sQuery);
             }
         }
     }

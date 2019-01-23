@@ -35,25 +35,24 @@
                 {
                     foreach (var item in Model)
                     {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.AnoMesDescricao)</td>
-                    @if (item.Status == "1")
-                    {
-                        <td>Aberto</td>
-                        <td>
-                            <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-eye"></i></button>
-                            <button type="button" class="btn btn-sm btn-editar" name="editar" onclick="location.href='@Url.Action("Edit", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-pen"></i></button>
-                            <button type="button" class="btn btn-sm btn-excluir" name="excluir" onclick="location.href='@Url.Action("Delete", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-trash"></i></button>
-                        </td>
-                    }
-                    else
-                    {
-                        <td>Fechado</td>
-                        <td>
-                            <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-eye"></i></button>
-                        </td>
-                    }
-                </tr>
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.AnoMesDescricao)</td>
+                            @if (item.Status == "1")
+                            {
+                                <td>Aberto</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-editar" name="editar" onclick="location.href='@Url.Action("Edit", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-pen"></i></button>
+                                    <button type="button" class="btn btn-sm btn-excluir"  name="excluir" onclick="Delete('@item.Codigo','@item.AnoMesDescricao')"><i class="fas fa-trash"></i></button>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>Fechado</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-eye"></i></button>
+                                </td>
+                            }
+                        </tr>
                     }
                 }
             </tbody>
@@ -61,40 +60,86 @@
     </div>
 </div>
 
-<div class="btn-ft">
-    <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
-    <label class="btn-ft-item-open" for="btn-ft-open">
-        <span><i class="fas fa-plus"></i></span>
-    </label>
-    <a href="@Url.Action("Create", "Marcacao")" class="btn-ft-item" tooltip="Nova Marcação Diária"><i class="fas fa-plus"></i></a>
+<div id="myModal" role="dialog">
 </div>
+    <div class="btn-ft">
+        <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
+        <label class="btn-ft-item-open" for="btn-ft-open">
+            <span><i class="fas fa-plus"></i></span>
+        </label>
+        <a href="@Url.Action("Create", "Marcacao")" class="btn-ft-item" tooltip="Nova Marcação Diária"><i class="fas fa-plus"></i></a>
+    </div>
 
-<script>
-    $('#tbCabecalhoMarcacao').DataTable({
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
-        "columnDefs": [
-            { className: "text-left", "targets": [0, 1] },
-            { "orderable": false, "targets": [2] }
-        ],
-        "language": {
-            "decimal": "",
-            "emptyTable": "Nenhum registro disponível na tabela",
-            "info": "Visualizando _START_ de _END_ de _TOTAL_ registros",
-            "infoEmpty": "Visualizando 0 de 0 de 0 registros",
-            "infoFiltered": "(filtered from _MAX_ total entries)",
-            "infoPostFix": "",
-            "thousands": ",",
-            "lengthMenu": "Mostrar _MENU_ registros",
-            "loadingRecords": "Carregando...",
-            "processing": "Processando...",
-            "search": "Pesquisar:",
-            "zeroRecords": "Nenhum registro correspondente encontrado",
-            "paginate": {
-                "first": "Primeira",
-                "last": "Última",
-                "next": "Próxima",
-                "previous": "Anterior"
-            }
-        },
-    });
-</script>
+    <script>
+        $('#tbCabecalhoMarcacao').DataTable({
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+            "columnDefs": [
+                { className: "text-left", "targets": [0, 1] },
+                { "orderable": false, "targets": [2] }
+            ],
+            "language": {
+                "decimal": "",
+                "emptyTable": "Nenhum registro disponível na tabela",
+                "info": "Visualizando _START_ de _END_ de _TOTAL_ registros",
+                "infoEmpty": "Visualizando 0 de 0 de 0 registros",
+                "infoFiltered": "(filtered from _MAX_ total entries)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ registros",
+                "loadingRecords": "Carregando...",
+                "processing": "Processando...",
+                "search": "Pesquisar:",
+                "zeroRecords": "Nenhum registro correspondente encontrado",
+                "paginate": {
+                    "first": "Primeira",
+                    "last": "Última",
+                    "next": "Próxima",
+                    "previous": "Anterior"
+                }
+            },
+        });
+
+       
+        function Delete(id, anodescricao) {
+            $("#myModal").dialog({
+                resizable: false,
+                height: 200,
+                title: "Exclusão de Marcação",
+                modal: true,
+                open: function () {
+                    $(this).html("Todos os lançamentos para " + anodescricao + " serão apagados, deseja excluír esta marcação?");
+                },
+                buttons: {
+                    "Confirmar": function () {
+                        ExcluirMarcacao(id);
+                        $(this).dialog("close");
+                    },
+                    Cancel: function () {
+                        $(this).dialog("close");
+                    }
+                },
+
+            });
+        }
+
+        function ExcluirMarcacao(codmarcao) {
+            $.ajax({
+                type: "post",
+                dataType: 'json',
+                url: '/Marcacao/Excluir',
+                data: { codigo: codmarcao }
+            })
+                .done(function (data) {
+                    if (data.erro === true) {
+                        Danger(data.msg)
+                    } else {
+                        Success(data.sucesso);
+                        window.location.reload();
+                    }
+                })
+                .fail(function (data) {
+                    Danger(data.msg)
+                });
+            event.preventDefault();
+        }
+    </script>

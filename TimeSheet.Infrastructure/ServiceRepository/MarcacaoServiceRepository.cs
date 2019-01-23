@@ -23,7 +23,7 @@ namespace TimeSheet.Infrastructure.ServiceRepository
 
         public void DeleteMarcacao(string codigo)
         {
-            throw new NotImplementedException();
+            __marcacaoRepository.Delete(codigo);
         }
 
         public List<Marcacao> ObterListMarcacaoPorCodigo(string codigo)
