@@ -84,21 +84,6 @@
             </div>
         </div>
     </div>
-    <div id="sucesso" style="display:none" class="card">
-        <div class="body">
-            <div class="alert alert-success">
-                <strong id="strong">Lancamento realizado com sucesso!</strong>
-            </div>
-        </div>
-    </div>
-    <div id="erro" style="display:none" class="card">
-        <div class="alert alert-danger">
-            <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ops!  </font></font></strong><font style="vertical-align: inherit;">
-                <font id="erromsg" style="vertical-align: inherit;">
-                </font>
-            </font>
-        </div>
-    </div>
     <div id="myModal" class="modal fade" role="dialog">
     </div>
     <div class="modal-body" id="modal-body"></div>
@@ -174,6 +159,32 @@
         }
     }
 
+    function Detalhe(id, datalancamento) {
+        document.getElementById("salvar").style.display = 'none';
+        document.getElementById("salvarEdicao").style.display = 'none';
+        var inputText = $('#DateSelect').val();
+        if (inputText !== undefined) {
+            if (inputText != '') {
+
+                $("#novaMarcacao").removeClass("is-invalid");
+                $.ajax({
+                    url: "/Lancamento/Details",
+                    data: { data: datalancamento, seq: id },
+                    type: 'get'
+                }).done(function (data) {
+                    $("#modal-body").html(data);
+                    $('#modal-body').scrollView();
+                    CarregarEmpreendimentos();
+                });
+
+            } else {
+                Information('A data da marcação não informada!');
+            }
+        } else {
+            Information('Não foi carregado!');
+        }
+    }
+
     function Delete(id) {
         $("#myModal").dialog({
             resizable: false,
@@ -194,7 +205,6 @@
     }
 
     var onSelect = function (dateText) {
-         limparCampos();
         if ($("#DateSelect").val().length == 10) {
             $.ajax({
                 url: '@Url.Action("ListApontamento", "Marcacao")',
@@ -231,13 +241,10 @@
         })
             .done(function (data) {
                 if (data.erro === true) {
-                    document.getElementById("sucesso").style.display = 'none';
-                    document.getElementById("erro").style.display = 'block';
-                    $('#erromsg').text(data.msg);
+                    Danger(data.msg);
+                    
                 } else {
-                    document.getElementById("erro").style.display = 'none';
-                    document.getElementById("sucesso").style.display = 'block';
-                    $('#strong').text(data.sucesso);
+                    Success(data.sucesso)
                     ObterListaLancamento();
                     limparCampos();
               }
@@ -258,9 +265,7 @@
         })
             .done(function (data) {
                 if (data.erro === true) {
-                    document.getElementById("sucesso").style.display = 'none';
-                    document.getElementById("erro").style.display = 'block';
-                    $('#erromsg').text(data.msg);
+                    Danger(data.msg);
                 } else {
                     Success(data.sucesso);
                     ObterListaLancamento();
@@ -298,7 +303,7 @@
                             '<td>' + data[i].observacao +'...'+ '</td>' +
                             '<td>' + data[i].codDivergencia + '</td>' +
                             '<td>' +
-                            '<button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick=location.href="/Lancamento/Delete/' + data[i].seq + '"><i class="fas fa-eye"></i></button>' +
+                            '<button type="button" class="btn btn-sm btn-visualizar" name="visualizar"  onclick="Detalhe(' + data[i].seq + ',' + data[i].dateLancamento +')"><i class="fas fa-eye"></i></button>' +
                             '<button type="button" class="btn btn-sm btn-editar" name="editar" onclick="edit(' + data[i].seq + ','+data[i].dateLancamento +')"><i class="fas fa-pen"></i></button>' +
                             '<button type="button" class="btn btn-sm create"  onclick="Delete('+ data[i].seq +')"><i class="fas fa-trash"></i></button>' +
                             '</td></tr>');
@@ -308,8 +313,6 @@
     }
 
     function limparCampos() {
-        document.getElementById("sucesso").style.display = 'none';
-        document.getElementById("erro").style.display = 'none';
         $('#Lancamento_HoraInicio').val("");
         $('#Lancamento_HoraFim').val("");
         $('#Lancamento_HoraFim').val("");
@@ -331,13 +334,9 @@
         })
             .done(function (data) {
                 if (data.erro === true) {
-                    document.getElementById("sucesso").style.display = 'none';
-                    document.getElementById("erro").style.display = 'block';
-                    $('#erromsg').text(data.msg);
+                    Danger(data.msg)
                 } else {
-                    document.getElementById("erro").style.display = 'none';
-                    document.getElementById("sucesso").style.display = 'block';
-                    $('#strong').text(data.sucesso);
+                    Success(data.sucesso);
                     ObterListaLancamento();
                     limparCampos();
                 }
@@ -348,17 +347,18 @@
         event.preventDefault();
     }
 
-    function CreateImportacao() {
+    function CreateImportacao(horaini, horaf) {
+        $("#modal-body").html("");
         document.getElementById("salvar").style.display = 'block';
         document.getElementById("salvarEdicao").style.display = 'none';
-        var inputText = $('#DateSelect').val();
+        var inputText = $("#DateSelect").val();
         if (inputText !== undefined) {
             if (inputText != '') {
                 $("#novaMarcacao").removeClass("is-invalid");
                 $.ajax({
                     url: "/Lancamento/Index",
                     type: 'get',
-                    data: { horainicio: $("horainicio").text(), horafim: $("horafim").text()}
+                    data: { horainicio: horaini, horafim: horaf}
                 }).done(function (data) {
                     $("#modal-body").html(data);
                     $('#modal-body').scrollView();
@@ -387,21 +387,20 @@
                     if (data.length % 2 === 0) {
                     for (var i = 0; data.length > i; i++) {
                       
-                            $('#tbLancamento tbody').append('<tr><td id="horainicio">' + data[i].apontamento + '</td>' +
-                                '<td id="horafim">' + data[i + 1].apontamento + '</td>' +
-                                '<td>' + + '</td>' +
-                                '<td>' + + '...' + '</td>' +
-                                '<td>' + + '</td>' +
+                            $('#tbLancamento tbody').append('<tr><td >' + data[i].apontamento + '</td>' +
+                                '<td >' + data[i + 1].apontamento + '</td>' +
+                                '<td></td>' +
+                                '<td></td>' +
+                                '<td></td>' +
                                 '<td>' +
-                                '<button type="button" class="btn btn-sm btn-editar" name="editar" onclick="CreateImportacao()"><i class="fas fa-pen"></i></button>' +
-                                '<button type="button" class="btn btn-sm create"  onclick="Delete(' + data[i].seq + ')"><i class="fas fa-trash"></i></button>' +
+                                '<button type="button" class="btn btn-sm btn-editar" name="editar" onclick="CreateImportacao(\'' + data[i].apontamento + '\',\'' + data[i + 1].apontamento+'\');"><i class="fas fa-pen"></i></button>' +
                                 '</td></tr>');
                             i++;
 
                         }
                     } else {
 
-                        Information('Não é impossivel importar batidas ímpar!');
+                        Information('Não é possivel importar batidas ímpar!');
                     }
                 }
             });

@@ -1,0 +1,55 @@
+﻿@model TimeSheet.ViewModel.ViewModelLancamento
+
+@{
+    Layout = null;
+}
+
+<div class="my-row">
+    <div class="col-md-12">
+        <div class="card azulc-azule">
+            <div class="card-header">
+                Detalhe
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-1">
+                        <label for="HoraInicio">Hora Início</label>
+                        @Html.HiddenFor(model => model.Seq, new { htmlAttributes = new { @class = "form-control", @placeholder = "", } })
+                        @Html.EditorFor(model => model.HoraInicio, new { htmlAttributes = new { @type = "time", @disabled = "disabled", @class = "form-control col-md-18", @placeholder = "Dia do Mês" } })
+                        <span asp-validation-for="HoraInicio" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-1 col-sm-4">
+                        <label for="HoraFim">Hora Fim</label>
+                        @Html.EditorFor(model => model.HoraFim, new { htmlAttributes = new { @type = "time", @disabled = "disabled", @class = "form-control col-md-12", @placeholder = "Início" } })
+                        <span asp-validation-for="HoraFim" class="text-danger"></span>
+                    </div>
+                    <div class="col-xs-8 col-sm-4">
+                        <div class="form-group col-md-14">
+                           Projeto
+                            <div class="input-group mb-3">
+                                <input disabled="disabled" value="@ViewBag.descricaoEmprendimento" id="nomeEmpreendimento" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-2 coddivergencia">
+                        <label for="DiaFim">Código de divergência</label>
+                        <div class="input-group mb-3">
+                            @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @type = "text", @disabled = "disabled", @id = "searchInput", @class = "form-control  col-md-8", @placeholder = "Código divergência..." } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger"  })
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6">
+                        <label for="Observacao">
+                            Observação
+                        </label>
+                        @Html.TextAreaFor(model => model.Observacao, new { @Id = "comentario", @disabled = "disabled", @class = "form-control comment", @cols = 50, @rows = 7 })
+                        @Html.ValidationMessageFor(model => model.Observacao, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

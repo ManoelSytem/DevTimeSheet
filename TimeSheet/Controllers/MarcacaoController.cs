@@ -116,7 +116,7 @@ namespace TimeSheet.Controllers
                     if (marcacao.Lancamento != null)
                     {
                         marcacao.Lancamento.ValidaHoraLancamento();
-                        marcacao.Lancamento.Observacao.ReplaceSaveObservacaoProthues();
+                        marcacao.Lancamento.Observacao = marcacao.Lancamento.Observacao.ReplaceSaveObservacaoProthues();
                         var codiviergencia = _prothuesService.ObterCodigoDivergenciaPorCodigo(Convert.ToString(marcacao.Lancamento.CodDivergencia));
                         codiv.ValidaCodigoDivergencia(codiviergencia);
                         lancameneto = _mapper.Map<Lancamento>(marcacao.Lancamento);

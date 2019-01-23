@@ -30,7 +30,12 @@ namespace TimeSheet.Controllers
         {
             try
             {
-                return View();
+              ViewModelLancamento lancamento = new ViewModelLancamento();
+                ViewModelMacacao marcacao = new ViewModelMacacao();
+                lancamento.HoraInicio = TimeSpan.Parse(horainicio);
+                lancamento.HoraFim = TimeSpan.Parse(horafim);
+                marcacao.Lancamento = lancamento;
+                return View(marcacao);
             }
             catch (Exception e)
             {
@@ -115,6 +120,25 @@ namespace TimeSheet.Controllers
                 });
             }
            
+        }
+
+
+        public ActionResult Details(string data, string seq)
+        {
+            try
+            {
+                
+                var lancamento = _mapper.Map<ViewModelLancamento>(_lancamentoServiceRepository.ObterLancamentoEdit(data, User.GetDados("Matricula"), seq));
+                ViewBag.descricaoEmprendimento = lancamento.DescricaoEmp;
+                return View(lancamento);
+
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
+
         }
     }
 }

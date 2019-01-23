@@ -26,7 +26,7 @@ body {
 /* Alertas */
 
 .alertas {
-    position: absolute;
+    position: fixed;
     left: 0px;
     right: 0px;
     z-index: 1000;
