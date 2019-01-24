@@ -125,7 +125,7 @@ namespace TimeSheet.Controllers
                         marcacao.Lancamento.codEmpredimento = marcacao.Lancamento.EmpreendimentoIds[0];
                         _lancamentoerviceRepository.SalvarLancamento(_mapper.Map<Lancamento>(marcacao.Lancamento), User.GetDados("Filial"), marcacao.DataDia.ToDateProtheus());
                     }
-                    return Json(new { sucesso = "Lancamento realizado com sucesso!" });
+                    return Json(new { sucesso = "Lançamento cadastrado com sucesso!" });
                 }
 
                 return Json(new
@@ -194,7 +194,7 @@ namespace TimeSheet.Controllers
                     }
 
 
-                    return Json(new { sucesso = "Lancamento atualizado com sucesso!" });
+                    return Json(new { sucesso = "Lançamento atualizado com sucesso!" });
                 }
 
                 return Json(new

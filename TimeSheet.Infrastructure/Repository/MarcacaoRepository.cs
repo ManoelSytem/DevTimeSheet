@@ -102,16 +102,20 @@ namespace TimeSheet.Infrastructure.Repository
 
             using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
             {
+                dbConnection.Open();
                 string sQuery = $@"UPDATE ZYZ010 
                                    SET D_E_L_E_T_ = '*',
                                    R_E_C_D_E_L_ = R_E_C_N_O_
-                                   WHERE ZYZ_CODIGO = '{codigo}'
-                                   UPDATE ZYY010 
-                                   SET D_E_L_E_T_ = '*',
-                                   R_E_C_D_E_L_ = R_E_C_N_O_
-                                   WHERE ZYY_CODIGO = '{codigo}'";
-                dbConnection.Open();
+                                   WHERE ZYZ_CODIGO = '{codigo}'";
+
                 dbConnection.Execute(sQuery);
+
+                string sQueryZ = $@" UPDATE ZYY010 
+                     SET D_E_L_E_T_ = '*',
+                     R_E_C_D_E_L_ = R_E_C_N_O_
+                     WHERE ZYY_CODIGO = '{codigo}'";
+
+                dbConnection.Execute(sQueryZ);
             }
         }
     }

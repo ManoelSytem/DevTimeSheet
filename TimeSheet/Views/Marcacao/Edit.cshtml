@@ -229,6 +229,7 @@
     }
 
     function ObterListaLancamento() {
+        $("#modal-body").html("");
           $.ajax({
                 url: '@Url.Action("GetMarcacoes", "Marcacao")',
                 changeMonth: true,
@@ -241,16 +242,23 @@
                     for (var i = 0; data.length > i; i++) {
                         if (!(data[i].observacao === null)) {
                             data[i].observacao = data[i].observacao.substring(0, 20);
+                        } else {
+                            data[i].observacao = ' ';
+                        }
+                        if (!(data[i].status === '2')) {
+                            var buttons = '<button type="button" class="btn btn-sm btn-editar" name="editar" onclick="edit(' + data[i].seq + ',' + data[i].dateLancamento + ')"><i class="fas fa-pen"></i></button>' +
+                                '<button type="button" class="btn btn-sm create"  onclick="Delete(' + data[i].seq + ')"><i class="fas fa-trash"></i></button>';
+                        } else {
+                            buttons = '';
                         }
                         $('#tbLancamento tbody').append('<tr><td>' + data[i].horaInicio + '</td>' +
                             '<td>' + data[i].horaFim + '</td>' +
                             '<td>' + data[i].descricaoEmp + '</td>' +
-                            '<td>' + data[i].observacao +'...' + '</td>' +
+                            '<td>' + data[i].observacao + '...' + '</td>' +
                             '<td>' + data[i].codDivergencia + '</td>' +
                             '<td>' +
-                            '<button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="Detalhe(' + data[i].seq + ',' + data[i].dateLancamento +')"><i class="fas fa-eye"></i></button>' +
-                            '<button type="button" class="btn btn-sm btn-editar" name="editar" onclick="edit(' + data[i].seq + ','+data[i].dateLancamento +')"><i class="fas fa-pen"></i></button>' +
-                            '<button type="button" class="btn btn-sm create"  onclick="Delete('+ data[i].seq +')"><i class="fas fa-trash"></i></button>' +
+                            '<button type = "button" class="btn btn-sm btn-visualizar" name = "visualizar"  onclick = "Detalhe(' + data[i].seq + ',' + data[i].dateLancamento + ')" > <i class="fas fa-eye"></i></button > ' +
+                            buttons +
                             '</td></tr>');
                     }
                 }
@@ -271,6 +279,7 @@
                     Success(data.sucesso);
                     ObterListaLancamento();
                     limparCampos();
+                  
                 }
             })
             .fail(function (data) {
@@ -288,10 +297,12 @@
             buttons: {
                 "Excluir": function () {
                     ExcluirRegistroLancamento(id);
+                    $("#modal-body").html("")
                     $(this).dialog("close");
                 },
                 Cancel: function () {
                     $(this).dialog("close");
+                    $("#modal-body").html("");
                 }
             }
         });

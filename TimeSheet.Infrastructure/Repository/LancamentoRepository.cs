@@ -52,7 +52,8 @@ namespace TimeSheet.Infrastructure.Repository
                                ZYY_PROJET as codEmpredimento,
                                ZYY_CODDIV as CodDivergencia,
                                LTRIM(RTRIM(ZYY_OBSERV)) as Observacao,
-                               SZ.ZA_DESC as DescricaoEmp
+                               SZ.ZA_DESC as DescricaoEmp,
+                               ZB.ZYZ_STATUS AS Status
                                FROM ZYY010 ZA
                                INNER JOIN  ZYZ010  ZB ON (ZB.ZYZ_CODIGO =  ZA.ZYY_CODIGO) 
                                INNER JOIN  SZA010 SZ ON (ZA.ZYY_PROJET =  SZ.ZA_COD) 
@@ -73,6 +74,7 @@ namespace TimeSheet.Infrastructure.Repository
                         lancamento.Seq = LacamentoResult.Seq;
                         lancamento.DateLancamento = LacamentoResult.DateLancamento;
                         lancamento.Observacao = LacamentoResult.Observacao;
+                        lancamento.Status = LacamentoResult.Status;
                         listlancamento.Add(lancamento);
                     }
                     return listlancamento;

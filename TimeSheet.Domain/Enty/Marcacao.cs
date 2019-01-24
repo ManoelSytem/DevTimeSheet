@@ -33,7 +33,11 @@ namespace TimeSheet.Domain.Enty
                 {
                     codigo = MarcacaoResult.Codigo;
                 }
-                
+                if (MarcacaoResult.AnoMes == ano + mes && MarcacaoResult.Status == "2")
+                {
+                    throw new Exception("Não é possivel realizar novos lançamentos! O período se encontra fechado.");
+                }
+
             }
 
             return codigo;

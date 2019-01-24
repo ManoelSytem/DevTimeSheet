@@ -107,7 +107,7 @@ namespace TimeSheet.Controllers
             try
             {
                  _lancamentoServiceRepository.DeleteLancamento(seq);
-                return Json(new { sucesso = "Lancamento excluído com sucesso!" });
+                return Json(new { sucesso = "Lançamento excluído com sucesso!" });
             }
             catch (Exception e)
             {
