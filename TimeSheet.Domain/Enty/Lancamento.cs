@@ -10,8 +10,8 @@ namespace TimeSheet.Domain.Enty
         public string Seq { get; set; }
         public string CodLancamento { get; set; }
         public string DateLancamento { get; set; }
-        public TimeSpan? HoraInicio { get; set; }
-        public TimeSpan? HoraFim { get; set; }
+        public TimeSpan HoraInicio { get; set; }
+        public TimeSpan HoraFim { get; set; }
         public string codEmpredimento { get; set; }
         public string DescricaoEmp { get; set; }
         public string Observacao { get; set; }

@@ -96,8 +96,30 @@ namespace TimeSheet.Infrastructure.Repository
                 throw ex;
             }
         }
+        public Marcacao ObterMarcacaoPorCodigo(string codigo)
+        {
+            try
+            {
+                Marcacao Marcacao = new Marcacao();
 
-        public void Delete(string codigo)
+                using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+                {
+                    string sQuery = $@"Select  ZYZ_ANOMES as AnoMes, LTRIM(RTRIM(ZYZ_CODINT)) AS codigojornada, ZYZ_STATUS as Status from ZYZ010
+                                        Where ZYZ_CODIGO = '{codigo}' AND  D_E_L_E_T_ <> '*'";
+                    dbConnection.Open();
+                    dbConnection.Execute(sQuery);
+
+                    return dbConnection.QueryFirst<Marcacao>(sQuery);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+            public void Delete(string codigo)
         {
 
             using (OracleConnection dbConnection = new OracleConnection(ConnectionString))

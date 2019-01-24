@@ -38,7 +38,7 @@ namespace TimeSheet.Infrastructure.ServiceRepository
 
         public Marcacao ObterMarcacao(string codigo)
         {
-            throw new NotImplementedException();
+            return __marcacaoRepository.ObterMarcacaoPorCodigo(codigo);
         }
 
         public void SalvarMarcacao(Marcacao item)

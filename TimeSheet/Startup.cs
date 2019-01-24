@@ -37,6 +37,7 @@ namespace TimeSheet
             services.AddSingleton<IJornadaTrabalho, JornadaTrbServiceRepository>();
             services.AddSingleton<IMarcacao, MarcacaoServiceRepository>();
             services.AddSingleton<ILancamento, LancamentoServiceRepository>();
+            services.AddSingleton<IFechamento, FechamentoServiceRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

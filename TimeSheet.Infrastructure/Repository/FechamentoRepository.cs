@@ -1,0 +1,38 @@
+﻿using Dapper;
+using Oracle.ManagedDataAccess.Client;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using TimeSheet.Domain.Enty;
+
+namespace TimeSheet.Infrastructure.Repository
+{
+    public class FechamentoRepository
+    {
+        private const string ConnectionString = "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=stark.intranet.bahiagas.com.br)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=ap12hml)));User Id=ap6;Password=ap6;";
+
+
+        public FechamentoRepository()
+        {
+
+        }
+
+        public void Add(Fechamento item, string filial, string dataProthues, string matUser)
+        {
+            try
+            {
+                using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+                {
+                    string sQuery = $@"INSERT INTO ZYU010 (ZYU_FILIAL,ZYU_CODIGO,ZYU_DATA,ZYU_HORA,ZYU_MATUSU,ZYU_THOREX,ZYU_THORAT,ZYU_THORFT,ZYU_THORAB,ZYU_THORAS) 
+                                    VALUES ('{filial}','{item.CodigoMarcacao}','{item.DataLancamento}','{matUser}', {item.TotalHoraExedente},{item.TotalAtraso},{item.TotalFalta},{item.TotalFalta},{item.TotalHora})";
+                    dbConnection.Open();
+                    dbConnection.Execute(sQuery);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+    }
+}

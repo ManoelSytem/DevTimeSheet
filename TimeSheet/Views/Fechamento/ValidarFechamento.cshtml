@@ -1,0 +1,83 @@
+﻿@model IEnumerable<TimeSheet.ViewModel.ViewModelFechamento>
+
+@{
+    ViewData["Title"] = "Fechamento de Marcações";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["Createfalse"] != null)
+{
+    <div class="card">
+        <div class="alert alert-danger">
+            <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Erro.  </font></font></strong><font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                    @TempData["Createfalse"].ToString();
+                </font>
+            </font>
+        </div>
+    </div>
+}
+<div class="card azulc-azule">
+    <div class="card-header">
+        @ViewBag.Title
+    </div>
+    <div class="card-body">
+        <table id="tbCabecalhoMarcacao" class="table table-striped table-bordered table-hover responsive nowrap" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th style="">Lançamento Data</th>
+                    <th>Descrição</th>
+                    <th>Divergência (S/N)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>..</td>
+                            <td>...</td>
+                            <td>
+                                ..
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $('#tbCabecalhoMarcacao').DataTable({
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+        "columnDefs": [
+            { className: "text-left", "targets": [0, 1] },
+            { "orderable": false, "targets": [2] }
+        ],
+        "language": {
+            "decimal": "",
+            "emptyTable": "Nenhum registro disponível na tabela",
+            "info": "Visualizando _START_ de _END_ de _TOTAL_ registros",
+            "infoEmpty": "Visualizando 0 de 0 de 0 registros",
+            "infoFiltered": "(filtered from _MAX_ total entries)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ registros",
+            "loadingRecords": "Carregando...",
+            "processing": "Processando...",
+            "search": "Pesquisar:",
+            "zeroRecords": "Nenhum registro correspondente encontrado",
+            "paginate": {
+                "first": "Primeira",
+                "last": "Última",
+                "next": "Próxima",
+                "previous": "Anterior"
+            }
+        },
+    });
+
+
+
+</script>
