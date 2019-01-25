@@ -92,9 +92,13 @@ namespace TimeSheet.Controllers
         {
             try
             {
+                Marcacao marcacao = new Marcacao();
+                marcacao.ValidaMarcacaoFoiFechada(_marcacaoServiceRepository.ObterMarcacao(viewModelefechamento.CodigoMarcacao));
+
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
                 var fechamento = _mapper.Map<Fechamento>(viewModelefechamento);
                 _fechamentoServiceRepository.SalvarFechamento(fechamento, User.GetDados("Filial"), DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"));
+                _marcacaoServiceRepository.UpdateStatusFechamento(viewModelefechamento.CodigoMarcacao);
                 return Json(new { sucesso = "Fechamento realizado com sucesso!" });
             }
             catch (Exception e)

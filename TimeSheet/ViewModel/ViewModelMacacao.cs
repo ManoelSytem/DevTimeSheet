@@ -19,5 +19,7 @@ namespace TimeSheet.ViewModel
         public string codigojornada { get; set; }
         public virtual ViewModelLancamento Lancamento { get; set; }
         public virtual List<ViewModelLancamento> Lancamentolist { get; set; }
+
+
     }
 }

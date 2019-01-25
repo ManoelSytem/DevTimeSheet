@@ -52,6 +52,14 @@ namespace TimeSheet.Domain.Enty
             }
         }
 
+        public void ValidaMarcacaoFoiFechada(Marcacao marcacao)
+        {
+            if (marcacao.Status == "2")
+            {
+                throw new Exception("Marcação se encontra fechada!");
+            }
+        }
+
 
     }
 }

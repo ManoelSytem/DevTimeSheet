@@ -13,5 +13,6 @@ namespace TimeSheet.Domain.Interface
         List<Marcacao> ObterListMarcacaoPorMatUser(string mat);
         List<Marcacao> ObterListMarcacaoPorCodigo(string codigo);
         Marcacao ObterMarcacao(string codigo);
+        void UpdateStatusFechamento(string codigo);
     }
 }

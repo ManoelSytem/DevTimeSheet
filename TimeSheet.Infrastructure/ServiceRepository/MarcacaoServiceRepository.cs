@@ -45,5 +45,10 @@ namespace TimeSheet.Infrastructure.ServiceRepository
         {
             __marcacaoRepository.Add(item);
         }
+
+        public void UpdateStatusFechamento(string codigo)
+        {
+            __marcacaoRepository.UpdateStatusMarcacao(codigo);
+        }
     }
 }

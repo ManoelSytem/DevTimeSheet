@@ -5,7 +5,7 @@ using System.Text;
 using TimeSheet.Domain.Util;
 
 namespace TimeSheet.Domain.Enty
-{
+{    
     public class Fechamento
     {
         public string Filial{ get; set; }
@@ -19,6 +19,7 @@ namespace TimeSheet.Domain.Enty
         public string DataLancamento { get; set; }
         public string Descricao { get; set; }
         public string Divergencia { get; set; }
+        
 
         public List<Fechamento> ValidarFechamento(List<Marcacao> marcacao, List<Apontamento> apontamentos, JornadaTrabalho jornada)
         {
@@ -151,5 +152,62 @@ namespace TimeSheet.Domain.Enty
             return TotalHoras.TotalHours;
         }
 
+        public void ValidarLancamento(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada, List<Apontamento> apontamento)
+        {
+
+        }
+       
+
+        public List<Fechamento> LancamentoForaDeIntervalo(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada)
+        {
+            List<Fechamento> listFachamento = new List<Fechamento>();
+            Fechamento novoFechamento = new Fechamento();
+            
+            foreach (Lancamento LancamentoResult in lancamentoList)
+            {
+                if(LancamentoResult.HoraInicio < jornada.HoraInicioDe || LancamentoResult.HoraInicio > jornada.HoraInicioAte || LancamentoResult.HoraFim < jornada.HoraFinal)
+                {
+                    novoFechamento.Divergencia = "Sim";
+                    novoFechamento.DataLancamento = LancamentoResult.DateLancamento.ToDateProtheusReverse();
+                    novoFechamento.Descricao = "Dias onde a primeira marcação esteja fora do intervalo informado para os campos “Hora Início de” e “Hora inicio até” na tabela de Intervalos para o período do fechamento.";
+                }
+
+                if ( LancamentoResult.HoraFim < jornada.HoraFinal)
+                {
+                    novoFechamento.Divergencia = "Sim";
+                    novoFechamento.DataLancamento = LancamentoResult.DateLancamento.ToDateProtheusReverse();
+                    novoFechamento.Descricao = "Dias onde a última marcação seja menor que o campo “Hora Saída” na tabela de Intervalos para o período do fechamento.";
+                }
+
+            }
+
+            return listFachamento;
+        }
+
+        public List<Fechamento> ValidarApontamento(Lancamento lancamento, List<Apontamento> apontamento)
+        {
+            List<Fechamento> listFechamento = new List<Fechamento>();
+            Fechamento novoFechamento = new Fechamento();
+
+            if (ValidarApontamentoImpar(apontamento))
+            {
+                novoFechamento.Divergencia = "Sim";
+                novoFechamento.DataLancamento = lancamento.DateLancamento;
+                novoFechamento.Descricao = "Dias com quantidade de batidas do relógio impar";
+            }
+            return listFechamento;
+        }
+
+        public bool ValidarApontamentoImpar(List<Apontamento> apontamento)
+        {
+            if(!(apontamento.Count % 2 == 0))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

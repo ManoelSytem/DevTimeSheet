@@ -120,7 +120,7 @@ namespace TimeSheet.Infrastructure.Repository
 
 
             public void Delete(string codigo)
-        {
+            {
 
             using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
             {
@@ -138,6 +138,19 @@ namespace TimeSheet.Infrastructure.Repository
                      WHERE ZYY_CODIGO = '{codigo}'";
 
                 dbConnection.Execute(sQueryZ);
+            }
+            }
+
+        public void UpdateStatusMarcacao(string codigo)
+        {
+
+            using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+            {
+                dbConnection.Open();
+                string sQuery = $@"UPDATE ZYZ010 
+                                   SET ZYZ_STATUS = '2'
+                                   WHERE ZYZ_CODIGO = '{codigo}'";
+                dbConnection.Execute(sQuery);
             }
         }
     }
