@@ -7,6 +7,7 @@ namespace TimeSheet.ViewModel
 {
     public class ViewModelFechamento
     {
+        public string CodigoMarcacao { get; set; }
         public string DataLancamento { get; set; }
         public string Descricao { get; set; }
         public string Divergencia { get; set; }

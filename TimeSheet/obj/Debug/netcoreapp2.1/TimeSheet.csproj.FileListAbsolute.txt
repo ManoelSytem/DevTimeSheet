@@ -187,3 +187,4 @@ C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreap
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Lancamento\Details.g.cshtml.cs
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Fechamento\Index.g.cshtml.cs
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Fechamento\ValidarFechamento.g.cshtml.cs
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Fechamento\Fechamento.g.cshtml.cs

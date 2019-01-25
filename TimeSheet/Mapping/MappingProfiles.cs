@@ -24,6 +24,8 @@ namespace TimeSheet.Mapping
             CreateMap<Lancamento, ViewModelLancamento>().ReverseMap();
 
             CreateMap<Apontamento, Apontamento>().ReverseMap();
+
+            CreateMap<Fechamento, ViewModelFechamento>().ReverseMap();
         }
 
     }

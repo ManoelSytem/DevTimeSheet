@@ -22,8 +22,9 @@ namespace TimeSheet.Controllers
         private readonly IMarcacao _marcacaoServiceRepository;
         private readonly IMapper _mapper;
         private readonly IJornadaTrabalho _jornadaTrbServiceRepository;
-        
-        public FechamentoController(IProtheus prothuesService, IMarcacao marcacaoServiceRepository, IMapper mapper, IConfiguracao configuracao, IMarcacao marcacao, ILancamento lancamento, IJornadaTrabalho jornada)
+        private readonly IFechamento _fechamentoServiceRepository;
+
+        public FechamentoController(IFechamento fechamentoServiceRepository, IProtheus prothuesService, IMarcacao marcacaoServiceRepository, IMapper mapper, IConfiguracao configuracao, IMarcacao marcacao, ILancamento lancamento, IJornadaTrabalho jornada)
         {
             _prothuesService = prothuesService;
             _marcacaoServiceRepository = marcacaoServiceRepository;
@@ -32,6 +33,7 @@ namespace TimeSheet.Controllers
             _marcacao = marcacao;
             _lancamentoerviceRepository = lancamento;
             _jornadaTrbServiceRepository = jornada;
+            _fechamentoServiceRepository = fechamentoServiceRepository;
 
         }
 
@@ -71,14 +73,37 @@ namespace TimeSheet.Controllers
                 marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
                 marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"));
                 var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
-                fechamento.CalcularFechamento(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho);
 
-                return View();
+                 var viewModelFechamento =  _mapper.Map<ViewModelFechamento>(fechamento.CalcularFechamento(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho));
+                 viewModelFechamento.CodigoMarcacao = id;
+                return View("Fechamento", viewModelFechamento);
             }
             catch (Exception e)
             {
                 TempData["Createfalse"] = e.Message;
                 return View();
+            }
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Fechamento(ViewModelFechamento viewModelefechamento)
+        {
+            try
+            {
+                string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
+                var fechamento = _mapper.Map<Fechamento>(viewModelefechamento);
+                _fechamentoServiceRepository.SalvarFechamento(fechamento, User.GetDados("Filial"), DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"));
+                return Json(new { sucesso = "Fechamento realizado com sucesso!" });
+            }
+            catch (Exception e)
+            {
+                return Json(new
+                {
+                    msg = e.Message,
+                    erro = true
+                });
             }
 
         }
