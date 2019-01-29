@@ -67,16 +67,26 @@ namespace TimeSheet.Controllers
         {
             try
             {
+
                 Marcacao marcacao = new Marcacao();
                 Fechamento fechamento = new Fechamento();
 
-                marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
-                marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"));
-                var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
+                var ResultFechamento = ValidacaoFechamento("ValidaDiferencaTotalHoraDiaLancamentoMacacao", id);
 
-                 var viewModelFechamento =  _mapper.Map<ViewModelFechamento>(fechamento.CalcularFechamento(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho));
-                 viewModelFechamento.CodigoMarcacao = id;
-                return View("Fechamento", viewModelFechamento);
+                if (ResultFechamento.Count > 0)
+                {
+                    return View("ValidarFechamento", _mapper.Map<List<ViewModelFechamento>>(ResultFechamento));
+                }
+                else
+                {
+                    marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
+                    marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"));
+                    var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
+
+                    var viewModelFechamento = _mapper.Map<ViewModelFechamento>(fechamento.CalcularFechamento(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho));
+                    viewModelFechamento.CodigoMarcacao = id;
+                    return View("Fechamento", viewModelFechamento);
+                }
             }
             catch (Exception e)
             {
@@ -111,5 +121,73 @@ namespace TimeSheet.Controllers
             }
 
         }
+
+
+
+        public List<Fechamento> ValidacaoFechamento(string metodo, string id)
+        {
+            List<Fechamento> listFechamento = new List<Fechamento>();
+            Fechamento fechamento = new Fechamento();
+
+            //Mit Validação 8.4.1
+            if (metodo == "ValidarApontamentoImpar")
+            {
+                var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+
+                foreach (Lancamento lancamento in listLancamento)
+                {
+                       
+                        var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
+                        var fechamentoReturn = fechamento.ValidarApontamentoImpar(lancamento, listApontamento);
+
+                        if (fechamentoReturn.Divergencia != null)
+                        {
+                            listFechamento.Add(fechamentoReturn);
+                        }
+
+                   
+                }
+            }
+
+            //Mit Validação 8.4.2
+            if (metodo == "ValidaDiferencaTotalHoraDiaLancamentoMacacao")
+            {
+                 listFechamento  =  ValidaDiferencaTotalHoraDiaLancamentoMacacao(id);
+            }
+
+
+            return listFechamento;
+        }
+
+
+        private List<Fechamento> ValidaDiferencaTotalHoraDiaLancamentoMacacao(string id)
+        {
+            Fechamento fechamento = new Fechamento();
+            List<Fechamento> listFechamento = new List<Fechamento>();
+
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+            
+            foreach (Lancamento lancamento in listLancamento)
+            {
+                var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
+                var totalApontamentoPorLancentoDia = fechamento.CalcularTotalApontamentoPorDiaLancamento(listApontamento);
+                var lancamentolist = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, User.GetDados("Matricula"));
+                var totalHoraDecimalLancmanetoPorDia = fechamento.CalcularTotalHoraLancamentoPorDia(lancamentolist);
+                var FechamentoResultValidacao = fechamento.ValidaDiferencaTotalHoraDiaLancamentoTotalApontamento(lancamento, totalHoraDecimalLancmanetoPorDia, totalApontamentoPorLancentoDia);
+                if(FechamentoResultValidacao.Descricao != null)
+                {
+                    listFechamento.Add(FechamentoResultValidacao);
+                }
+
+            }
+            return listFechamento;
+        }
+
+    }
+
+    public class LancamentoComparer : IEqualityComparer<Lancamento>
+    {
+        public bool Equals(Lancamento x, Lancamento y) => x.DateLancamento == y.DateLancamento;
+        public int GetHashCode(Lancamento obj) => obj.DateLancamento.GetHashCode();
     }
 }

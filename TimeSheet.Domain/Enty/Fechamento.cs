@@ -5,10 +5,10 @@ using System.Text;
 using TimeSheet.Domain.Util;
 
 namespace TimeSheet.Domain.Enty
-{    
+{
     public class Fechamento
     {
-        public string Filial{ get; set; }
+        public string Filial { get; set; }
         public string CodigoMarcacao { get; set; }
         public string HoraFechamento { get; set; }
         public double TotalHoraExedente { get; set; }
@@ -19,7 +19,12 @@ namespace TimeSheet.Domain.Enty
         public string DataLancamento { get; set; }
         public string Descricao { get; set; }
         public string Divergencia { get; set; }
-        
+
+
+        public Fechamento()
+        {
+
+        }
 
         public List<Fechamento> ValidarFechamento(List<Marcacao> marcacao, List<Apontamento> apontamentos, JornadaTrabalho jornada)
         {
@@ -31,11 +36,11 @@ namespace TimeSheet.Domain.Enty
         public Fechamento CalcularFechamento(IOrderedEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho)
         {
             Fechamento Fechamento = new Fechamento();
-            Fechamento.TotalHoraExedente = Math.Round(CalcularTotalHoraExedente(orderedlistalancamento.OrderBy(c=> c.DateLancamento), jornadaTrabalho),2);
+            Fechamento.TotalHoraExedente = Math.Round(CalcularTotalHoraExedente(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
             Fechamento.TotalAtraso = Math.Round(CalcularAtraso(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
             Fechamento.TotalFalta = CalcularQuantidadeDeDiaSemApontamento(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho);
             Fechamento.TotalAbono = CalcularTotalDeAbono(orderedlistalancamento.OrderBy(c => c.DateLancamento));
-            Fechamento.TotalHora = Math.Round(CalcularTotalHoras(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho),2);
+            Fechamento.TotalHora = Math.Round(CalcularTotalHoras(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
             return Fechamento;
         }
 
@@ -51,13 +56,14 @@ namespace TimeSheet.Domain.Enty
             foreach (Lancamento LancamentoResult in lancamentoList)
             {
 
-                if (datalancamento != LancamentoResult.DateLancamento && datalancamento != "0") {
+                if (datalancamento != LancamentoResult.DateLancamento && datalancamento != "0")
+                {
                     totalHoraDiaLancamento -= jrDiaria;
                 }
                 datalancamento = LancamentoResult.DateLancamento;
                 totalLancamento = LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
                 totalHoraDiaLancamento += totalLancamento;
-                
+
             }
 
             totalHoraExedenteTimeSpan = totalHoraDiaLancamento - jrDiaria;
@@ -71,7 +77,7 @@ namespace TimeSheet.Domain.Enty
             DateTime initialDate = jornada.DataInicio;
             DateTime finalDate = jornada.DataFim;
             string datalancamento = "0";
-            int  countDiasDiasDiferenteLancamento = 0;
+            int countDiasDiasDiferenteLancamento = 0;
             int countDiasInguasLancamento = 0;
 
             var days = 0;
@@ -93,7 +99,7 @@ namespace TimeSheet.Domain.Enty
 
             foreach (Lancamento LancamentoResult in lancamentoList)
             {
-               
+
                 if (datalancamento != LancamentoResult.DateLancamento && datalancamento != "0")
                 {
                     countDiasDiasDiferenteLancamento++;
@@ -116,11 +122,11 @@ namespace TimeSheet.Domain.Enty
             int totalAbono = 0;
             foreach (Lancamento LancamentoResult in lancamentoList)
             {
-                if(LancamentoResult.CodDivergencia != 0)
+                if (LancamentoResult.CodDivergencia != 0)
                 {
                     totalAbono++;
                 }
-               
+
             }
             return totalAbono;
         }
@@ -152,27 +158,23 @@ namespace TimeSheet.Domain.Enty
             return TotalHoras.TotalHours;
         }
 
-        public void ValidarLancamento(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada, List<Apontamento> apontamento)
-        {
-
-        }
-       
+    
 
         public List<Fechamento> LancamentoForaDeIntervalo(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada)
         {
             List<Fechamento> listFachamento = new List<Fechamento>();
             Fechamento novoFechamento = new Fechamento();
-            
+
             foreach (Lancamento LancamentoResult in lancamentoList)
             {
-                if(LancamentoResult.HoraInicio < jornada.HoraInicioDe || LancamentoResult.HoraInicio > jornada.HoraInicioAte || LancamentoResult.HoraFim < jornada.HoraFinal)
+                if (LancamentoResult.HoraInicio < jornada.HoraInicioDe || LancamentoResult.HoraInicio > jornada.HoraInicioAte || LancamentoResult.HoraFim < jornada.HoraFinal)
                 {
                     novoFechamento.Divergencia = "Sim";
                     novoFechamento.DataLancamento = LancamentoResult.DateLancamento.ToDateProtheusReverse();
                     novoFechamento.Descricao = "Dias onde a primeira marcação esteja fora do intervalo informado para os campos “Hora Início de” e “Hora inicio até” na tabela de Intervalos para o período do fechamento.";
                 }
 
-                if ( LancamentoResult.HoraFim < jornada.HoraFinal)
+                if (LancamentoResult.HoraFim < jornada.HoraFinal)
                 {
                     novoFechamento.Divergencia = "Sim";
                     novoFechamento.DataLancamento = LancamentoResult.DateLancamento.ToDateProtheusReverse();
@@ -184,23 +186,25 @@ namespace TimeSheet.Domain.Enty
             return listFachamento;
         }
 
-        public List<Fechamento> ValidarApontamento(Lancamento lancamento, List<Apontamento> apontamento)
+
+        //Inicio das validações de acordo com a MIT
+        public Fechamento ValidarApontamentoImpar(Lancamento lancamento, List<Apontamento> apontamento)
         {
-            List<Fechamento> listFechamento = new List<Fechamento>();
             Fechamento novoFechamento = new Fechamento();
 
-            if (ValidarApontamentoImpar(apontamento))
+            if (VerificaImpar(apontamento))
             {
                 novoFechamento.Divergencia = "Sim";
                 novoFechamento.DataLancamento = lancamento.DateLancamento;
                 novoFechamento.Descricao = "Dias com quantidade de batidas do relógio impar";
             }
-            return listFechamento;
+
+            return novoFechamento;
         }
 
-        public bool ValidarApontamentoImpar(List<Apontamento> apontamento)
+        public bool VerificaImpar(List<Apontamento> apontamento)
         {
-            if(!(apontamento.Count % 2 == 0))
+            if (!(apontamento.Count % 2 == 0))
             {
                 return true;
             }
@@ -208,6 +212,45 @@ namespace TimeSheet.Domain.Enty
             {
                 return false;
             }
+        }
+
+       
+
+        public decimal CalcularTotalApontamentoPorDiaLancamento(List<Apontamento> apontamentolist)
+        {
+            TimeSpan totalhoraApontamemto = TimeSpan.Parse("00:00:00");
+            if (!VerificaImpar(apontamentolist))
+            {
+                for (int i = 0; i < apontamentolist.Count; i = i + 2)
+                {
+                    totalhoraApontamemto +=  TimeSpan.Parse(Convert.ToString(apontamentolist[i].apontamento)) -TimeSpan.Parse(Convert.ToString(apontamentolist[i+1].apontamento));
+                }
+            }
+
+            return Math.Abs(Math.Round(Convert.ToDecimal(totalhoraApontamemto.TotalHours), 2));
+        }
+
+        public decimal CalcularTotalHoraLancamentoPorDia(List<Lancamento> lancamento)
+        {
+            TimeSpan totalhoraLancamentoDia = TimeSpan.Parse("00:00:00");
+            foreach(Lancamento LancamentoResult in lancamento)
+            {
+                totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+            }
+            return Math.Round(Convert.ToDecimal(totalhoraLancamentoDia.TotalHours),2);
+        }
+
+        public Fechamento ValidaDiferencaTotalHoraDiaLancamentoTotalApontamento(Lancamento lancamento, decimal totalLancamento,  decimal totalApontamento)
+        {
+             Fechamento novo = new Fechamento();
+             if(totalApontamento < totalLancamento)
+               {
+                  novo.Divergencia = "Sim";
+                  novo.DataLancamento = lancamento.DateLancamento;
+                  novo.Descricao = "Dias com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema";
+               }
+
+            return novo;
         }
     }
 }
