@@ -26,6 +26,7 @@ namespace TimeSheet.ViewModel
         [Required(ErrorMessage = "Informe o projeto, item obrigatório. ", AllowEmptyStrings = false)]
         public string[] EmpreendimentoIds { get; set; }
         public virtual ICollection<Empreendimento> Projetos { get; set; }
+        public string Fase { get; set; }
 
 
         public void ValidaHoraLancamento()

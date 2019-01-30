@@ -102,7 +102,7 @@ namespace TimeSheet.Controllers
 
                     string codigoAbertura = aberturaMarcacao.AbeturaExiste(_marcacao.ObterListMarcacaoPorMatUser(User.GetDados("Matricula")), marcacao.DataDia.ToDia(), marcacao.DataDia.ToAno());
                     string codJornadaTrabalho = jornada.ValidarJornadaTrabalhoExisteParaLancamento(_jornadaTrbServiceRepository.ObterListJornada(), marcacao.DataDia.ToDateProtheusReverse());
-                  
+
                     if (codigoAbertura == "0")
                     {
                         marcacao.AnoMes = marcacao.DataDia.ToShortDateProtheus();
@@ -130,7 +130,7 @@ namespace TimeSheet.Controllers
 
                 return Json(new
                 {
-                    msg = string.Join("; ", ModelState.Values
+                    msg = string.Join("\n", ModelState.Values
                                         .SelectMany(x => x.Errors)
                                         .Select(x => x.ErrorMessage)),
                     erro = true
@@ -149,7 +149,7 @@ namespace TimeSheet.Controllers
             {
 
                 ViewModelMacacao marcacao = new ViewModelMacacao();
-            
+
 
                 var infoUser = new ViewModelMacacao();
                 var user = new Usuario();
@@ -247,10 +247,6 @@ namespace TimeSheet.Controllers
                     matricula = User.GetDados("Matricula");
                     filial = User.GetDados("Filial");
 
-                    //config = _configuracao.ObterConfiguracao();
-                    //config.ValidaConfiguracaoMarcacao(dia + "/" + mes + "/" + ano, dia);
-
-                    //marcacao.ValidarAbeturaMarcacaoExiste(_marcacao.ObterListMarcacaoPorMatUser(User.GetDados("Matricula")), ano, mes);
                 }
                 return Json(_prothuesService.ObterBatidasDePonto(matricula, filial, data));
 
@@ -294,5 +290,31 @@ namespace TimeSheet.Controllers
 
         }
 
+
+        public ActionResult Details(string id)
+        {
+
+            try
+            {
+                var list = _mapper.Map<List<Lancamento>, List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")));
+                ViewModelMacacao marcacao = new ViewModelMacacao();
+
+
+                var infoUser = new ViewModelMacacao();
+                var user = new Usuario();
+                marcacao.MatUsuario = User.GetDados("Matricula");
+                marcacao.Coordenacao = User.GetDados("Coordenacao");
+                user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
+                marcacao.NomeUsuario = user.Nome;
+                marcacao.Lancamentolist = list;
+                return View(marcacao);
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
+
+        }
     }
 }

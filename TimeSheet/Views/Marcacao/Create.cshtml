@@ -94,7 +94,7 @@
         </label>
         <button type="button" style="display:none" id="salvar" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></button>
         <button type="button" style="display:none" id="salvarEdicao" class="btn-ft-item" tooltip="Salvar Edição"><i class="fas fa-save"></i></button>
-        <a href="@Url.Action("Index", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
+        <a href="@Url.Action("Create", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
         <a onclick="Create()" class="btn-ft-item" tooltip="Novo Lançamento"><i class="fas fa-plus"></i></a>
     </div>
 }
@@ -110,8 +110,8 @@
 
 
     function Create() {
-        document.getElementById("salvar").style.display = 'block';
-        document.getElementById("salvarEdicao").style.display = 'none';
+        $("#salvar").show();
+        $("#salvarEdicao").hide();
         var inputText = $('#DateSelect').val();
         if (inputText !== undefined) {
             if (inputText != '') {
@@ -303,7 +303,7 @@
                         }
                         if (!(data[i].status === '2')) {
                             var buttons = '<button type="button" class="btn btn-sm btn-editar" name="editar" onclick="edit(' + data[i].seq + ',' + data[i].dateLancamento + ')"><i class="fas fa-pen"></i></button>' +
-                                '<button type="button" class="btn btn-sm create"  onclick="Delete(' + data[i].seq + ')"><i class="fas fa-trash"></i></button>';
+                                '<button type="button" class="btn btn-sm btn-excluir create"  onclick="Delete(' + data[i].seq + ')"><i class="fas fa-trash"></i></button>';
                         } else {
                             buttons = '';
                         }

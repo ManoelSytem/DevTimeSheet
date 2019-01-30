@@ -69,7 +69,7 @@ namespace TimeSheet.Infrastructure.Repository
 
                 var sql = $@"SELECT LTRIM(RTRIM(SZA010.ZA_COD)) AS CodigoProtheus
                               ,LTRIM(RTRIM(SZA010.ZA_DESC)) AS Nome
-                              ,SZA010.ZA_FASE
+                              ,SZA010.ZA_FASE AS Fase
                             FROM SZA010
                             INNER JOIN (
                               SELECT SZA.ZA_COD

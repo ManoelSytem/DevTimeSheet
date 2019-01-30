@@ -8,5 +8,6 @@ namespace TimeSheet.Domain.Enty
     {
         public string Nome { get; set; }
         public string CodigoProtheus { get; set; }
+        public string Fase { get; set; }
     }
 }

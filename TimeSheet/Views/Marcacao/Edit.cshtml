@@ -53,7 +53,7 @@
                     <div class="row">
                         <div class="col-xs-6 col-sm-2">
                             <label for="NomeGerencia">
-                                Coordenação
+                                Centro de Custo
                             </label>
                             @Html.EditorFor(model => model.Coordenacao, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Coordenacao" } })
                             <span asp-validation-for="Coordenacao" class="text-danger"></span>
@@ -112,7 +112,7 @@
             <span><i class="fas fa-plus"></i></span>
         </label>
         <button style="display:none" type="button" id="salvarEdicao" class="btn-ft-item" tooltip="Salvar Edição"><i class="fas fa-save"></i></button>
-        <a href="@Url.Action("Index", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
+        <a href="@Url.Action("Edit", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
     </div>
 }
 
@@ -247,7 +247,7 @@
                         }
                         if (!(data[i].status === '2')) {
                             var buttons = '<button type="button" class="btn btn-sm btn-editar" name="editar" onclick="edit(' + data[i].seq + ',' + data[i].dateLancamento + ')"><i class="fas fa-pen"></i></button>' +
-                                '<button type="button" class="btn btn-sm create"  onclick="Delete(' + data[i].seq + ')"><i class="fas fa-trash"></i></button>';
+                                '<button type="button" class="btn btn-sm btn-excluir create"  onclick="Delete(' + data[i].seq + ')"><i class="fas fa-trash"></i></button>';
                         } else {
                             buttons = '';
                         }

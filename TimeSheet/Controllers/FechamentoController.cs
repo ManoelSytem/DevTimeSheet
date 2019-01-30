@@ -71,16 +71,11 @@ namespace TimeSheet.Controllers
                 Marcacao marcacao = new Marcacao();
                 Fechamento fechamento = new Fechamento();
 
-                //var ResultFechamento = ValidacaoFechamento("ValidaDiferencaTotalHoraDiaLancamentoMacacao", id);
-                //var ResultFechamento = ValidacaoFechamento("ValidaDiferencaEntreBatidas", id);
-                //var ResultFechamento = ValidacaoFechamento("ValidaDiferencaTotalHoraLancamentoPorDiaETotalHoraJornadaDiaria", id);
-                //var ResultFechamento = ValidacaoFechamento("ValidaSabadoDomingoEFeriado", id);
-                //var ResultFechamento =  ValidacaoFechamento("ValidaMarcacoesSemLancamento", id)
-                var ResultFechamento = ValidacaoFechamento("ValidaLancamentoForaDeIntervalo", id);
+                var ResultFechamento = ValidacaoFechamento(id);
 
                 if (ResultFechamento.Count > 0)
                 {
-                    return View("ValidarFechamento", _mapper.Map<List<ViewModelFechamento>>(ResultFechamento));
+                    return View("ValidarFechamento", _mapper.Map<List<ViewModelFechamento>>(ResultFechamento.OrderBy(c => c.DataLancamento)));
                 }
                 else
                 {
@@ -129,15 +124,13 @@ namespace TimeSheet.Controllers
 
 
 
-        public List<Fechamento> ValidacaoFechamento(string metodo, string id)
+        public List<Fechamento> ValidacaoFechamento(string id)
         {
             List<Fechamento> listFechamento = new List<Fechamento>();
             Fechamento fechamento = new Fechamento();
 
             //Mit Validação 8.4.1
-            if (metodo == "ValidarApontamentoImpar")
-            {
-                var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+             var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
 
                 foreach (Lancamento lancamento in listLancamento)
                 {
@@ -152,87 +145,68 @@ namespace TimeSheet.Controllers
 
 
                 }
-            }
-
-            //Mit Validação 8.4.2
-            if (metodo == "ValidaDiferencaTotalHoraDiaLancamentoMacacao")
-            {
-                var list = ValidaDiferencaTotalHoraDiaLancamentoMacacao(id);
-                if (list.Count > 0)
+         
+            //Mit Validação 8.4.2   
+                var listA = ValidaDiferencaTotalHoraDiaLancamentoMacacao(id);
+                if (listA.Count > 0)
                 {
-                    foreach (Fechamento fechamentoResult in list.ToList())
+                    foreach (Fechamento fechamentoResult in listA.ToList())
                     {
                         listFechamento.Add(fechamentoResult);
                     }
                 }
-            }
-
+            
 
             //Mit Validação 8.4.3 e  Validação 8.4.4
-            if (metodo == "ValidaDiferencaEntreBatidas")
-            {
-                var list  = ValidaDiferencaBatida(id);
-                if (list.Count > 0)
+                var listB  = ValidaDiferencaBatida(id);
+                if (listB.Count > 0)
                 {
-                    foreach (Fechamento fechamentoResult in list.ToList())
+                    foreach (Fechamento fechamentoResult in listB.ToList())
                     {
                         listFechamento.Add(fechamentoResult);
                     }
                 }
-            }
+           
 
             //Mit Validação 8.4.5
-            if (metodo == "ValidaDiferencaTotalHoraLancamentoPorDiaETotalHoraJornadaDiaria")
-            {
-                var list = ValidaDiferencaTotalHoraLancamentoPorDiaETotalHoraJornadaDiaria(id);
-                if (list.Count > 0)
+                var listC = ValidaDiferencaTotalHoraLancamentoPorDiaETotalHoraJornadaDiaria(id);
+                if (listC.Count > 0)
                 {
-                    foreach (Fechamento fechamentoResult in list.ToList())
+                    foreach (Fechamento fechamentoResult in listC.ToList())
                     {
                         listFechamento.Add(fechamentoResult);
                     }
                 }
-            }
-
+           
             //Mit Validação 8.4.6
-            if (metodo == "ValidaSabadoDomingoEFeriado")
-            {
-                var list = ValidaSabadoDomingoEFeriado(id);
-                if (list.Count > 0)
+                var listD = ValidaSabadoDomingoEFeriado(id);
+                if (listD.Count > 0)
                 {
-                    foreach (Fechamento fechamentoResult in list.ToList())
+                    foreach (Fechamento fechamentoResult in listD.ToList())
                     {
                         listFechamento.Add(fechamentoResult);
                     }
                 }
-            }
-
+           
             //Mit Validação 8.4.7
-            if (metodo == "ValidaMarcacoesSemLancamento")
-            {
-
-                var list = ValidaDiasSemLancameto(id);
-                if (list.Count > 0)
+                var listE = ValidaDiasSemLancameto(id);
+                if (listE.Count > 0)
                 {
-                    foreach (Fechamento fechamentoResult in list.ToList())
+                    foreach (Fechamento fechamentoResult in listE.ToList())
                     {
                         listFechamento.Add(fechamentoResult);
                     }
                 }
-            }
+            
             //Mit Validação 8.4.8 e 8.4.8 e 8.4.10
-            if (metodo == "ValidaLancamentoForaDeIntervalo")
-            {
-                var list =  ValidaLancamentoForaDeIntervalo(id);
-                if (list.Count > 0)
+                var listF =  ValidaLancamentoForaDeIntervalo(id);
+                if (listF.Count > 0)
                 {
-                    foreach (Fechamento fechamentoResult in list.ToList())
+                    foreach (Fechamento fechamentoResult in listF.ToList())
                     {
                         listFechamento.Add(fechamentoResult);
                     }
                 }
-
-            }
 
             return listFechamento;
         }

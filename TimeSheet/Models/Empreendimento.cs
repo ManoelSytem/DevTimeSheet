@@ -9,5 +9,6 @@ namespace TimeSheet.Models
     {
         public string CodigoProtheus { get; set; }
         public string Nome { get; set; }
+        public string Fase { get; set; }
     }
 }

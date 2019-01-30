@@ -24,7 +24,7 @@ namespace TimeSheet.Infrastructure.Repository
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
                     string sQuery = $@"INSERT INTO ZYU010 (ZYU_FILIAL,ZYU_CODIGO,ZYU_DATA,ZYU_HORA,ZYU_MATUSU,ZYU_THOREX,ZYU_THORAT,ZYU_THORFT,ZYU_THORAB,ZYU_THORAS, R_E_C_N_O_,  R_E_C_D_E_L_) 
-                                    VALUES ('{filial}','{item.CodigoMarcacao}','{dataProthues}','{DateTime.Now.ToShortTimeString()}','{matUser}', {Convert.ToString(item.TotalHoraExedente).Replace(",", ".")},{Convert.ToString(item.TotalAtraso).Replace(",", ".")},{item.TotalFalta},{Convert.ToString(item.TotalAbono).Replace(",", ".")},{Convert.ToString(item.TotalHora).Replace(",", ".")},(SELECT NVL(MAX(X.R_E_C_N_O_),0)+1 FROM ZYY010 X),0)";
+                                    VALUES ('{filial}','{item.CodigoMarcacao}','{dataProthues}','{DateTime.Now.ToShortTimeString().Replace(":", "")}','{matUser}', {Convert.ToString(item.TotalHoraExedente).Replace(",", ".")},{Convert.ToString(item.TotalAtraso).Replace(",", ".")},{item.TotalFalta},{Convert.ToString(item.TotalAbono).Replace(",", ".")},{Convert.ToString(item.TotalHora).Replace(",", ".")},(SELECT NVL(MAX(X.R_E_C_N_O_),0)+1 FROM ZYY010 X),0)";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
                 }
