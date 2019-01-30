@@ -45,6 +45,7 @@ namespace TimeSheet.Infrastructure.Repository
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
                     string sQuery = $@" Select DISTINCT 
+                               LTRIM(RTRIM(ZYY_CODIGO)) as Codigo,
                                LTRIM(RTRIM(ZYY_SEQ)) as Seq,
                                LTRIM(RTRIM(ZYY_DATA)) as DateLancamento, 
                                ZYY_HORINI as  HoraInicio,

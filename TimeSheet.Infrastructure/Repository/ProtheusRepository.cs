@@ -66,7 +66,7 @@ namespace TimeSheet.Infrastructure.Repository
             Conexao.Open();
             try
             {
-               
+
                 var sql = $@"SELECT LTRIM(RTRIM(SZA010.ZA_COD)) AS CodigoProtheus
                               ,LTRIM(RTRIM(SZA010.ZA_DESC)) AS Nome
                               ,SZA010.ZA_FASE
@@ -98,7 +98,7 @@ namespace TimeSheet.Infrastructure.Repository
 
         public List<Domain.Enty.Apontamento> ObterListBatidaDePontoDiario(string mat, string filial, string Data)
         {
-            
+
             try
             {
                 using (OracleConnection Conexao = new OracleConnection(ConnectionString))
@@ -117,8 +117,8 @@ namespace TimeSheet.Infrastructure.Repository
                         apontamento.horaFim = TimeSpan.Parse(ApResult.hora.Replace(',', ':'));
                         listApontamento.Add(apontamento);
                     }
-               
-                return listApontamento;
+
+                    return listApontamento;
                 }
             }
             catch (Exception ex)
@@ -127,7 +127,7 @@ namespace TimeSheet.Infrastructure.Repository
             }
             finally
             {
-               
+
             }
 
         }
@@ -138,7 +138,7 @@ namespace TimeSheet.Infrastructure.Repository
             try
             {
 
-                Usuario usuarioGerencia= new Usuario(); ;
+                Usuario usuarioGerencia = new Usuario(); ;
                 var sqlUser = $@"Select RA_NOME AS Nome from SRA010
                           WHERE RA_MAT = LTRIM(RTRIM('{mat}'))";
                 var QueryResult = Conexao.Query<Usuario>(sqlUser);
@@ -149,6 +149,35 @@ namespace TimeSheet.Infrastructure.Repository
                 }
 
                 return usuarioGerencia;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Conexao.Close();
+            }
+
+        }
+
+        public Feriado ObterFeriadoProthues(string data, string filial)
+        {
+            Conexao.Open();
+            try
+            {
+
+                Feriado feriado = new Feriado(); ;
+                var sqlUser = $@"Select P3_FILIAL AS  Filial, P3_DATA Data, P3_DESC AS Descricao, P3_FIXO from  SP3010
+                                where P3_DATA = '{data}' AND P3_FILIAL = '{filial}' AND P3_FIXO = 'S'";
+                var QueryResult = Conexao.Query<Feriado>(sqlUser);
+
+                foreach(Feriado feriadoResult in QueryResult) {
+                    feriado.Data = feriadoResult.Data;
+                    feriado.Descricao = feriadoResult.Descricao;
+                    feriado.Filial = feriadoResult.Filial;
+                }
+                return feriado;
             }
             catch (Exception ex)
             {

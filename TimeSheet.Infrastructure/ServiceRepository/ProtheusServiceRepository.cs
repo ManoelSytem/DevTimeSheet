@@ -26,6 +26,11 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             return _prothuesRepository.ObterCodigoDivergenciaPorCodigo(cod);
         }
 
+        public Feriado ObterFeriadoPorDataLancamento(string data, string filial)
+        {
+            return _prothuesRepository.ObterFeriadoProthues(data, filial);
+        }
+
         public IEnumerable<CodDivergencia> ObterListCodDivergenciaPordescricao(string descricao)
         {
             return _prothuesRepository.ObterListaCodigoDivergenciaPorIdDesc(descricao);

@@ -10,6 +10,8 @@ namespace TimeSheet.Domain.Enty.Interface
         CodDivergencia ObterCodigoDivergenciaPorCodigo(string cod);
         IEnumerable<Empreendimento> ObterListEmpreendimentos(string nome);
         List<Apontamento> ObterBatidasDePonto(string mat, string filial, string Data);
+        Feriado ObterFeriadoPorDataLancamento(string data, string filial);
         Usuario ObterUsuarioNome(string mat);
+
     }
 }
