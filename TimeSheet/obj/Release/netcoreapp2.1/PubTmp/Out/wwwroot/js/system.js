@@ -1,40 +1,40 @@
 $(document).ready(function () {
 
- DataTable:
+    DataTable:
 
-$('#tb1').DataTable({
+    $('#tb1').DataTable({
 
-    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "TDS"]],
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "TDS"]],
 
-    "columnDefs": [
-        { className: "text-right", "targets": [] },
-        { className: "text-left", "targets": [0, 1, 2, 3] },
-        { "orderable": false, "targets": [4, 5] }
-    ],
+        "columnDefs": [
+            { className: "text-right", "targets": [] },
+            { className: "text-left", "targets": [0, 1, 2, 3] },
+            { "orderable": false, "targets": [4, 5] }
+        ],
 
-    "language": {
+        "language": {
 
-        "decimal": "",
-        "emptyTable": "Nenhum registro disponível na tabela",
-        "info": "Visualizando _START_ de _END_ de _TOTAL_ registros",
-        "infoEmpty": "Visualizando 0 de 0 de 0 registros",
-        "infoFiltered": "(filtered from _MAX_ total entries)",
-        "infoPostFix": "",
-        "thousands": ",",
-        "lengthMenu": "Mostrar _MENU_ registros",
-        "loadingRecords": "Carregando...",
-        "processing": "Processando...",
-        "search": "Pesquisar:",
-        "zeroRecords": "Nenhum registro correspondente encontrado",
-        "paginate": {
-            "first": "Primeira",
-            "last": "Última",
-            "next": "Próxima",
-            "previous": "Anterior"
-        }
-    },
+            "decimal": "",
+            "emptyTable": "Nenhum registro disponível na tabela",
+            "info": "Visualizando _START_ de _END_ de _TOTAL_ registros",
+            "infoEmpty": "Visualizando 0 de 0 de 0 registros",
+            "infoFiltered": "(filtered from _MAX_ total entries)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ registros",
+            "loadingRecords": "Carregando...",
+            "processing": "Processando...",
+            "search": "Pesquisar:",
+            "zeroRecords": "Nenhum registro correspondente encontrado",
+            "paginate": {
+                "first": "Primeira",
+                "last": "Última",
+                "next": "Próxima",
+                "previous": "Anterior"
+            }
+        },
 
-});
+    });
 
     $('#tb2').DataTable({
 
@@ -97,7 +97,7 @@ function Alerta(tipo, mensagem) {
     if (tipo === "Erro") classe = "danger";
     if (tipo === "Informação") classe = "info";
     if (tipo === "Atenção") classe = "warning";
-
+    
     var alert = `<div class="alert alert-${classe} alert-dismissable fade show" role="alert">
 	                <i class="fas fa-check-circle fa-lg"></i>
 	                <strong>${tipo}</strong>${mensagem}
@@ -105,6 +105,10 @@ function Alerta(tipo, mensagem) {
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>`;
+
+    setTimeout(function () {
+        $(".alert").fadeOut();
+    }, 7000);
     return alert;
 }
 

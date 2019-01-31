@@ -5,27 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (TempData["CreateSucesso"] != null)
-{
-    <div class="card">
-        <div class="body">
-            <div class="alert alert-success">
-                <strong>Lançamento realizado com sucesso!</strong>
-            </div>
-        </div>
-    </div>
-}@if (TempData["Createfalse"] != null)
-{
-    <div class="card">
-        <div class="alert alert-danger">
-            <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ops!  </font></font></strong><font style="vertical-align: inherit;">
-                <font style="vertical-align: inherit;">
-                    @TempData["Createfalse"].ToString();
-                </font>
-            </font>
-        </div>
-    </div>
-}
 @using (Html.BeginForm())
 {
     <div class="my-row">
@@ -92,7 +71,7 @@
                                         <td>@item.DateLancamento.ToDateProtheusReverseformate()</td>
                                         <td>@Html.DisplayFor(modelItem => item.HoraInicio)</td>
                                         <td>@Html.DisplayFor(modelItem => item.HoraFim)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.DescricaoEmp)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.DescricaoEmp) - Fase -  @Html.DisplayFor(modelItem => item.Fase)</td>
                                         <td>...</td>
                                         <td>@Html.DisplayFor(modelItem => item.CodDivergencia)</td>
                                     </tr>

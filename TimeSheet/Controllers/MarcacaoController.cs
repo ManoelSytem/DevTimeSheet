@@ -122,7 +122,8 @@ namespace TimeSheet.Controllers
                         lancameneto = _mapper.Map<Lancamento>(marcacao.Lancamento);
                         lancameneto.ValidaHorasLancamentoOutraMarcacao(_lancamentoerviceRepository.ObterLancamento(marcacao.DataDia.ToDateProtheus(), User.GetDados("Matricula")));
                         marcacao.Lancamento.Codigo = aberturaMarcacao.AbeturaExiste(_marcacao.ObterListMarcacaoPorMatUser(User.GetDados("Matricula")), marcacao.DataDia.ToDia(), marcacao.DataDia.ToAno());
-                        marcacao.Lancamento.codEmpredimento = marcacao.Lancamento.EmpreendimentoIds[0];
+                        marcacao.Lancamento.codEmpredimento = marcacao.Lancamento.EmpreendimentoIds[0].Substring(0, marcacao.Lancamento.EmpreendimentoIds[0].IndexOf('-'));
+                        marcacao.Lancamento.Fase = marcacao.Lancamento.EmpreendimentoIds[0].Substring(marcacao.Lancamento.EmpreendimentoIds[0].IndexOf('-') + 1);
                         _lancamentoerviceRepository.SalvarLancamento(_mapper.Map<Lancamento>(marcacao.Lancamento), User.GetDados("Filial"), marcacao.DataDia.ToDateProtheus());
                     }
                     return Json(new { sucesso = "Lançamento cadastrado com sucesso!" });
@@ -189,7 +190,8 @@ namespace TimeSheet.Controllers
                         codiv.ValidaCodigoDivergencia(codiviergencia);
                         lancameneto = _mapper.Map<Lancamento>(marcacao.Lancamento);
                         lancameneto.ValidaHorasLancamentoOutraMarcacao(_lancamentoerviceRepository.ObterLancamento(marcacao.DataDia.ToDateProtheus(), User.GetDados("Matricula")));
-                        marcacao.Lancamento.codEmpredimento = marcacao.Lancamento.EmpreendimentoIds[0];
+                        marcacao.Lancamento.codEmpredimento = marcacao.Lancamento.EmpreendimentoIds[0].Substring(0, marcacao.Lancamento.EmpreendimentoIds[0].IndexOf('-'));
+                        marcacao.Lancamento.Fase = marcacao.Lancamento.EmpreendimentoIds[0].Substring(marcacao.Lancamento.EmpreendimentoIds[0].IndexOf('-')+1);
                         _lancamentoerviceRepository.AtualizarLancamento(_mapper.Map<Lancamento>(marcacao.Lancamento));
                     }
 

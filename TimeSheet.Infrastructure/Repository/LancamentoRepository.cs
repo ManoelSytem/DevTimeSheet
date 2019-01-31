@@ -24,8 +24,8 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
-                    string sQuery = $@"INSERT INTO ZYY010 (ZYY_CODIGO, ZYY_FILIAL, ZYY_DATA , ZYY_HORINI,ZYY_HORFIN, ZYY_PROJET,ZYY_CODDIV,ZYY_OBSERV,R_E_C_N_O_,  R_E_C_D_E_L_)
-                    VALUES('{item.Codigo}','{filial}', '{dataProthues}', '{item.HoraInicio}','{item.HoraFim}', '{item.codEmpredimento}', '{item.CodDivergencia}','{item.Observacao}', (SELECT NVL(MAX(X.R_E_C_N_O_),0)+1 FROM ZYY010 X),0)";
+                    string sQuery = $@"INSERT INTO ZYY010 (ZYY_CODIGO, ZYY_FILIAL, ZYY_DATA , ZYY_HORINI,ZYY_HORFIN, ZYY_PROJET,ZYY_CODDIV,ZYY_OBSERV,ZYY_FASE, R_E_C_N_O_,  R_E_C_D_E_L_)
+                    VALUES('{item.Codigo}','{filial}', '{dataProthues}', '{item.HoraInicio}','{item.HoraFim}', '{item.codEmpredimento}', '{item.CodDivergencia}','{item.Observacao}','{item.Fase}', (SELECT NVL(MAX(X.R_E_C_N_O_),0)+1 FROM ZYY010 X),0)";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
                 }
@@ -47,6 +47,7 @@ namespace TimeSheet.Infrastructure.Repository
                     string sQuery = $@" Select DISTINCT 
                                LTRIM(RTRIM(ZYY_CODIGO)) as Codigo,
                                LTRIM(RTRIM(ZYY_SEQ)) as Seq,
+                               LTRIM(RTRIM(SZ.ZA_FASE)) as Fase,
                                LTRIM(RTRIM(ZYY_DATA)) as DateLancamento, 
                                ZYY_HORINI as  HoraInicio,
                                ZYY_HORFIN as HoraFim,
@@ -76,6 +77,7 @@ namespace TimeSheet.Infrastructure.Repository
                         lancamento.DateLancamento = LacamentoResult.DateLancamento;
                         lancamento.Observacao = LacamentoResult.Observacao;
                         lancamento.Status = LacamentoResult.Status;
+                        lancamento.Fase = LacamentoResult.Fase;
                         listlancamento.Add(lancamento);
                     }
                     return listlancamento;
@@ -96,7 +98,8 @@ namespace TimeSheet.Infrastructure.Repository
                 {
                     string sQuery = $@" Select 
                               LTRIM(RTRIM(ZYY_SEQ)) as Seq,
-                              LTRIM(RTRIM(ZYY_DATA)) as DateLancamento, 
+                              LTRIM(RTRIM(ZYY_DATA)) as DateLancamento,
+                              LTRIM(RTRIM(SZ.ZA_FASE)) as Fase,
                               ZYY_CODIGO as Codigo,
                                ZYY_HORINI as  HoraInicio,
                                ZYY_HORFIN as HoraFim,
@@ -121,6 +124,7 @@ namespace TimeSheet.Infrastructure.Repository
                         lancamento.Seq = LacamentoResult.Seq;
                         lancamento.DateLancamento = LacamentoResult.DateLancamento;
                         lancamento.Observacao = LacamentoResult.Observacao;
+                        lancamento.Fase = LacamentoResult.Fase;
                     return lancamento;
                 }
             }
@@ -140,7 +144,8 @@ namespace TimeSheet.Infrastructure.Repository
                 {
                     string sQuery = $@" Select DISTINCT 
                                LTRIM(RTRIM(ZYY_SEQ)) as Seq,
-                              LTRIM(RTRIM(ZYY_DATA)) as DateLancamento, 
+                              LTRIM(RTRIM(ZYY_DATA)) as DateLancamento,
+                               LTRIM(RTRIM(SZ.ZA_FASE)) as Fase,
                                ZYY_CODIGO as Codigo,
                                ZYY_HORINI as  HoraInicio,
                                ZYY_HORFIN as HoraFim,
@@ -166,6 +171,7 @@ namespace TimeSheet.Infrastructure.Repository
                         lancamento.CodDivergencia = LacamentoResult.CodDivergencia;
                         lancamento.Seq = LacamentoResult.Seq;
                         lancamento.DateLancamento = LacamentoResult.DateLancamento;
+                        lancamento.Fase = LacamentoResult.Fase;
                         listlancamento.Add(lancamento);
                     }
                     return listlancamento;
@@ -187,7 +193,8 @@ namespace TimeSheet.Infrastructure.Repository
                     string sQuery = $@"UPDATE ZYY010
                             SET ZYY_HORINI =  '{item.HoraInicio}', ZYY_HORFIN = '{item.HoraFim}',
                             ZYY_PROJET = '{item.codEmpredimento}', ZYY_CODDIV = '{item.CodDivergencia}',
-                             ZYY_OBSERV = '{item.Observacao}'
+                             ZYY_OBSERV = '{item.Observacao}',
+                             ZYY_FASE =  '{item.Fase}'
                             WHERE ZYY_SEQ  = '{item.Seq}'";
 
                     dbConnection.Open();

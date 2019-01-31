@@ -4,27 +4,6 @@
     Layout = null;
 }
 
-@if (TempData["CreateSucesso"] != null)
-{
-    <div class="card">
-        <div class="body">
-            <div class="alert alert-success">
-                <strong>Lançamento realizado com sucesso!</strong>
-            </div>
-        </div>
-    </div>
-}@if (TempData["Createfalse"] != null)
-{
-    <div class="card">
-        <div class="alert alert-danger">
-            <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ops!  </font></font></strong><font style="vertical-align: inherit;">
-                <font style="vertical-align: inherit;">
-                    @TempData["Createfalse"].ToString();
-                </font>
-            </font>
-        </div>
-    </div>
-}
 <div class="my-row">
     <div class="col-md-12">
         <div class="card azulc-azule">
@@ -117,7 +96,7 @@
         $('#Lancamento_EmpreendimentoIds option:not(:selected)').remove();
         for (var i in data) {
             if ($('#Lancamento_EmpreendimentoIds option[value="' + data[i].codigoProtheus + '"]').val() === undefined) {
-                $('#Lancamento_EmpreendimentoIds').append('<option value="' + data[i].codigoProtheus + '">' + data[i].codigoProtheus + ' - ' + data[i].nome + '</option>');
+                $('#Lancamento_EmpreendimentoIds').append('<option value="' + data[i].codigoProtheus + '-' + data[i].fase + '">' + data[i].codigoProtheus + ' - ' + data[i].nome +' - Fase - ' + data[i].fase + '</option>');
             }
         }
     }

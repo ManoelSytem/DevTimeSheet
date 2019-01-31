@@ -98,7 +98,7 @@
         $('#Lancamento_EmpreendimentoIds option:not(:selected)').remove();
         for (var i in data) {
             if ($('#Lancamento_EmpreendimentoIds option[value="' + data[i].codigoProtheus + '"]').val() === undefined) {
-                $('#Lancamento_EmpreendimentoIds').append('<option value="' + data[i].codigoProtheus + '">' + data[i].codigoProtheus + ' - ' + data[i].nome + '</option>');
+                $('#Lancamento_EmpreendimentoIds').append('<option value="' + data[i].codigoProtheus + '-' + data[i].fase + '">' + data[i].codigoProtheus + ' - ' + data[i].nome + '- Fase -' + data[i].fase + '</option>');
             }
         }
     }
