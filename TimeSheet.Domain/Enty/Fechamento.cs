@@ -216,7 +216,7 @@ namespace TimeSheet.Domain.Enty
         public Fechamento ValidaDiferencaTotalHoraDiaLancamentoTotalApontamento(Lancamento lancamento, decimal totalLancamento, decimal totalApontamento)
         {
             Fechamento novo = new Fechamento();
-            if (totalApontamento < totalLancamento && lancamento.CodDivergencia == 0)
+            if (totalApontamento < totalLancamento)
             {
                 novo.Divergencia = "Sim";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
@@ -227,9 +227,9 @@ namespace TimeSheet.Domain.Enty
         }
 
 
-        public List<Fechamento> ValidaDiferencaEntreBatidas(Lancamento lancamento, List<Apontamento> apontamentolist)
+        public Fechamento ValidaPrimeiroLancamento(Lancamento lancamento, List<Apontamento> apontamentolist)
         {
-            List<Fechamento> novalistFechamento = new List<Fechamento>();
+           Fechamento FechamentoRetorno = new Fechamento();
             if (!VerificaImpar(apontamentolist))
             {
                 for (int i = 0; i < apontamentolist.Count; i = i + 2)
@@ -237,24 +237,37 @@ namespace TimeSheet.Domain.Enty
                     if ((lancamento.HoraInicio < TimeSpan.Parse(Convert.ToString(apontamentolist[i].apontamento)) | lancamento.HoraInicio > TimeSpan.Parse(Convert.ToString(apontamentolist[i].apontamento))) && lancamento.CodDivergencia == 0)
                     {
                         Fechamento novo = new Fechamento();
-                        novo.Divergencia = "Sim";
+                        novo.Divergencia = "Não";
                         novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
                         novo.Descricao = "diferença entre a primeira batida do relógio e o primeiro lançamento no sistema e sem código de divergência";
-                        novalistFechamento.Add(novo);
-                    }
+                        return novo;
 
-                    if ((lancamento.HoraFim < TimeSpan.Parse(Convert.ToString(apontamentolist[i + 3].apontamento)) | lancamento.HoraFim < TimeSpan.Parse(Convert.ToString(apontamentolist[i + 3].apontamento))) && lancamento.CodDivergencia == 0)
-                    {
-                        Fechamento novo = new Fechamento();
-                        novo.Divergencia = "Sim";
-                        novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                        novo.Descricao = "diferença entre a última batida do relógio e o último lançamento no sistema e sem código de divergência";
-                        novalistFechamento.Add(novo);
                     }
                     break;
                 }
             }
-            return novalistFechamento;
+            return FechamentoRetorno;
+        }
+
+        public Fechamento ValidaUltimaLancamento(Lancamento lancamento, List<Apontamento> apontamentolist)
+        {
+            Fechamento FechamentoRetorno = new Fechamento();
+            if (!VerificaImpar(apontamentolist))
+            {
+                for (int i = 0; i < apontamentolist.Count; i = i + 2)
+                {
+                    if ((lancamento.HoraFim < TimeSpan.Parse(Convert.ToString(apontamentolist[i + 3].apontamento)) | lancamento.HoraFim > TimeSpan.Parse(Convert.ToString(apontamentolist[i + 3].apontamento))) && lancamento.CodDivergencia == 0)
+                    {
+                        Fechamento novo = new Fechamento();
+                        novo.Divergencia = "Não";
+                        novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
+                        novo.Descricao = "diferença entre a última batida do relógio e o último lançamento no sistema e sem código de divergência";
+                        return novo;
+                    }
+                    break;
+                }
+            }
+            return FechamentoRetorno;
         }
 
         public Fechamento ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(Lancamento lancamento, decimal totalLancamento, JornadaTrabalho jornada)

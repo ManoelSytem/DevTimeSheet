@@ -67,7 +67,7 @@ namespace TimeSheet.Controllers
         {
             try
             {
-
+                TempData["Createfalse"] = null;
                 Marcacao marcacao = new Marcacao();
                 Fechamento fechamento = new Fechamento();
 
@@ -77,7 +77,7 @@ namespace TimeSheet.Controllers
                 {
                     foreach (Fechamento fechamentoResult in ResultFechamento)
                     {
-                        if (fechamentoResult.StatusFechamento == "B") 
+                        if (fechamentoResult.StatusFechamento == "B")
                         {
                             ViewBag.FechamentoBloqueado = "B";
                         }
@@ -185,7 +185,7 @@ namespace TimeSheet.Controllers
             }
 
 
-            //Mit Validação 8.4.3 e  Validação 8.4.4 não conclui o fechamento caso possuir divergências.
+            //Mit Validação 8.4.3 e  Validação 8.4.4 não concluirá o fechamento caso possuir divergências.
             var listB = ValidaDiferencaBatida(id);
             if (listB.Count > 0)
             {
@@ -207,7 +207,7 @@ namespace TimeSheet.Controllers
                 }
             }
 
-            //Mit Validação 8.4.6 não conclui o fechamento caso possuir divergências.
+            //Mit Validação 8.4.6 não concluirá o fechamento caso possuir divergências.
             var listD = ValidaSabadoDomingoEFeriado(id);
             if (listD.Count > 0)
             {
@@ -228,7 +228,7 @@ namespace TimeSheet.Controllers
                 }
             }
 
-            //Mit Validação 8.4.8 e 8.4.9 e 8.4.10 não conclui o fechamento caso possuir divergências.
+            //Mit Validação 8.4.8 e 8.4.9 e 8.4.10 não concluirá o fechamento caso possuir divergências.
             var listF = ValidaLancamentoForaDeIntervalo(id);
             if (listF.Count > 0)
             {
@@ -272,25 +272,53 @@ namespace TimeSheet.Controllers
             Fechamento fechamento = new Fechamento();
             List<Fechamento> listaFechamentoFinal = new List<Fechamento>();
 
-            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento);
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
 
-            foreach (Lancamento lancamento in listLancamento)
+            if (listLancamento != null)
             {
-                var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
-                var listFechamentoResult = fechamento.ValidaDiferencaEntreBatidas(lancamento, listApontamento);
 
-                if (listFechamentoResult.Count > 0)
+                foreach (Lancamento lancamento in listLancamento)
                 {
-                    foreach (Fechamento passaListFechamento in listFechamentoResult)
-                    {
-                        listaFechamentoFinal.Add(passaListFechamento);
-                    }
-                }
+                    var fechamentoRetornoPrimeiro = ValidarPrimeiroLancamentoPorDia(lancamento.DateLancamento);
+                    var fechamentoRetornoUltimo =   ValidarUltimoLancamentoPorDia(lancamento.DateLancamento);
 
+                    if (fechamentoRetornoPrimeiro.Descricao != null)
+                    {
+                        listaFechamentoFinal.Add(fechamentoRetornoUltimo);
+                    }
+                    if (fechamentoRetornoUltimo.Descricao != null)
+                    {
+                        listaFechamentoFinal.Add(fechamentoRetornoUltimo);
+                    }
+
+                }
             }
             return listaFechamentoFinal;
         }
 
+
+        private Fechamento ValidarPrimeiroLancamentoPorDia(string datalancamento)
+        {
+            Fechamento fechamento = new Fechamento();
+
+            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
+
+            var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), LancamentoDiario.DateLancamento);
+            var FechamentoResult = fechamento.ValidaPrimeiroLancamento(LancamentoDiario, listApontamento);
+
+            return FechamentoResult;
+        }
+
+         private Fechamento ValidarUltimoLancamentoPorDia(string datalancamento)
+        {
+            Fechamento fechamento = new Fechamento();
+
+            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).Last();
+            var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), LancamentoDiario.DateLancamento);
+            var FechamentoResult = fechamento.ValidaUltimaLancamento(LancamentoDiario, listApontamento);
+
+            return FechamentoResult;
+        }
 
         private List<Fechamento> ValidaDiferencaTotalHoraLancamentoPorDiaETotalHoraJornadaDiaria(string id)
         {
