@@ -22,8 +22,8 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
-                    string sQuery = $@"INSERT INTO ZYZ010 (ZYZ_FILIAL, ZYZ_MATUSU, ZYZ_ANOMES, ZYZ_STATUS, ZYZ_CODINT, R_E_C_N_O_)
-                             VALUES('{item.Filial}', '{item.MatUsuario}', '{item.AnoMes}','{item.Status}', '{item.codigojornada}', (SELECT MAX(X.R_E_C_N_O_)+1 FROM ZYV010 X))";
+                    string sQuery = $@"INSERT INTO ZYZ010 (ZYZ_FILIAL, ZYZ_MATUSU, ZYZ_ANOMES, ZYZ_STATUS, ZYZ_CODINT, R_E_C_N_O_, R_E_C_D_E_L_)
+                             VALUES('{item.Filial}', '{item.MatUsuario}', '{item.AnoMes}','{item.Status}', '{item.codigojornada}', (SELECT MAX(X.R_E_C_N_O_)+1 FROM ZYZ010 X),0)";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
                 }
