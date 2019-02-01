@@ -5,27 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (TempData["CreateSucesso"] != null)
-{
-    <div class="card">
-        <div class="body">
-            <div class="alert alert-success">
-                <strong>Lançamento realizado com sucesso!</strong>
-            </div>
-        </div>
-    </div>
-}@if (TempData["Createfalse"] != null)
-{
-    <div class="card">
-        <div class="alert alert-danger">
-            <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ops!  </font></font></strong><font style="vertical-align: inherit;">
-                <font style="vertical-align: inherit;">
-                    @TempData["Createfalse"].ToString();
-                </font>
-            </font>
-        </div>
-    </div>
-}
 @using (Html.BeginForm())
 {
     <div class="my-row">

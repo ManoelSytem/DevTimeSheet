@@ -19,7 +19,7 @@ namespace TimeSheet.Domain.Enty
         public string DataLancamento { get; set; }
         public string Descricao { get; set; }
         public string Divergencia { get; set; }
-
+        public string StatusFechamento { get; set; }
 
         public Fechamento()
         {

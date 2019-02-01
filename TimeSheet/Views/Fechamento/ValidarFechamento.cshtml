@@ -17,38 +17,51 @@
         </div>
     </div>
 }
-<div class="card azulc-azule">
-    <div class="card-header">
-        @ViewBag.Title
-    </div>
-    <div class="card-body">
-        <table id="tbCabecalhoMarcacao" class="table table-striped table-bordered table-hover responsive nowrap" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th style="">Lançamento Data</th>
-                    <th>Descrição</th>
-                    <th>Divergência (S/N)</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model != null)
-                {
-                    foreach (var item in Model)
+    <div class="card azulc-azule">
+        <div class="card-header">
+            @ViewBag.Title
+        </div>
+        <div class="card-body">
+            <table id="tbCabecalhoMarcacao" class="table table-striped table-bordered table-hover responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th style="">Lançamento Data</th>
+                        <th>Descrição</th>
+                        <th>Divergência (S/N)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
                     {
-                        <tr>
-                            <td>@item.DataLancamento</td>
-                            <td>@item.Descricao</td>
-                            <td>
-                                @item.Divergencia
-                            </td>
-                        </tr>
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.DataLancamento</td>
+                                <td>@item.Descricao</td>
+                                <td>
+                                    @item.Divergencia
+                                </td>
+                            </tr>
+                        }
                     }
+                </tbody>
+            </table>
+            <div align="center">
+                @if(ViewBag.FechamentoBloqueado != "B") {
+                <button type="button" style="background-color:#f44336; " onclick="RealizarFechamento()" class="btn btn-danger">Realizar Fechamento</button>
                 }
-            </tbody>
-        </table>
+            </div>
+        </div>
     </div>
+<div id="myModal" role="dialog">
 </div>
-
+<div class="btn-ft">
+    <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
+    <label class="btn-ft-item-open" for="btn-ft-open">
+        <span><i class="fas fa-plus"></i></span>
+    </label>
+    <a href="@Url.Action("Index", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
+</div>
 <script>
     $('#tbCabecalhoMarcacao').DataTable({
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
@@ -78,6 +91,29 @@
         },
     });
 
+    function RealizarFechamento() {
+        $("#myModal").dialog({
+            resizable: false,
+            height: 350,
+            width: 450,
+            title: "Informação",
+            modal: true,
+            open: function () {
+                $(this).html("Atenção! algumas marcações sinalizadas como divergência poderão ser fechadas. Você será redirecionado para a tela de fechamento para realizar a confirmação.");
+            },
+            buttons: {
+                "Realizar Fechamento": function () {
+                    window.location.href = '/Fechamento/Fechamento/'+@ViewBag.CodigoMarcacao;
+                    $(this).dialog("close");
+                },
+                "Voltar e Revisar": function () {
+                    $(this).dialog("close");
+                }
+            },
+
+        });
+
+    }
 
 
 </script>

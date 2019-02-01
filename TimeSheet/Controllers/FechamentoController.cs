@@ -75,23 +75,50 @@ namespace TimeSheet.Controllers
 
                 if (ResultFechamento.Count > 0)
                 {
-                    return View("ValidarFechamento", _mapper.Map<List<ViewModelFechamento>>(ResultFechamento.OrderBy(c => c.DataLancamento)));
+                    foreach (Fechamento fechamentoResult in ResultFechamento)
+                    {
+                        if (fechamentoResult.StatusFechamento == "B") 
+                        {
+                            ViewBag.FechamentoBloqueado = "B";
+                        }
+                    }
                 }
-                else
-                {
-                    marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
-                    marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"));
-                    var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
-
-                    var viewModelFechamento = _mapper.Map<ViewModelFechamento>(fechamento.CalcularFechamento(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho));
-                    viewModelFechamento.CodigoMarcacao = id;
-                    return View("Fechamento", viewModelFechamento);
-                }
+                ViewBag.CodigoMarcacao = id;
+                return View("ValidarFechamento", _mapper.Map<List<ViewModelFechamento>>(ResultFechamento.OrderBy(c => c.DataLancamento)));
             }
             catch (Exception e)
             {
                 TempData["Createfalse"] = e.Message;
                 return View();
+            }
+
+        }
+
+
+
+        [HttpGet]
+        public IActionResult Fechamento(string id)
+        {
+            try
+            {
+                Fechamento fechamento = new Fechamento();
+                Marcacao marcacao = new Marcacao();
+
+                marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
+                marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"));
+                var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
+
+                var viewModelFechamento = _mapper.Map<ViewModelFechamento>(fechamento.CalcularFechamento(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho));
+                viewModelFechamento.CodigoMarcacao = id;
+                return View("Fechamento", viewModelFechamento);
+            }
+            catch (Exception e)
+            {
+                return Json(new
+                {
+                    msg = e.Message,
+                    erro = true
+                });
             }
 
         }
@@ -130,83 +157,87 @@ namespace TimeSheet.Controllers
             Fechamento fechamento = new Fechamento();
 
             //Mit Validação 8.4.1
-             var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
 
-                foreach (Lancamento lancamento in listLancamento)
+            foreach (Lancamento lancamento in listLancamento)
+            {
+
+                var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
+                var fechamentoReturn = fechamento.ValidarApontamentoImpar(lancamento, listApontamento);
+
+                if (fechamentoReturn.Divergencia != null)
                 {
-
-                    var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
-                    var fechamentoReturn = fechamento.ValidarApontamentoImpar(lancamento, listApontamento);
-
-                    if (fechamentoReturn.Divergencia != null)
-                    {
-                        listFechamento.Add(fechamentoReturn);
-                    }
-
-
+                    listFechamento.Add(fechamentoReturn);
                 }
-         
+
+
+            }
+
             //Mit Validação 8.4.2   
-                var listA = ValidaDiferencaTotalHoraDiaLancamentoMacacao(id);
-                if (listA.Count > 0)
+            var listA = ValidaDiferencaTotalHoraDiaLancamentoMacacao(id);
+            if (listA.Count > 0)
+            {
+                foreach (Fechamento fechamentoResult in listA.ToList())
                 {
-                    foreach (Fechamento fechamentoResult in listA.ToList())
-                    {
-                        listFechamento.Add(fechamentoResult);
-                    }
-                }
-            
 
-            //Mit Validação 8.4.3 e  Validação 8.4.4
-                var listB  = ValidaDiferencaBatida(id);
-                if (listB.Count > 0)
-                {
-                    foreach (Fechamento fechamentoResult in listB.ToList())
-                    {
-                        listFechamento.Add(fechamentoResult);
-                    }
+                    listFechamento.Add(fechamentoResult);
                 }
-           
+            }
+
+
+            //Mit Validação 8.4.3 e  Validação 8.4.4 não conclui o fechamento caso possuir divergências.
+            var listB = ValidaDiferencaBatida(id);
+            if (listB.Count > 0)
+            {
+                foreach (Fechamento fechamentoResult in listB.ToList())
+                {
+                    fechamentoResult.StatusFechamento = "B";  // status bloqueado para fechamento caso exista.
+                    listFechamento.Add(fechamentoResult);
+                }
+            }
+
 
             //Mit Validação 8.4.5
-                var listC = ValidaDiferencaTotalHoraLancamentoPorDiaETotalHoraJornadaDiaria(id);
-                if (listC.Count > 0)
+            var listC = ValidaDiferencaTotalHoraLancamentoPorDiaETotalHoraJornadaDiaria(id);
+            if (listC.Count > 0)
+            {
+                foreach (Fechamento fechamentoResult in listC.ToList())
                 {
-                    foreach (Fechamento fechamentoResult in listC.ToList())
-                    {
-                        listFechamento.Add(fechamentoResult);
-                    }
+                    listFechamento.Add(fechamentoResult);
                 }
-           
-            //Mit Validação 8.4.6
-                var listD = ValidaSabadoDomingoEFeriado(id);
-                if (listD.Count > 0)
+            }
+
+            //Mit Validação 8.4.6 não conclui o fechamento caso possuir divergências.
+            var listD = ValidaSabadoDomingoEFeriado(id);
+            if (listD.Count > 0)
+            {
+                foreach (Fechamento fechamentoResult in listD.ToList())
                 {
-                    foreach (Fechamento fechamentoResult in listD.ToList())
-                    {
-                        listFechamento.Add(fechamentoResult);
-                    }
+                    fechamentoResult.StatusFechamento = "B";  // status bloqueado para fechamento caso exista.
+                    listFechamento.Add(fechamentoResult);
                 }
-           
+            }
+
             //Mit Validação 8.4.7
-                var listE = ValidaDiasSemLancameto(id);
-                if (listE.Count > 0)
+            var listE = ValidaDiasSemLancameto(id);
+            if (listE.Count > 0)
+            {
+                foreach (Fechamento fechamentoResult in listE.ToList())
                 {
-                    foreach (Fechamento fechamentoResult in listE.ToList())
-                    {
-                        listFechamento.Add(fechamentoResult);
-                    }
+                    listFechamento.Add(fechamentoResult);
                 }
-            
-            //Mit Validação 8.4.8 e 8.4.8 e 8.4.10
-                var listF =  ValidaLancamentoForaDeIntervalo(id);
-                if (listF.Count > 0)
+            }
+
+            //Mit Validação 8.4.8 e 8.4.9 e 8.4.10 não conclui o fechamento caso possuir divergências.
+            var listF = ValidaLancamentoForaDeIntervalo(id);
+            if (listF.Count > 0)
+            {
+                foreach (Fechamento fechamentoResult in listF.ToList())
                 {
-                    foreach (Fechamento fechamentoResult in listF.ToList())
-                    {
-                        listFechamento.Add(fechamentoResult);
-                    }
+                    fechamentoResult.StatusFechamento = "B";  // status bloqueado para fechamento caso exista.
+                    listFechamento.Add(fechamentoResult);
                 }
+            }
 
             return listFechamento;
         }
