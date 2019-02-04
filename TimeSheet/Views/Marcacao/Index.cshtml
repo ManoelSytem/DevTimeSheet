@@ -33,12 +33,14 @@
                             <button type="button" class="btn btn-sm btn-editar" name="editar" onclick="location.href='@Url.Action("Edit", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-pen"></i></button>
                             <button type="button" class="btn btn-sm btn-excluir" name="excluir" onclick="Delete('@item.Codigo','@item.AnoMesDescricao')"><i class="fas fa-trash"></i></button>
                             <button type="button" data-toggle="tooltip" data-placement="top" title="Realizar Fechamento" onclick="location.href='@Url.Action("ValidarFechamento", "Fechamento", new { id = item.Codigo})'" class="btn btn-sm btn-aprovar" name="lock"><i class="fa fa-unlock-alt"></i></button>
+                            <button type="button" data-toggle="tooltip" data-placement="top" title="Imprimir espelho de ponto" onclick="location.href='@Url.Action("ValidarFechamento", "Fechamento", new { id = item.Codigo})'" class="btn btn-sm btn-imprimir"><i class="fas fa-print"></i></button>
                         </td>
 
                     }
                     else
                     {
                         <td>Fechado</td>
+                        <button type="button" data-toggle="tooltip" data-placement="top" title="Imprimir espelho de ponto" onclick="location.href='@Url.Action("ValidarFechamento", "Fechamento", new { id = item.Codigo})'" class="btn btn-sm btn-imprimir"><i class="fas fa-print"></i></button>
                         <td><button type="button" data-toggle="tooltip" data-placement="top" title="Fechado" class="btn btn-sm" name="lock"><i class="fa fa-lock"></i></button></td>
                     }
                 </tr>

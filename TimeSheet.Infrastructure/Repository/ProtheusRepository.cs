@@ -168,14 +168,30 @@ namespace TimeSheet.Infrastructure.Repository
             {
 
                 Feriado feriado = new Feriado(); ;
-                var sqlUser = $@"Select P3_FILIAL AS  Filial, P3_DATA Data, P3_DESC AS Descricao, P3_FIXO from  SP3010
-                                where P3_DATA = '{data}' AND P3_FILIAL = '{filial}' AND P3_FIXO = 'S'";
+                var sqlUser = $@"Select P3_FILIAL AS Filial, P3_FIXO AS FIXO, P3_DATA Data, P3_DESC AS Descricao, P3_FIXO from  SP3010
+                                where P3_DATA = '{data}' AND P3_FILIAL = '{filial}'";
                 var QueryResult = Conexao.Query<Feriado>(sqlUser);
 
                 foreach(Feriado feriadoResult in QueryResult) {
                     feriado.Data = feriadoResult.Data;
                     feriado.Descricao = feriadoResult.Descricao;
                     feriado.Filial = feriadoResult.Filial;
+                    feriado.Fixo = feriadoResult.Fixo;
+                }
+
+                if(feriado.Descricao == null)
+                {
+                    var sqlUser2 = $@"Select P3_FILIAL AS Filial, P3_FIXO AS FIXO, P3_DATA Data, P3_DESC AS Descricao, P3_FIXO from  SP3010
+                                where P3_MESDIA = '{data.Substring(4,4)}' AND P3_FILIAL = '{filial}'";
+                    var QueryResult2 = Conexao.Query<Feriado>(sqlUser2);
+
+                    foreach (Feriado feriadoResult in QueryResult2)
+                    {
+                        feriado.Data = feriadoResult.Data;
+                        feriado.Descricao = feriadoResult.Descricao;
+                        feriado.Filial = feriadoResult.Filial;
+                        feriado.Fixo = feriadoResult.Fixo;
+                    }
                 }
                 return feriado;
             }

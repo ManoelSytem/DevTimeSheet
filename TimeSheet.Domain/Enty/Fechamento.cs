@@ -159,7 +159,7 @@ namespace TimeSheet.Domain.Enty
         }
 
 
-        
+
         //Inicio das validações de acordo com a MIT
         public Fechamento ValidarApontamentoImpar(Lancamento lancamento, List<Apontamento> apontamento)
         {
@@ -229,7 +229,7 @@ namespace TimeSheet.Domain.Enty
 
         public Fechamento ValidaPrimeiroLancamento(Lancamento lancamento, List<Apontamento> apontamentolist)
         {
-           Fechamento FechamentoRetorno = new Fechamento();
+            Fechamento FechamentoRetorno = new Fechamento();
             if (!VerificaImpar(apontamentolist))
             {
                 for (int i = 0; i < apontamentolist.Count; i = i + 2)
@@ -273,7 +273,7 @@ namespace TimeSheet.Domain.Enty
         public Fechamento ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(Lancamento lancamento, decimal totalLancamento, JornadaTrabalho jornada)
         {
             Fechamento novo = new Fechamento();
-            if (totalLancamento > Math.Round(Convert.ToDecimal(jornada.JornadaDiaria.TotalHours), 2))
+            if (totalLancamento < Math.Round(Convert.ToDecimal(jornada.JornadaDiaria.TotalHours), 2))
             {
                 novo.Divergencia = "Sim";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
@@ -322,7 +322,7 @@ namespace TimeSheet.Domain.Enty
                      &&
                     initialDate.DayOfWeek != DayOfWeek.Saturday)
                 {
-                    if (!DataLancamentoExiste(initialDate,lancamentolist))
+                    if (!DataLancamentoExiste(initialDate, lancamentolist))
                     {
                         dataSemLancamento.DataLancamento = initialDate.ToShortDateString();
                         dataSemLancamento.Divergencia = "Sim";
@@ -330,7 +330,7 @@ namespace TimeSheet.Domain.Enty
                         fechamentoSemLancamento.Add(dataSemLancamento);
                     }
                 }
-                   
+
             }
 
             return fechamentoSemLancamento;
@@ -349,42 +349,55 @@ namespace TimeSheet.Domain.Enty
             return valor;
         }
 
-        public List<Fechamento> LancamentoForaDeIntervalo(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada)
+        public Fechamento ValidarLancamentoForaDeJornadaInicio(Lancamento lancamento, JornadaTrabalho jornada)
         {
-            List<Fechamento> listFachamento = new List<Fechamento>();
             Fechamento novoFechamento = new Fechamento();
 
-            foreach (Lancamento LancamentoResult in lancamentoList)
+            if ((lancamento.HoraInicio > jornada.HoraInicioDe | lancamento.HoraInicio < jornada.HoraInicioAte)  && lancamento.CodDivergencia == 0)
             {
-                if ((LancamentoResult.HoraInicio < jornada.HoraInicioDe | LancamentoResult.HoraInicio > jornada.HoraInicioAte | LancamentoResult.HoraFim < jornada.HoraFinal) && LancamentoResult.CodDivergencia == 0)
-                {
-                    novoFechamento.Divergencia = "Sim";
-                    novoFechamento.DataLancamento = LancamentoResult.DateLancamento.ToDateProtheusReverseformate();
-                    novoFechamento.Descricao = "Dias onde a primeira marcação esteja fora do intervalo informado para os campos “Hora Início de” e “Hora inicio até” na tabela de Intervalos para o período do fechamento.";
-                    listFachamento.Add(novoFechamento);
-                }
-
-                if ((LancamentoResult.HoraFim < jornada.HoraFinal) && LancamentoResult.CodDivergencia == 0)
-                {
-                    novoFechamento.Divergencia = "Sim";
-                    novoFechamento.DataLancamento = LancamentoResult.DateLancamento.ToDateProtheusReverseformate();
-                    novoFechamento.Descricao = "Dias onde a última marcação seja menor que o campo “Hora Saída” na tabela de Intervalos para o período do fechamento.";
-                    listFachamento.Add(novoFechamento);
-                }
-
-                if ((LancamentoResult.HoraInicio > jornada.InterInicio && LancamentoResult.HoraInicio < jornada.HoraInicioAte) && LancamentoResult.CodDivergencia == 0)
-                {
-                    novoFechamento.Divergencia = "Sim";
-                    novoFechamento.DataLancamento = LancamentoResult.DateLancamento.ToDateProtheusReverseformate();
-                    novoFechamento.Descricao = "Dias onde o intervalo esteja fora do intervalo informado para os campos “Intervalo de” e “Intervalo até” na tabela de Intervalos para o período do fechamento.";
-                    listFachamento.Add(novoFechamento);
-                }
-
+                Fechamento novo = new Fechamento();
+                novoFechamento.Divergencia = "Sim";
+                novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
+                novoFechamento.Descricao = "Dias onde a primeira marcação esteja fora do intervalo informado para os campos “Hora Início de” e “Hora inicio até” na tabela de Intervalos para o período do fechamento.";
+                return novo;
             }
-
-            return listFachamento;
+            return novoFechamento;
         }
+
+
+        public Fechamento ValidarUltimoLancamentoForaDeJornada(Lancamento lancamento, JornadaTrabalho jornada)
+        {
+            Fechamento novoFechamento = new Fechamento();
+           
+            if ((lancamento.HoraFim < jornada.HoraFinal) && lancamento.CodDivergencia == 0)
+            {
+                Fechamento novo = new Fechamento();
+                novoFechamento.Divergencia = "Sim";
+                novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
+                novoFechamento.Descricao = "Dias onde a última marcação seja menor que o campo “Hora Saída” na tabela de Intervalos para o período do fechamento.";
+                return novo;
+            }
+            return novoFechamento;
+        }
+
+
+        public Fechamento ValidarLancamentoForaDeIntervaloInicio(Lancamento lancamento, JornadaTrabalho jornada)
+        {
+            Fechamento novoFechamento = new Fechamento();
+
+            if ((lancamento.HoraInicio >= jornada.InterInicio && lancamento.HoraInicio <= jornada.InterFim) && lancamento.CodDivergencia == 0)
+            {
+                Fechamento novo = new Fechamento();
+                novoFechamento.Divergencia = "Sim";
+                novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
+                novoFechamento.Descricao = "Dias onde a primeira marcação esteja fora do intervalo informado para os campos “Hora Início de” e “Hora inicio até” na tabela de Intervalos para o período do fechamento.";
+                return novo;
+            }
+            return novoFechamento;
+        }
+
 
     }
 
 }
+

@@ -386,16 +386,74 @@ namespace TimeSheet.Controllers
         private List<Fechamento> ValidaLancamentoForaDeIntervalo(string id)
         {
             Fechamento fechamento = new Fechamento();
+            List<Fechamento> listaFechamentoFinal = new List<Fechamento>();
             Marcacao marcacao = new Marcacao();
 
             marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
-            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"));
             var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
 
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
 
-            return fechamento.LancamentoForaDeIntervalo(listLancamento.ToList().OrderBy(c => c.DateLancamento), jornadaTrabalho);
+            if (listLancamento != null)
+            {
+
+                foreach (Lancamento lancamento in listLancamento)
+                {
+                    var fechamentoRetornoPrimeiro = ValidarPrimeiroLancamentoForaJornadaPorDia(lancamento.DateLancamento, jornadaTrabalho);
+                    var fechamentoRetornoUltimo = ValidarUltimoLancamentoForaJornadaPorDia(lancamento.DateLancamento, jornadaTrabalho);
+                    var fechamentoRetornoForaIntervalo = ValidarPrimeiroLancamentoForaIntervaloPorDia(lancamento.DateLancamento, jornadaTrabalho);
+
+                    if (fechamentoRetornoPrimeiro.Descricao != null)
+                    {
+                        listaFechamentoFinal.Add(fechamentoRetornoUltimo);
+                    }
+                    if (fechamentoRetornoUltimo.Descricao != null)
+                    {
+                        listaFechamentoFinal.Add(fechamentoRetornoUltimo);
+                    }
+                    if (fechamentoRetornoForaIntervalo.Descricao != null)
+                    {
+                        listaFechamentoFinal.Add(fechamentoRetornoForaIntervalo);
+                    }
+
+                }
+            }
+            return listaFechamentoFinal;
         }
 
+
+        private Fechamento ValidarPrimeiroLancamentoForaJornadaPorDia(string datalancamento, JornadaTrabalho jornada)
+        {
+            Fechamento fechamento = new Fechamento();
+
+            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
+
+            var FechamentoResult = fechamento.ValidarLancamentoForaDeJornadaInicio(LancamentoDiario, jornada);
+
+            return FechamentoResult;
+        }
+
+
+        private Fechamento ValidarUltimoLancamentoForaJornadaPorDia(string datalancamento, JornadaTrabalho jornada)
+        {
+            Fechamento fechamento = new Fechamento();
+
+            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
+
+            var FechamentoResult = fechamento.ValidarUltimoLancamentoForaDeJornada(LancamentoDiario, jornada);
+
+            return FechamentoResult;
+        }
+
+        private Fechamento ValidarPrimeiroLancamentoForaIntervaloPorDia(string datalancamento, JornadaTrabalho jornada)
+        {
+            Fechamento fechamento = new Fechamento();
+
+            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
+            var FechamentoResult = fechamento.ValidarLancamentoForaDeIntervaloInicio(LancamentoDiario, jornada);
+
+            return FechamentoResult;
+        }
 
 
     }
