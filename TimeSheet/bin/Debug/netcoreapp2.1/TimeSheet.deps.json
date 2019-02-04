@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "66fa6123c3c8e16d917bae465919c3046ffbbc35"
+    "signature": "5b2ac28d6d72ad289c023d9faef7979b77f3a531"
   },
   "compilationOptions": {
     "defines": [
@@ -30,6 +30,7 @@
           "Microsoft.AspNetCore.App": "2.1.1",
           "Microsoft.NETCore.App": "2.1.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.1.1",
+          "Rotativa.AspNetCore": "1.1.1",
           "TimeSheet.Domain": "1.0.0",
           "TimeSheet.Infrastructure": "1.0.0"
         },
@@ -481,6 +482,20 @@
         },
         "compile": {
           "lib/netstandard2.0/Oracle.ManagedDataAccess.dll": {}
+        }
+      },
+      "Rotativa.AspNetCore/1.1.1": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc": "2.1.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Rotativa.AspNetCore.dll": {
+            "assemblyVersion": "1.1.1.0",
+            "fileVersion": "1.1.1.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Rotativa.AspNetCore.dll": {}
         }
       },
       "System.ComponentModel/4.3.0": {
@@ -3765,6 +3780,13 @@
       "sha512": "sha512-YWpsNnGbLt5CjpfHzt9RUZbp8CPC5AOkeATSY10WICit9TYtkt3cLBP1i7o1b1jHJen6JWwYrxGRG0BTeN9D/Q==",
       "path": "oracle.manageddataaccess.core/2.18.3",
       "hashPath": "oracle.manageddataaccess.core.2.18.3.nupkg.sha512"
+    },
+    "Rotativa.AspNetCore/1.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8G2uvsUCWhqVON2EBp01zzcHRG9btkkO1u5B5byalSyyxgCL0iUpz5mYq5+HUQFIJ5DWEfSBx5vwVQSvx6L6DQ==",
+      "path": "rotativa.aspnetcore/1.1.1",
+      "hashPath": "rotativa.aspnetcore.1.1.1.nupkg.sha512"
     },
     "System.ComponentModel/4.3.0": {
       "type": "package",

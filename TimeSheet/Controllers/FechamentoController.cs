@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
@@ -14,6 +15,7 @@ using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers
 {
+    [Authorize]
     public class FechamentoController : Controller
     {
         private readonly IProtheus _prothuesService;
@@ -128,17 +130,17 @@ namespace TimeSheet.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Fechamento(ViewModelFechamento viewModelefechamento)
+        public IActionResult Fechamento(ViewModelFechamento viewModelfechamento)
         {
             try
             {
                 Marcacao marcacao = new Marcacao();
-                marcacao.ValidaMarcacaoFoiFechada(_marcacaoServiceRepository.ObterMarcacao(viewModelefechamento.CodigoMarcacao));
+                marcacao.ValidaMarcacaoFoiFechada(_marcacaoServiceRepository.ObterMarcacao(viewModelfechamento.CodigoMarcacao));
 
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
-                var fechamento = _mapper.Map<Fechamento>(viewModelefechamento);
+                var fechamento = _mapper.Map<Fechamento>(viewModelfechamento);
                 _fechamentoServiceRepository.SalvarFechamento(fechamento, User.GetDados("Filial"), DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"));
-                _marcacaoServiceRepository.UpdateStatusFechamento(viewModelefechamento.CodigoMarcacao);
+                _marcacaoServiceRepository.UpdateStatusFechamento(viewModelfechamento.CodigoMarcacao);
                 return Json(new { sucesso = "Fechamento realizado com sucesso!" });
             }
             catch (Exception e)

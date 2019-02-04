@@ -16,7 +16,7 @@ using Apontamento = TimeSheet.Models.Apontamento;
 
 namespace TimeSheet.Controllers
 {
-    [AllowAnonymous]
+    [Authorize]
     public class MarcacaoController : Controller
     {
         private readonly IProtheus _prothuesService;

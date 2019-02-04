@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Rotativa.AspNetCore;
 using TimeSheet.Authorization;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
@@ -63,7 +64,7 @@ namespace TimeSheet
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
+            RotativaConfiguration.Setup(env);
         }
     }
 }

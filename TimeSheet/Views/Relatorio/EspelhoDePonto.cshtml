@@ -1,0 +1,195 @@
+﻿@model TimeSheet.ViewModel.ViewModelRelatorio
+
+
+@{
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Espelho de Ponto</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <style type="text/css">
+        * {
+            font-family: Arial;
+        }
+
+        body {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 100%;
+            margin: 5px auto;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            border: #000 1px solid;
+            vertical-align: middle;
+            padding: 3px 5px 3px 5px;
+        }
+
+        .text-left {
+            text-align: left;
+            font-size: 11px;
+        }
+
+        .text-right {
+            text-align: right;
+            font-size: 11px;
+        }
+
+        .text-center {
+            text-align: center;
+            font-size: 11px;
+        }
+
+        table {
+            page-break-inside: auto
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto
+        }
+
+        td {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+
+        thead {
+            display: table-header-group
+        }
+
+        tfoot {
+            display: table-footer-group;
+        }
+
+        tbody {
+            display: table-row-group;
+        }
+    </style>
+</head>
+<body>
+    <table style="height:50px; text-align: center; font-size:20px;" class="table">
+        <tr>
+            <td><b>ESPELHO DE PONTO</b></td>
+        </tr>
+    </table>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <td class="text-left" style="font-size:14px;">
+                    <b>Matrícula: @Model.user.SubjectId</b>
+                </td>
+                <td class="text-left" style="font-size:14px; width:650px;">
+                    <b>Nome:  @Model.user.Nome</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="text-left" colspan="2" style="font-size:14px;">
+                    <b>Coordenador: @Model.user.Gerencia</b>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th colspan="6"><b>Fechamento</b></th>
+            </tr>
+            
+                    <tr>
+                        <th class="text-center">Data</th>
+                        <th class="text-center">Horas Execedentes</th>
+                        <th class="text-center">Atrasos</th>
+                        <th class="text-center">Total Horas</th>
+                        <th class="text-center">Divergência (S/N)</th>
+                    </tr>
+
+                </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                    <tr>
+                        <th scope="row">@Model.listFechamento.DataLancamento</th>
+                        <td>@Model.listFechamento.TotalHoraExedente</td>
+                        <td>@Model.listFechamento.TotalAtraso</td>
+                        <td>@Model.listFechamento.TotalHora</td>
+                        <td>@Model.listFechamento.Divergencia</td>
+                    </tr>
+            }
+                </tbody>
+    </table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th colspan="6"><b>Relógio</b></th>
+            </tr>
+            <tr>
+                <th class="text-center">Data</th>
+                <th class="text-center">Hora 1</th>
+                <th class="text-center">Hora 2</th>
+                <th class="text-center">Hora 3</th>
+                <th class="text-center">Hora 4</th>
+                <th class="text-center">Hora 5</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <th scope="row">01/02/2018</th>
+                    <td>teste</td>
+                    <td>teste</td>
+                    <td>teste</td>
+                    <td>teste</td>
+                    <td>teste</td>
+                </tr>
+            </tbody>
+    </table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th colspan="5"><b>Lançamentos</b></th>
+            </tr>
+            <tr>
+                <th class="text-center">Data</th>
+                <th class="text-center">Hora Início</th>
+                <th class="text-center">Hora Fim</th>
+                <th class="text-center">Projeto</th>
+                <th class="text-center">Código Divergência</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                @foreach (var item in Model.listLancamento)
+                {
+                    <tr>
+                        <th scope="row">@item.DateLancamento</th>
+                        <td>@item.HoraInicio</td>
+                        <td>@item.HoraFim</td>
+                        <td>@item.Projetos</td>
+                        <td>@item.CodDivergencia</td>
+                        <td>teste</td>
+                    </tr>
+
+                    @if (item.Observacao != null)
+                    {<tr>
+                        <td class="text-left" colspan="5" style="font-size:18px;">
+                            <b>
+                                Observação: @item.Observacao
+                            </b>
+                        </td>
+                    </tr>
+                        }
+                    }
+            }
+        </tbody>
+    </table>
+</body>
+</html>
