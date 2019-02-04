@@ -12,6 +12,7 @@ namespace TimeSheet.Domain.Enty.Interface
         List<Apontamento> ObterBatidasDePonto(string mat, string filial, string Data);
         Feriado ObterFeriadoPorDataLancamento(string data, string filial);
         Usuario ObterUsuarioNome(string mat);
+        Usuario ObterCoordenadorPorCentroDeCusto(string centroCusto);
 
     }
 }

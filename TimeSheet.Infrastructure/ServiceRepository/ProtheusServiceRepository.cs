@@ -26,6 +26,11 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             return _prothuesRepository.ObterCodigoDivergenciaPorCodigo(cod);
         }
 
+        public Usuario ObterCoordenadorPorCentroDeCusto(string centroCusto)
+        {
+            return _prothuesRepository.ObterCoordenador(centroCusto);
+        }
+
         public Feriado ObterFeriadoPorDataLancamento(string data, string filial)
         {
             return _prothuesRepository.ObterFeriadoProthues(data, filial);

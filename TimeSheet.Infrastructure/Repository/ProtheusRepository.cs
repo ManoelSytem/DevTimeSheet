@@ -138,17 +138,48 @@ namespace TimeSheet.Infrastructure.Repository
             try
             {
 
-                Usuario usuarioGerencia = new Usuario(); ;
+                Usuario usuario = new Usuario(); 
                 var sqlUser = $@"Select RA_NOME AS Nome from SRA010
                           WHERE RA_MAT = LTRIM(RTRIM('{mat}'))";
                 var QueryResult = Conexao.Query<Usuario>(sqlUser);
 
                 foreach (Usuario UserGerenciaResult in QueryResult)
                 {
-                    usuarioGerencia.Nome = UserGerenciaResult.Nome;
+                    usuario.Nome = UserGerenciaResult.Nome;
                 }
 
-                return usuarioGerencia;
+                return usuario;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Conexao.Close();
+            }
+
+        }
+
+
+        public Usuario ObterCoordenador(string centroCusto)
+        {
+            Conexao.Open();
+            try
+            {
+
+                Usuario usuario = new Usuario(); ;
+                var sqlUser = $@"Select CTT_DESC03 AS Nome, CTT_EMLGER AS Email from CTT010 
+                               where CTT_CUSTO = LTRIM(RTRIM('{centroCusto}'))";
+                var QueryResult = Conexao.Query<Usuario>(sqlUser);
+
+                foreach (Usuario UserGerenciaResult in QueryResult)
+                {
+                    usuario.Nome = UserGerenciaResult.Nome;
+                    usuario.Email = UserGerenciaResult.Email;
+                }
+
+                return usuario;
             }
             catch (Exception ex)
             {

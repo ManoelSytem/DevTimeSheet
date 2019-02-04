@@ -10,6 +10,7 @@ using TimeSheet.Authorization;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
 using TimeSheet.Infrastructure.ServiceRepository;
+using TimeSheet.Util;
 
 namespace TimeSheet
 {
@@ -38,6 +39,7 @@ namespace TimeSheet
             services.AddSingleton<IMarcacao, MarcacaoServiceRepository>();
             services.AddSingleton<ILancamento, LancamentoServiceRepository>();
             services.AddSingleton<IFechamento, FechamentoServiceRepository>();
+            services.AddTransient<INotificacao, Notificacao>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

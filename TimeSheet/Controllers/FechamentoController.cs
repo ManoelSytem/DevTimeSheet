@@ -9,6 +9,7 @@ using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
 using TimeSheet.Domain.Util;
+using TimeSheet.Util;
 using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers
@@ -23,8 +24,9 @@ namespace TimeSheet.Controllers
         private readonly IMapper _mapper;
         private readonly IJornadaTrabalho _jornadaTrbServiceRepository;
         private readonly IFechamento _fechamentoServiceRepository;
+        private readonly INotificacao _Notificacao;
 
-        public FechamentoController(IFechamento fechamentoServiceRepository, IProtheus prothuesService, IMarcacao marcacaoServiceRepository, IMapper mapper, IConfiguracao configuracao, IMarcacao marcacao, ILancamento lancamento, IJornadaTrabalho jornada)
+        public FechamentoController(IFechamento fechamentoServiceRepository, IProtheus prothuesService, IMarcacao marcacaoServiceRepository, IMapper mapper, IConfiguracao configuracao, IMarcacao marcacao, ILancamento lancamento, IJornadaTrabalho jornada, INotificacao notificacao)
         {
             _prothuesService = prothuesService;
             _marcacaoServiceRepository = marcacaoServiceRepository;
@@ -34,6 +36,7 @@ namespace TimeSheet.Controllers
             _lancamentoerviceRepository = lancamento;
             _jornadaTrbServiceRepository = jornada;
             _fechamentoServiceRepository = fechamentoServiceRepository;
+            _Notificacao = notificacao;
 
         }
 
@@ -455,6 +458,14 @@ namespace TimeSheet.Controllers
             return FechamentoResult;
         }
 
+        private void NotificarFechamento(Fechamento fechamento)
+        {
+            var  user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
+            var coordenador  = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
+            var mensagem = $"O técnico {user.Nome}  realizou o fechamento da marcação : {fechamento.CodigoMarcacao}";
+            _Notificacao.EnviarEmail(coordenador.Email, mensagem);
+
+        }
 
     }
 
