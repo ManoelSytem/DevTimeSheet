@@ -2,6 +2,7 @@
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TimeSheet.Domain.Enty;
 
@@ -34,5 +35,32 @@ namespace TimeSheet.Infrastructure.Repository
                 throw ex;
             }
         }
+
+
+        public List<Fechamento> ObterListaLancamentoPorDataMatricula(string data, string matricula)
+        {
+            try
+            {
+                using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+                {
+                    string sQuery = $@"Select LTRIM(RTRIM(ZYU_DATA)) as Datafechamento,
+                                     LTRIM(RTRIM(ZYU_THOREX))as TotalHoraExedente,
+                                     LTRIM(RTRIM(ZYU_THORAT)) as TotalAtraso,
+                                     LTRIM(RTRIM(ZYU_THORAB)) as TotalAbono,
+                                     LTRIM(RTRIM(ZYU_THORAS))as TotalHora
+                                     from ZYU010
+                                     where ZYU_MATUSU =  LTRIM(RTRIM('{matricula}'))";
+                    dbConnection.Open();
+                    dbConnection.Execute(sQuery);
+                    return dbConnection.Query<Fechamento>(sQuery).ToList();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

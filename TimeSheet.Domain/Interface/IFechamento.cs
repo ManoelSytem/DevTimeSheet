@@ -9,5 +9,6 @@ namespace TimeSheet.Domain.Interface
     {
         void SalvarFechamento(Fechamento item, string filial, string dataProtheus, string matUser);
         List<Fechamento> ObterFechamento(string data, string matricula);
+       
     }
 }

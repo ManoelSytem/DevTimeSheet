@@ -10,5 +10,6 @@ namespace TimeSheet.Domain.Enty
         public TimeSpan horaInicio { get; set; }
         public TimeSpan horaFim { get; set; }
         public TimeSpan apontamento { get; set; }
+        public string dataApontamento { get; set; }
     }
 }

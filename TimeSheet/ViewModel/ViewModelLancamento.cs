@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeSheet.Domain.Enty;
+using TimeSheet.Domain.Util;
 
 namespace TimeSheet.ViewModel
 {
@@ -27,7 +28,7 @@ namespace TimeSheet.ViewModel
         public string[] EmpreendimentoIds { get; set; }
         public virtual ICollection<Empreendimento> Projetos { get; set; }
         public string Fase { get; set; }
-
+        public string DateFormatado { get { return this.DateLancamento.ToDateProtheusReverseformate(); } set { } }
 
         public void ValidaHoraLancamento()
         {

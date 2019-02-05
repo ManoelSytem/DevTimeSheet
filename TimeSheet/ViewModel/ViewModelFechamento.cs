@@ -9,6 +9,7 @@ namespace TimeSheet.ViewModel
     {
         public string CodigoMarcacao { get; set; }
         public string DataLancamento { get; set; }
+        public string Datafechamento { get; set; }
         public string Descricao { get; set; }
         public string Divergencia { get; set; }
         public double TotalHoraExedente { get; set; }

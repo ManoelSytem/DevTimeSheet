@@ -115,16 +115,18 @@
                 </thead>
         <tbody>
             @if (Model != null)
-            {
+            {@foreach (var item in Model.listFechamento)
+                {
                     <tr>
-                        <th scope="row">@Model.listFechamento.DataLancamento</th>
-                        <td>@Model.listFechamento.TotalHoraExedente</td>
-                        <td>@Model.listFechamento.TotalAtraso</td>
-                        <td>@Model.listFechamento.TotalHora</td>
-                        <td>@Model.listFechamento.Divergencia</td>
+                        <th scope="row">@item.Datafechamento</th>
+                        <td>@item.TotalHoraExedente</td>
+                        <td>@item.TotalAtraso</td>
+                        <td>@item.TotalHora</td>
+                        <td>@item.Divergencia</td>
                     </tr>
+                }
             }
-                </tbody>
+        </tbody>
     </table>
     <table class="table">
         <thead>
@@ -133,22 +135,31 @@
             </tr>
             <tr>
                 <th class="text-center">Data</th>
-                <th class="text-center">Hora 1</th>
-                <th class="text-center">Hora 2</th>
-                <th class="text-center">Hora 3</th>
-                <th class="text-center">Hora 4</th>
-                <th class="text-center">Hora 5</th>
+                <th class="text-center">Hora</th>
+                <th class="text-center">Hora</th>
+                <th class="text-center">Hora</th>
+                <th class="text-center">Hora</th>
             </tr>
-        </thead>
+            </thead>
         <tbody>
-                <tr>
-                    <th scope="row">01/02/2018</th>
-                    <td>teste</td>
-                    <td>teste</td>
-                    <td>teste</td>
-                    <td>teste</td>
-                    <td>teste</td>
-                </tr>
+            @if (Model != null)
+            {
+                 var datalancamento = "0";
+                @foreach (var item in Model.apontamento)
+                {
+                       <tr>
+                          <th scope="row">@item.dataApontamento</th>
+                         @if (datalancamento != item.dataApontamento)
+                         {
+                             datalancamento = item.dataApontamento;
+                             @foreach (var itemA in Model.apontamento)
+                             {
+                        <td>@itemA.apontamento</td>
+                             }
+                         }
+                       </tr>
+                    }
+                }
             </tbody>
     </table>
     <table class="table">
@@ -167,15 +178,14 @@
         <tbody>
             @if (Model != null)
             {
-                @foreach (var item in Model.listLancamento)
+                @foreach (var item in Model.listLancamento.OrderBy(x => x.DateFormatado))
                 {
                     <tr>
-                        <th scope="row">@item.DateLancamento</th>
+                        <th scope="row">@item.DateFormatado</th>
                         <td>@item.HoraInicio</td>
                         <td>@item.HoraFim</td>
-                        <td>@item.Projetos</td>
+                        <td>@item.DescricaoEmp</td>
                         <td>@item.CodDivergencia</td>
-                        <td>teste</td>
                     </tr>
 
                     @if (item.Observacao != null)

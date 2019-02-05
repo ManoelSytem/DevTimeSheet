@@ -18,7 +18,7 @@ namespace TimeSheet.Infrastructure.ServiceRepository
 
         public List<Fechamento> ObterFechamento(string data, string matricula)
         {
-            throw new NotImplementedException();
+           return _FechamentoRepository.ObterListaLancamentoPorDataMatricula(data, matricula);
         }
 
         public void SalvarFechamento(Fechamento item, string filial, string dataProtheus, string matUser)

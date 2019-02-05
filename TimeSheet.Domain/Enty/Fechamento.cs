@@ -17,6 +17,7 @@ namespace TimeSheet.Domain.Enty
         public double TotalAbono { get; set; }
         public double TotalHora { get; set; }
         public string DataLancamento { get; set; }
+        public string Datafechamento { get; set; }
         public string Descricao { get; set; }
         public string Divergencia { get; set; }
         public string StatusFechamento { get; set; }
