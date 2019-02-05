@@ -189,3 +189,4 @@ C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreap
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Fechamento\Fechamento.g.cshtml.cs
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Marcacao\Details.g.cshtml.cs
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Relatorio\EspelhoDePonto.g.cshtml.cs
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Debug\netcoreapp2.1\Razor\Views\Relatorio\EspelhoDePontoSintetico.g.cshtml.cs
