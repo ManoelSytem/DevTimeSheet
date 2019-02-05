@@ -79,6 +79,39 @@ namespace TimeSheet.Controllers
 
         }
 
+        [Authorize]
+        public IActionResult EspelhoDePontoSintetico(string id)
+        {
+            try
+            {
+              
+                ViewModelRelatorio viewModelRelatorio = new ViewModelRelatorio();
+                Usuario user = new Usuario();
+
+
+                user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
+                user.Nome = user.Nome;
+                user.SubjectId = User.GetDados("Matricula");
+                user.Gerencia = User.GetDados("Coordenacao");
+
+
+                viewModelRelatorio.listFechamento = _mapper.Map<List<ViewModelFechamento>>(_fechamentoServiceRepository.ObterFechamento(id, User.GetDados("Matricula")));
+                viewModelRelatorio.user = user;
+
+
+                return new ViewAsPdf("EspelhoDePontoSintetico", viewModelRelatorio);
+            }
+            catch (Exception e)
+            {
+                return Json(new
+                {
+                    msg = e.Message,
+                    erro = true
+                });
+            }
+
+        }
+
 
         private List<Apontamento> ListaApontamentoPorLancamento(List<ViewModelLancamento> listlancamentoViewModel)
         {
@@ -94,7 +127,7 @@ namespace TimeSheet.Controllers
                     foreach (Apontamento apontamentoResult in listApontamento)
                     {
                         Apontamento novo = new Apontamento();
-                        novo.dataApontamento = datalancamento;
+                        novo.dataApontamento = datalancamento.ToDateProtheusReverseformate();
                         novo.apontamento = apontamentoResult.apontamento;
                         listaApontamento.Add(novo);
                     }

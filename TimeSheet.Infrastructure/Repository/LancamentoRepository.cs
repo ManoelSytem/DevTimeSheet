@@ -147,6 +147,7 @@ namespace TimeSheet.Infrastructure.Repository
                               LTRIM(RTRIM(ZYY_DATA)) as DateLancamento,
                                LTRIM(RTRIM(SZ.ZA_FASE)) as Fase,
                                ZYY_CODIGO as Codigo,
+                               LTRIM(RTRIM(ZYY_OBSERV)) as Observacao,
                                ZYY_HORINI as  HoraInicio,
                                ZYY_HORFIN as HoraFim,
                                ZYY_PROJET as codEmpredimento,
@@ -171,6 +172,7 @@ namespace TimeSheet.Infrastructure.Repository
                         lancamento.CodDivergencia = LacamentoResult.CodDivergencia;
                         lancamento.Seq = LacamentoResult.Seq;
                         lancamento.DateLancamento = LacamentoResult.DateLancamento;
+                        lancamento.Observacao = LacamentoResult.Observacao;
                         lancamento.Fase = LacamentoResult.Fase;
                         listlancamento.Add(lancamento);
                     }
