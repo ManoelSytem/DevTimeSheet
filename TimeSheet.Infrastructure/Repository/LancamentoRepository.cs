@@ -47,7 +47,7 @@ namespace TimeSheet.Infrastructure.Repository
                     string sQuery = $@" Select DISTINCT 
                                LTRIM(RTRIM(ZYY_CODIGO)) as Codigo,
                                LTRIM(RTRIM(ZYY_SEQ)) as Seq,
-                               LTRIM(RTRIM(SZ.ZA_FASE)) as Fase,
+                               LTRIM(RTRIM(ZYY_FASE)) as Fase,
                                LTRIM(RTRIM(ZYY_DATA)) as DateLancamento, 
                                ZYY_HORINI as  HoraInicio,
                                ZYY_HORFIN as HoraFim,

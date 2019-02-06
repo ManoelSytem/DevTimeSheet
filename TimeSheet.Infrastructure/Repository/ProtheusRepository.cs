@@ -75,10 +75,9 @@ namespace TimeSheet.Infrastructure.Repository
                             FROM SZA010
                             INNER JOIN (
                               SELECT SZA.ZA_COD
-                                ,MAX(SZA.ZA_FASE) ZA_FASE
+                                ,SZA.ZA_FASE ZA_FASE
                               FROM SZA010 SZA
                               WHERE SZA.D_E_L_E_T_ = ' '
-                              GROUP BY SZA.ZA_COD
                             ) SZA ON SZA010.ZA_COD = SZA.ZA_COD
                               AND SZA010.ZA_FASE = SZA.ZA_FASE
                             WHERE SZA010.D_E_L_E_T_ = ' '

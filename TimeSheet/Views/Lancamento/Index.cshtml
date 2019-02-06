@@ -95,6 +95,7 @@
     }
 
     function CarregarDadosEmpreendimento(data) {
+        $('#Lancamento_EmpreendimentoIds').empty();
         $('#Lancamento_EmpreendimentoIds option:not(:selected)').remove();
         for (var i in data) {
             if ($('#Lancamento_EmpreendimentoIds option[value="' + data[i].codigoProtheus + '"]').val() === undefined) {
