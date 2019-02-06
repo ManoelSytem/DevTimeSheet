@@ -82,7 +82,7 @@ namespace TimeSheet.Infrastructure.Repository
                               AND SZA010.ZA_FASE = SZA.ZA_FASE
                             WHERE SZA010.D_E_L_E_T_ = ' '
                                 AND (LTRIM(RTRIM(SZA010.ZA_DESC)) LIKE '%{nome.ToUpper()}%'
-                                   OR LTRIM(RTRIM(SZA010.ZA_COD)) LIKE '%{nome.ToUpper()}%')
+                                   OR LTRIM(RTRIM(SZA010.ZA_COD)) LIKE '%{nome.ToUpper()}%') AND  SZA.ZA_FASE = '1'
                             ORDER BY SZA010.ZA_DESC";
                 return Conexao.Query<Empreendimento>(sql);
             }
@@ -226,6 +226,37 @@ namespace TimeSheet.Infrastructure.Repository
                     }
                 }
                 return feriado;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Conexao.Close();
+            }
+
+        }
+
+
+        public Usuario ObterListColaborador(string centroCusto)
+        {
+            Conexao.Open();
+            try
+            {
+
+                Usuario usuario = new Usuario(); ;
+                var sqlUser = $@"Select LTRIM(RTRIM(CTT_DESC03)) AS Nome, LTRIM(RTRIM(CTT_EMLGER))  AS Email from CTT010 
+                               where CTT_CUSTO = '{centroCusto}'";
+                var QueryResult = Conexao.Query<Usuario>(sqlUser);
+
+                foreach (Usuario UserGerenciaResult in QueryResult)
+                {
+                    usuario.Nome = UserGerenciaResult.Nome;
+                    usuario.Email = UserGerenciaResult.Email;
+                }
+
+                return usuario;
             }
             catch (Exception ex)
             {

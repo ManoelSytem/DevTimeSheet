@@ -13,6 +13,7 @@ namespace TimeSheet.Domain.Enty.Interface
         Feriado ObterFeriadoPorDataLancamento(string data, string filial);
         Usuario ObterUsuarioNome(string mat);
         Usuario ObterCoordenadorPorCentroDeCusto(string centroCusto);
+        Usuario ObterListColaboradorPorCentroDeCusto(string centroCusto);
 
     }
 }

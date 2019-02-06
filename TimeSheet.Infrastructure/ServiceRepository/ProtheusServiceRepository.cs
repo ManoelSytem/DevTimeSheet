@@ -41,6 +41,11 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             return _prothuesRepository.ObterListaCodigoDivergenciaPorIdDesc(descricao);
         }
 
+        public Usuario ObterListColaboradorPorCentroDeCusto(string centroCusto)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Empreendimento> ObterListEmpreendimentos(string nome)
         {
             return _prothuesRepository.ObterEmpreendimentos(nome);
