@@ -139,8 +139,9 @@ namespace TimeSheet.Controllers
 
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
                 var fechamento = _mapper.Map<Fechamento>(viewModelfechamento);
-                _fechamentoServiceRepository.SalvarFechamento(fechamento, User.GetDados("Filial"), DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"));
+                _fechamentoServiceRepository.SalvarFechamento(fechamento, User.GetDados("Filial"), DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), User.GetDados("Centro de Custo"), "0" , "2", "0" );
                 _marcacaoServiceRepository.UpdateStatusFechamento(viewModelfechamento.CodigoMarcacao);
+                NotificarFechamento(viewModelfechamento);
                 return Json(new { sucesso = "Fechamento realizado com sucesso!" });
             }
             catch (Exception e)
@@ -460,11 +461,12 @@ namespace TimeSheet.Controllers
             return FechamentoResult;
         }
 
-        private void NotificarFechamento(Fechamento fechamento)
+        private void NotificarFechamento(ViewModelFechamento fechamento)
         {
             var  user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
-            var coordenador  = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
-            var mensagem = $"O técnico {user.Nome}  realizou o fechamento da marcação : {fechamento.CodigoMarcacao}";
+            var coordenador  = _prothuesService.ObterCoordenadorPorCentroDeCusto(User.GetDados("Centro de Custo"));
+            var mensagem = $"{user.Nome}, realizou o fechamento da marcação: {fechamento.CodigoMarcacao}." + "\r\n" +
+                           $"Matrícula : {User.GetDados("Matricula")} ";
             _Notificacao.EnviarEmail(coordenador.Email, mensagem);
 
         }

@@ -28,7 +28,7 @@ namespace TimeSheet.ViewModel
         public string[] EmpreendimentoIds { get; set; }
         public virtual ICollection<Empreendimento> Projetos { get; set; }
         public string Fase { get; set; }
-        public string DateFormatado { get { return this.DateLancamento.ToDateProtheusReverseformate(); } set { } }
+        public string DateFormatado { get { return DateLancamento?.ToDateProtheusReverseformate(); } set { } }
 
         public void ValidaHoraLancamento()
         {

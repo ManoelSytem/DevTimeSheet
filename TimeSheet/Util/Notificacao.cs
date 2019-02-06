@@ -27,7 +27,7 @@ namespace TimeSheet.Util
                     EnableSsl = Convert.ToBoolean(Configuration.GetSection("EmailService")["Ssl"]),
                     DeliveryMethod = SmtpDeliveryMethod.Network
                 };
-                using (var message = new MailMessage(Configuration.GetSection("EmailService")["Email"], email) { Subject = "RDO", Body = mensagem })
+                using (var message = new MailMessage(Configuration.GetSection("EmailService")["Email"], email) { Subject = "TimeSheet Fechamento de Marcações", Body = mensagem })
                 {
                     smtp.Send(message);
                 }

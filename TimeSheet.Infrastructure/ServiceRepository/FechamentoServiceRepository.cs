@@ -21,9 +21,9 @@ namespace TimeSheet.Infrastructure.ServiceRepository
            return _FechamentoRepository.ObterListaLancamentoPorDataMatricula(data, matricula);
         }
 
-        public void SalvarFechamento(Fechamento item, string filial, string dataProtheus, string matUser)
+        public void SalvarFechamento(Fechamento item, string filial, string dataProtheus, string matUser, string centroCusto, string projeto, string status, string fase)
         {
-            _FechamentoRepository.Add(item, filial, dataProtheus, matUser);
+            _FechamentoRepository.Add(item, filial, dataProtheus, matUser, centroCusto, projeto, status, fase);
         }
     }
 }

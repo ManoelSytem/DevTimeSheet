@@ -171,8 +171,8 @@ namespace TimeSheet.Infrastructure.Repository
             {
 
                 Usuario usuario = new Usuario(); ;
-                var sqlUser = $@"Select CTT_DESC03 AS Nome, CTT_EMLGER AS Email from CTT010 
-                               where CTT_CUSTO = LTRIM(RTRIM('{centroCusto}'))";
+                var sqlUser = $@"Select LTRIM(RTRIM(CTT_DESC03)) AS Nome, LTRIM(RTRIM(CTT_EMLGER))  AS Email from CTT010 
+                               where CTT_CUSTO = '{centroCusto}'";
                 var QueryResult = Conexao.Query<Usuario>(sqlUser);
 
                 foreach (Usuario UserGerenciaResult in QueryResult)

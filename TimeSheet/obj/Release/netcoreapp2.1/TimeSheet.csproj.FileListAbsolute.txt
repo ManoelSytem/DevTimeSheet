@@ -101,3 +101,5 @@ C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Release\netcore
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\Fechamento\ValidarFechamento.g.cshtml.cs
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\Fechamento\Fechamento.g.cshtml.cs
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\Marcacao\Details.g.cshtml.cs
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\Relatorio\EspelhoDePonto.g.cshtml.cs
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\Relatorio\EspelhoDePontoSintetico.g.cshtml.cs

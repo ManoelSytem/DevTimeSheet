@@ -32,16 +32,18 @@
                             <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-eye"></i></button>
                             <button type="button" class="btn btn-sm btn-editar" name="editar" onclick="location.href='@Url.Action("Edit", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-pen"></i></button>
                             <button type="button" class="btn btn-sm btn-excluir" name="excluir" onclick="Delete('@item.Codigo','@item.AnoMesDescricao')"><i class="fas fa-trash"></i></button>
-                            <button type="button" data-toggle="tooltip" data-placement="top"  title="Realizar Fechamento" onclick="location.href='@Url.Action("ValidarFechamento", "Fechamento", new { id = item.Codigo})'" class="btn btn-sm btn-aprovar" name="lock"><i class="fa fa-unlock-alt"></i></button>
-                            <button type="button"  title="Imprimir espelho de ponto"  onclick="setaDadosModal('@item.Codigo')" data-toggle="modal" data-target="#myModalRelatorio" class="btn btn-sm btn-imprimir"><i class="fas fa-print"></i></button>
+                            <button type="button" data-toggle="tooltip" data-placement="top" title="Realizar Fechamento" onclick="location.href='@Url.Action("ValidarFechamento", "Fechamento", new { id = item.Codigo})'" class="btn btn-sm btn-aprovar" name="lock"><i class="fa fa-unlock-alt"></i></button>
+                            <button type="button" title="Imprimir espelho de ponto" onclick="setaDadosModal('@item.Codigo')" data-toggle="modal" data-target="#myModalRelatorio" class="btn btn-sm btn-imprimir"><i class="fas fa-print"></i></button>
                         </td>
 
                     }
                     else
                     {
                         <td>Fechado</td>
-                        <button type="button" data-toggle="tooltip" data-placement="top" title="Imprimir espelho de ponto" onclick="location.href='@Url.Action("EspelhoDePonto", "Relatorio", new { id = item.Codigo})'" class="btn btn-sm btn-imprimir"><i class="fas fa-print"></i></button>
-                        <td><button type="button" data-toggle="tooltip" data-placement="top" title="Fechado" class="btn btn-sm" name="lock"><i class="fa fa-lock"></i></button></td>
+                        <td><button type="button" data-toggle="tooltip" data-placement="top" title="Fechado" class="btn btn-sm" name="lock"><i class="fa fa-lock"></i></button>
+                        <button type="button" title="Imprimir espelho de ponto" onclick="setaDadosModal('@item.Codigo')" data-toggle="modal" data-target="#myModalRelatorio" class="btn btn-sm btn-imprimir"><i class="fas fa-print"></i></button>
+                        </td>
+                       
                     }
                 </tr>
                     }
@@ -64,7 +66,7 @@
                     <div class="form-group">
                         <select id="comboRelatorio" class="form-control">
                             <option>Selecione</option>
-                            <option value="1">Análitico</option>
+                            <option value="1">Analítico</option>
                             <option value="2">Sintético</option>
                         </select>
                         <input disabled="disabled" style="display:none"  type="text" name="campo" id="codmarcacao">
@@ -72,12 +74,14 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button onclick="GerarRelatorio()" type="button" class="btn btn-primary">Gerar Relátorio</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button onclick="GerarRelatorio()" type="button" class="btn btn-primary">Gerar Relatório</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Sair</button>
             </div>
         </div>
     </div>
 </div>
+
+
 
 <div id="myModal" role="dialog">
 </div>
