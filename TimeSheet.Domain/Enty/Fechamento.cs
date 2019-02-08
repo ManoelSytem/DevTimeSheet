@@ -168,9 +168,9 @@ namespace TimeSheet.Domain.Enty
 
             if (VerificaImpar(apontamento))
             {
-                novoFechamento.Divergencia = "Sim";
+                novoFechamento.Divergencia = "Divergência";
                 novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                novoFechamento.Descricao = "Dias com quantidade de batidas do relógio impar";
+                novoFechamento.Descricao = "Dia com quantidade de batidas do relógio impar";
             }
 
             return novoFechamento;
@@ -217,11 +217,11 @@ namespace TimeSheet.Domain.Enty
         public Fechamento ValidaDiferencaTotalHoraDiaLancamentoTotalApontamento(Lancamento lancamento, decimal totalLancamento, decimal totalApontamento)
         {
             Fechamento novo = new Fechamento();
-            if (totalApontamento < totalLancamento)
+            if (totalApontamento < totalLancamento | totalApontamento > totalLancamento)
             {
-                novo.Divergencia = "Sim";
+                novo.Divergencia = "Divergência";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                novo.Descricao = "Dias com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema";
+                novo.Descricao = "Dia com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema";
             }
 
             return novo;
@@ -238,7 +238,7 @@ namespace TimeSheet.Domain.Enty
                     if ((lancamento.HoraInicio < TimeSpan.Parse(Convert.ToString(apontamentolist[i].apontamento)) | lancamento.HoraInicio > TimeSpan.Parse(Convert.ToString(apontamentolist[i].apontamento))) && lancamento.CodDivergencia == 0)
                     {
                         Fechamento novo = new Fechamento();
-                        novo.Divergencia = "Não";
+                        novo.Divergencia = "Erro";
                         novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
                         novo.Descricao = "diferença entre a primeira batida do relógio e o primeiro lançamento no sistema e sem código de divergência";
                         return novo;
@@ -259,7 +259,7 @@ namespace TimeSheet.Domain.Enty
             
             return new Fechamento()
             {
-                Divergencia = "Não",
+                Divergencia = "Erro",
                 DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate(),
                 Descricao = mensagem
             };
@@ -269,7 +269,7 @@ namespace TimeSheet.Domain.Enty
             {
                 return new Fechamento()
                 {
-                    Divergencia = "Sim",
+                    Divergencia = "Divergência",
                     DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate(),
                     Descricao = "Lançamento sem Apontamento"
                 };
@@ -282,9 +282,9 @@ namespace TimeSheet.Domain.Enty
             Fechamento novo = new Fechamento();
             if (totalLancamento < Math.Round(Convert.ToDecimal(jornada.JornadaDiaria.TotalHours), 2))
             {
-                novo.Divergencia = "Sim";
+                novo.Divergencia = "Divergência";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                novo.Descricao = "Dias com diferença entre o total apontado e a jornada diária";
+                novo.Descricao = "Dia com diferença entre o total apontado e a jornada diária";
             }
 
             return novo;
@@ -299,7 +299,7 @@ namespace TimeSheet.Domain.Enty
             if ((Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Sunday |
                Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Saturday | feriado.Descricao != null) && lancamento.CodDivergencia == 0)
             {
-                novo.Divergencia = "Sim";
+                novo.Divergencia = "Erro";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
                 novo.Descricao = "Sábados, domingos e feriados com apontamento e sem código de divergência";
 
@@ -332,8 +332,8 @@ namespace TimeSheet.Domain.Enty
                     if (!DataLancamentoExiste(initialDate, lancamentolist))
                     {
                         dataSemLancamento.DataLancamento = initialDate.ToShortDateString();
-                        dataSemLancamento.Divergencia = "Sim";
-                        dataSemLancamento.Descricao = "Dias úteis sem marcação";
+                        dataSemLancamento.Divergencia = "Divergência";
+                        dataSemLancamento.Descricao = "Dia úteis sem marcação";
                         fechamentoSemLancamento.Add(dataSemLancamento);
                     }
                 }
@@ -363,9 +363,9 @@ namespace TimeSheet.Domain.Enty
             if ((lancamento.HoraInicio > jornada.HoraInicioDe | lancamento.HoraInicio < jornada.HoraInicioAte) && lancamento.CodDivergencia == 0)
             {
                 Fechamento novo = new Fechamento();
-                novoFechamento.Divergencia = "Sim";
+                novoFechamento.Divergencia = "Erro";
                 novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                novoFechamento.Descricao = "Dias onde a primeira marcação esteja fora do intervalo informado para os campos “Hora Início de” e “Hora inicio até” na tabela de Intervalos para o período do fechamento.";
+                novoFechamento.Descricao = "Dia onde a primeira marcação esteja fora do intervalo informado para os campos “Hora Início de” e “Hora inicio até” na tabela de Intervalos para o período do fechamento.";
                 return novo;
             }
             return novoFechamento;
@@ -379,9 +379,9 @@ namespace TimeSheet.Domain.Enty
             if ((lancamento.HoraFim < jornada.HoraFinal) && lancamento.CodDivergencia == 0)
             {
                 Fechamento novo = new Fechamento();
-                novoFechamento.Divergencia = "Sim";
+                novoFechamento.Divergencia = "Erro";
                 novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                novoFechamento.Descricao = "Dias onde a última marcação seja menor que o campo “Hora Saída” na tabela de Intervalos para o período do fechamento.";
+                novoFechamento.Descricao = "Dia onde a última marcação seja menor que o campo “Hora Saída” na tabela de Intervalos para o período do fechamento.";
                 return novo;
             }
             return novoFechamento;
@@ -395,9 +395,9 @@ namespace TimeSheet.Domain.Enty
             if ((lancamento.HoraInicio >= jornada.InterInicio && lancamento.HoraInicio <= jornada.InterFim) && lancamento.CodDivergencia == 0)
             {
                 Fechamento novo = new Fechamento();
-                novoFechamento.Divergencia = "Sim";
+                novoFechamento.Divergencia = "Erro";
                 novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                novoFechamento.Descricao = "Dias onde a primeira marcação esteja fora do intervalo informado para os campos “Hora Início de” e “Hora inicio até” na tabela de Intervalos para o período do fechamento.";
+                novoFechamento.Descricao = "Dia onde a primeira marcação esteja fora do intervalo informado para os campos “Hora Início de” e “Hora inicio até” na tabela de Intervalos para o período do fechamento.";
                 return novo;
             }
             return novoFechamento;

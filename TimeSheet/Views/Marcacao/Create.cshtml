@@ -356,32 +356,7 @@
         event.preventDefault();
     }
 
-    function CreateImportacao(horaini, horaf) {
-        $("#modal-body").html("");
-        document.getElementById("salvar").style.display = 'block';
-        document.getElementById("salvarEdicao").style.display = 'none';
-        var inputText = $("#DateSelect").val();
-        if (inputText !== undefined) {
-            if (inputText != '') {
-                $("#novaMarcacao").removeClass("is-invalid");
-                $.ajax({
-                    url: "/Lancamento/Index",
-                    type: 'get',
-                    data: { horainicio: horaini, horafim: horaf}
-                }).done(function (data) {
-                    $("#modal-body").html(data);
-                    $('#modal-body').scrollView();
-                    
-                });
-
-            } else {
-                Information('A data da marcação não informada!');
-            }
-        } else {
-            Information('Não foi carregado!');
-        }
-    }
-
+   
     function ImportarHoras() {
         $("#modal-body").html("");
            if ($("#DateSelect").val().length == 10) {
@@ -416,6 +391,33 @@
             });
         }
     }
+
+    function CreateImportacao(horaini, horaf) {
+        $("#modal-body").html("");
+        document.getElementById("salvar").style.display = 'block';
+        document.getElementById("salvarEdicao").style.display = 'none';
+        var inputText = $("#DateSelect").val();
+        if (inputText !== undefined) {
+            if (inputText != '') {
+                $("#novaMarcacao").removeClass("is-invalid");
+                $.ajax({
+                    url: "/Lancamento/Index",
+                    type: 'get',
+                    data: { horainicio: horaini, horafim: horaf }
+                }).done(function (data) {
+                    $("#modal-body").html(data);
+                    $('#modal-body').scrollView();
+
+                });
+
+            } else {
+                Information('A data da marcação não informada!');
+            }
+        } else {
+            Information('Não foi carregado!');
+        }
+    }
+
 
        function CarregarEmpreendimentos() {
                             if ($("#nomeEmpreendimento").val().length >= 3) {
