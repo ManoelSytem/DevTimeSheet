@@ -383,10 +383,8 @@ namespace TimeSheet.Controllers
 
             marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
             var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
-            var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
 
-
-            return fechamento.ValidaDiasSemLancamento(listLancamento.ToList(), jornadaTrabalho);
+            return fechamento.ValidaDiasSemLancamento(listLancamento.ToList(), marcacao);
         }
 
         private List<Fechamento> ValidaLancamentoForaDeIntervalo(string id)

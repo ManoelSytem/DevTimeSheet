@@ -29,6 +29,7 @@ namespace TimeSheet.Domain.Util
         public static string ToDia(this string data) => data.Substring(5, 2);
         public static string ToAno(this string data) => data.Substring(0, 4);
         public static string ReplaceSaveObservacaoProthues(this string Observacao) => !String.IsNullOrWhiteSpace(Observacao) ? Regex.Replace(Observacao, @"\r\n?|\n", $"{(char)10}{(char)13}") : new string(' ', 252);
+
     }
 }
 

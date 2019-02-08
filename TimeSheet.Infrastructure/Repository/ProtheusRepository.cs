@@ -76,13 +76,14 @@ namespace TimeSheet.Infrastructure.Repository
                             INNER JOIN (
                               SELECT SZA.ZA_COD
                                 ,SZA.ZA_FASE ZA_FASE
+                                ,SZA.ZA_STATUS
                               FROM SZA010 SZA
                               WHERE SZA.D_E_L_E_T_ = ' '
                             ) SZA ON SZA010.ZA_COD = SZA.ZA_COD
                               AND SZA010.ZA_FASE = SZA.ZA_FASE
                             WHERE SZA010.D_E_L_E_T_ = ' '
                                 AND (LTRIM(RTRIM(SZA010.ZA_DESC)) LIKE '%{nome.ToUpper()}%'
-                                   OR LTRIM(RTRIM(SZA010.ZA_COD)) LIKE '%{nome.ToUpper()}%') AND  SZA.ZA_FASE = '1'
+                                   OR LTRIM(RTRIM(SZA010.ZA_COD)) LIKE '%{nome.ToUpper()}%') AND SZA.ZA_STATUS = '1'
                             ORDER BY SZA010.ZA_DESC";
                 return Conexao.Query<Empreendimento>(sql);
             }

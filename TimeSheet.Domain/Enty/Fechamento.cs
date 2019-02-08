@@ -252,23 +252,29 @@ namespace TimeSheet.Domain.Enty
 
         public Fechamento ValidaUltimaLancamento(Lancamento lancamento, List<Apontamento> apontamentolist)
         {
-            Fechamento FechamentoRetorno = new Fechamento();
-            if (!VerificaImpar(apontamentolist))
+            var mensagem = "";
+            if(apontamentolist.Count > 0) { 
+            if (lancamento.HoraFim != apontamentolist.LastOrDefault().horaFim && lancamento.CodDivergencia == 0)
+                mensagem = "Existe uma diferença entre a última batida do relógio e o último lançamento no sistema. Não foi informado um código de divergência.";
+            
+            return new Fechamento()
             {
-                for (int i = 0; i < apontamentolist.Count; i = i + 2)
-                {
-                    if ((lancamento.HoraFim < TimeSpan.Parse(Convert.ToString(apontamentolist[i + 3].apontamento)) | lancamento.HoraFim > TimeSpan.Parse(Convert.ToString(apontamentolist[i + 3].apontamento))) && lancamento.CodDivergencia == 0)
-                    {
-                        Fechamento novo = new Fechamento();
-                        novo.Divergencia = "Não";
-                        novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                        novo.Descricao = "diferença entre a última batida do relógio e o último lançamento no sistema e sem código de divergência";
-                        return novo;
-                    }
-                    break;
-                }
+                Divergencia = "Não",
+                DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate(),
+                Descricao = mensagem
+            };
+
             }
-            return FechamentoRetorno;
+            else
+            {
+                return new Fechamento()
+                {
+                    Divergencia = "Sim",
+                    DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate(),
+                    Descricao = "Lançamento sem Apontamento"
+                };
+            }
+
         }
 
         public Fechamento ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(Lancamento lancamento, decimal totalLancamento, JornadaTrabalho jornada)
@@ -301,13 +307,13 @@ namespace TimeSheet.Domain.Enty
             return novo;
         }
 
-        public List<Fechamento> ValidaDiasSemLancamento(List<Lancamento> lancamentolist, JornadaTrabalho jornada)
+        public List<Fechamento> ValidaDiasSemLancamento(List<Lancamento> lancamentolist, Marcacao marcacao)
         {
             List<Fechamento> novalistFechamento = new List<Fechamento>();
             List<Fechamento> fechamentoSemLancamento = new List<Fechamento>();
             Fechamento dataSemLancamento;
-            DateTime initialDate = jornada.DataInicio;
-            DateTime finalDate = jornada.DataFim;
+            DateTime initialDate = Convert.ToDateTime(marcacao.DataInicio.ToDateProtheusReverseformate());
+            DateTime finalDate = Convert.ToDateTime(marcacao.DataFim.ToDateProtheusReverseformate());
 
             var days = 0;
             days = initialDate.Subtract(finalDate).Days;
@@ -354,7 +360,7 @@ namespace TimeSheet.Domain.Enty
         {
             Fechamento novoFechamento = new Fechamento();
 
-            if ((lancamento.HoraInicio > jornada.HoraInicioDe | lancamento.HoraInicio < jornada.HoraInicioAte)  && lancamento.CodDivergencia == 0)
+            if ((lancamento.HoraInicio > jornada.HoraInicioDe | lancamento.HoraInicio < jornada.HoraInicioAte) && lancamento.CodDivergencia == 0)
             {
                 Fechamento novo = new Fechamento();
                 novoFechamento.Divergencia = "Sim";
@@ -369,7 +375,7 @@ namespace TimeSheet.Domain.Enty
         public Fechamento ValidarUltimoLancamentoForaDeJornada(Lancamento lancamento, JornadaTrabalho jornada)
         {
             Fechamento novoFechamento = new Fechamento();
-           
+
             if ((lancamento.HoraFim < jornada.HoraFinal) && lancamento.CodDivergencia == 0)
             {
                 Fechamento novo = new Fechamento();

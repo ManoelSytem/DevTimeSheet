@@ -5,14 +5,15 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 using TimeSheet.Domain;
 using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
 using TimeSheet.Domain.Util;
-using TimeSheet.Models;
+using TimeSheet.Util;
 using TimeSheet.ViewModel;
-using Apontamento = TimeSheet.Models.Apontamento;
+
 
 namespace TimeSheet.Controllers
 {
@@ -102,9 +103,12 @@ namespace TimeSheet.Controllers
 
                     string codigoAbertura = aberturaMarcacao.AbeturaExiste(_marcacao.ObterListMarcacaoPorMatUser(User.GetDados("Matricula")), marcacao.DataDia.ToDia(), marcacao.DataDia.ToAno());
                     string codJornadaTrabalho = jornada.ValidarJornadaTrabalhoExisteParaLancamento(_jornadaTrbServiceRepository.ObterListJornada(), marcacao.DataDia.ToDateProtheusReverse());
-
+                   
                     if (codigoAbertura == "0")
                     {
+                        var configuracao = _configuracao.ObterConfiguracao();
+                        marcacao.DataInicio = ObterPrimeiroDia(configuracao, marcacao);
+                        marcacao.DataFim = ObterDiaFim(configuracao, marcacao);
                         marcacao.AnoMes = marcacao.DataDia.ToShortDateProtheus();
                         marcacao.MatUsuario = User.GetDados("Matricula");
                         marcacao.Filial = User.GetDados("Filial");
@@ -272,6 +276,12 @@ namespace TimeSheet.Controllers
             return Json(_lancamentoerviceRepository.ObterLancamento(data, User.GetDados("Matricula")).OrderBy(c => c.HoraInicio).ToList());
         }
 
+        [HttpGet]
+        public ActionResult GetMarcacoesProthues(string data)
+        {
+            
+            return Json(_lancamentoerviceRepository.ObterLancamento(data, User.GetDados("Matricula")).OrderBy(c => c.HoraInicio).ToList());
+        }
 
         public JsonResult Excluir(string codigo)
         {
@@ -298,9 +308,10 @@ namespace TimeSheet.Controllers
 
             try
             {
-                var list = _mapper.Map<List<Lancamento>, List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")));
-                ViewModelMacacao marcacao = new ViewModelMacacao();
 
+                var list = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+                ViewModelMacacao marcacao = new ViewModelMacacao();
+                marcacao = _mapper.Map<ViewModelMacacao>(_marcacaoServiceRepository.ObterMarcacao(id));
 
                 var infoUser = new ViewModelMacacao();
                 var user = new Usuario();
@@ -308,7 +319,13 @@ namespace TimeSheet.Controllers
                 marcacao.Coordenacao = User.GetDados("Coordenacao");
                 user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
                 marcacao.NomeUsuario = user.Nome;
-                marcacao.Lancamentolist = list;
+
+                var mes = marcacao.AnoMes.ToString().Substring(4, 2);
+                var ano = marcacao.AnoMes.ToString().Substring(0, 4);
+                string month = new CultureInfo("pt-BR").DateTimeFormat.GetMonthName(Convert.ToInt32(mes));
+
+                marcacao.AnoMesDescricao = char.ToUpper(month[0]) + month.Substring(1) + "/" + ano;
+                marcacao.Lancamentolist = _mapper.Map<List<ViewModelLancamento>>(list);
                 return View(marcacao);
             }
             catch (Exception e)
@@ -317,6 +334,21 @@ namespace TimeSheet.Controllers
                 return View();
             }
 
+
+    }
+
+        private string ObterPrimeiroDia(Configuracao configuracao, ViewModelMacacao marcacao)
+        {
+            DateTime primeiroDiaDoMes = new DateTime(Convert.ToDateTime(marcacao.DataDia).Year, Convert.ToDateTime(marcacao.DataDia).Month, configuracao.DiaInicio);
+            return primeiroDiaDoMes.ToString("dd/MM/yyyy").ToDateProtheusConvert();
         }
+
+        private string ObterDiaFim(Configuracao configuracao, ViewModelMacacao marcacao)
+        {
+            DateTime ultimoDiaDoMes = new DateTime(Convert.ToDateTime(marcacao.DataDia).Year, Convert.ToDateTime(marcacao.DataDia).Month, DateTime.DaysInMonth(Convert.ToDateTime(marcacao.DataDia).Year, Convert.ToDateTime(marcacao.DataDia).Month));
+            return ultimoDiaDoMes.ToString("dd/MM/yyyy").ToDateProtheusConvert();
+        }
+
+        
     }
 }
