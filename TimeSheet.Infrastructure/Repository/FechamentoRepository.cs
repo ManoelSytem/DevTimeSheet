@@ -61,7 +61,7 @@ namespace TimeSheet.Infrastructure.Repository
                                      where ZYU_CODIGO = '{codigoMarcacao}' AND ZYU_MATUSU = '{matricula}' AND D_E_L_E_T_ <> '*' ";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
-                    return dbConnection.QueryFirst<Fechamento>(sQuery);
+                    return dbConnection.QueryFirstOrDefault<Fechamento>(sQuery);
 
                 }
             }

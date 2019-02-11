@@ -14,6 +14,6 @@ namespace TimeSheet.Domain.Enty.Interface
         Usuario ObterUsuarioNome(string mat);
         Usuario ObterCoordenadorPorCentroDeCusto(string centroCusto);
         Usuario ObterListColaboradorPorCentroDeCusto(string centroCusto);
-
+        List<Apontamento> ObterApontamentos(string matricula, string filial, string Data);
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TimeSheet.Domain;
 using TimeSheet.Domain.Enty;
@@ -16,7 +17,7 @@ namespace TimeSheet.Infrastructure.Repository
         //192.168.0.8
         // BASE TESTE AP12HML
         private OracleConnection Conexao;
-        private const string ConnectionString = "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=bgasha-scan.intranet.bahiagas.com.br)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=BAHIAGAS)));User Id=ap6;Password=msbd106;";
+        private const string ConnectionString = "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=stark.intranet.bahiagas.com.br)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=AP12HML)));User Id=ap6;Password=ap6;";
 
         public ProtheusRepository()
         {
@@ -134,13 +135,52 @@ namespace TimeSheet.Infrastructure.Repository
 
         }
 
+
+        public List<Apontamento> ObterApontamentos(string matricula, string filial, string Data)
+        {
+            try
+            {
+                using (OracleConnection Conexao = new OracleConnection(ConnectionString))
+                {
+                    var sql = $@"SELECT DISTINCT SP8010.P8_HORA AS ""hora""
+                                  ,SP8010.P8_DATA AS ""dataApontamento""
+                                  ,ZYY010.ZYY_CODIGO AS ""listLancamento.Codigo""
+                                  ,ZYY010.ZYY_SEQ AS ""listLancamento.Seq""
+                                  ,ZYY010.ZYY_DATA AS ""listLancamento.DateLancamento""
+                                  ,ZYY010.ZYY_HORINI AS ""listLancamento.HoraInicio""
+                                  ,ZYY010.ZYY_HORFIN AS ""listLancamento.HoraFim""
+                                  ,ZYY010.ZYY_OBSERV AS ""listLancamento.Observacao""
+                                  ,ZYY010.ZYY_CODDIV AS ""listLancamento.CodDivergencia""
+                                FROM ZYY010
+                                INNER JOIN ZYZ010 ON ZYY010.ZYY_FILIAL = ZYZ010.ZYZ_FILIAL
+                                  AND ZYY010.ZYY_CODIGO = ZYZ010.ZYZ_CODIGO
+                                  AND ZYZ010.D_E_L_E_T_ <> '*'
+                                INNER JOIN SP8010 ON SP8010.P8_FILIAL = ZYZ010.ZYZ_FILIAL
+                                  AND SP8010.P8_MAT = ZYZ010.ZYZ_MATUSU
+                                  AND ZYY010.ZYY_DATA = SP8010.P8_DATA
+                                  AND SP8010.D_E_L_E_T_ <> '*'
+                                  AND SP8010.P8_APONTA = 'S'
+                                  AND SP8010.P8_DATA = '{Data}'
+                                  AND SP8010.P8_MAT = '{matricula}'
+                                  AND SP8010.P8_FILIAL = '{filial}'
+                                WHERE ZYY010.D_E_L_E_T_ <> '*'";
+                    Conexao.Open();
+                    return Conexao.Query<Apontamento>(sql).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public Usuario ObterUsuarioPorMatricula(string mat)
         {
             Conexao.Open();
             try
             {
 
-                Usuario usuario = new Usuario(); 
+                Usuario usuario = new Usuario();
                 var sqlUser = $@"Select RA_NOME AS Nome from SRA010
                           WHERE RA_MAT = LTRIM(RTRIM('{mat}'))";
                 var QueryResult = Conexao.Query<Usuario>(sqlUser);
@@ -205,17 +245,18 @@ namespace TimeSheet.Infrastructure.Repository
                                 where P3_DATA = '{data}' AND P3_FILIAL = '{filial}'";
                 var QueryResult = Conexao.Query<Feriado>(sqlUser);
 
-                foreach(Feriado feriadoResult in QueryResult) {
+                foreach (Feriado feriadoResult in QueryResult)
+                {
                     feriado.Data = feriadoResult.Data;
                     feriado.Descricao = feriadoResult.Descricao;
                     feriado.Filial = feriadoResult.Filial;
                     feriado.Fixo = feriadoResult.Fixo;
                 }
 
-                if(feriado.Descricao == null)
+                if (feriado.Descricao == null)
                 {
                     var sqlUser2 = $@"Select P3_FILIAL AS Filial, P3_FIXO AS FIXO, P3_DATA Data, P3_DESC AS Descricao, P3_FIXO from  SP3010
-                                where P3_MESDIA = '{data.Substring(4,4)}' AND P3_FILIAL = '{filial}'";
+                                where P3_MESDIA = '{data.Substring(4, 4)}' AND P3_FILIAL = '{filial}'";
                     var QueryResult2 = Conexao.Query<Feriado>(sqlUser2);
 
                     foreach (Feriado feriadoResult in QueryResult2)

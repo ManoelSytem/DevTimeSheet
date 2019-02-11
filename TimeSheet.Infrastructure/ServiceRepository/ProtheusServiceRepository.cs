@@ -18,7 +18,7 @@ namespace TimeSheet.Infrastructure.ServiceRepository
 
         public List<Apontamento> ObterBatidasDePonto(string mat, string filial, string Data)
         {
-            return _prothuesRepository.ObterListBatidaDePontoDiario(mat,  filial, Data);
+            return _prothuesRepository.ObterListBatidaDePontoDiario(mat, filial, Data);
         }
 
         public CodDivergencia ObterCodigoDivergenciaPorCodigo(string cod)
@@ -53,7 +53,9 @@ namespace TimeSheet.Infrastructure.ServiceRepository
 
         public Usuario ObterUsuarioNome(string mat)
         {
-           return _prothuesRepository.ObterUsuarioPorMatricula(mat);
+            return _prothuesRepository.ObterUsuarioPorMatricula(mat);
         }
+
+        public List<Apontamento> ObterApontamentos(string matricula, string filial, string Data) => _prothuesRepository.ObterApontamentos(matricula, filial, Data);
     }
 }

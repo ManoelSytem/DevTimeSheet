@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TimeSheet.Domain;
 using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
@@ -108,12 +109,14 @@ namespace TimeSheet.Controllers
             {
                 Fechamento fechamento = new Fechamento();
                 Marcacao marcacao = new Marcacao();
-
+                
+         
                 marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
                 marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"));
                 var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
 
-                var viewModelFechamento = _mapper.Map<ViewModelFechamento>(fechamento.CalcularFechamento(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho));
+                var configuracao = _configuracao.ObterConfiguracao();
+                var viewModelFechamento = _mapper.Map<ViewModelFechamento>(fechamento.CalcularFechamento(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho, configuracao));
                 viewModelFechamento.CodigoMarcacao = id;
                 return View("Fechamento", viewModelFechamento);
             }

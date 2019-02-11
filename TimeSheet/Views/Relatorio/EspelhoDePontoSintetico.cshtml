@@ -101,11 +101,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th colspan="6"><b>Fechamento @Model.marcacao.AnoMesDescricao</b></th>
+                <th colspan="6"><b>Lançamentos @Model.marcacao.AnoMesDescricao</b></th>
             </tr>
 
             <tr>
-                <th class="text-center">Data Fechamento</th>
+                <th class="text-center">Data Lançamento</th>
                 <th class="text-center">Horas Execedentes</th>
                 <th class="text-center">Atrasos</th>
                 <th class="text-center">Abonos</th>
@@ -115,7 +115,7 @@
 
         </thead>
         <tbody>
-            @if (Model != null)
+            @if (Model.Fechamento != null)
             {
             <tr>
                 <th scope="row">@Model.Fechamento.Datafechamento.ToDateProtheusReverseformate()</th>

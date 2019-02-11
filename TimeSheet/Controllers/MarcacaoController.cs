@@ -54,7 +54,6 @@ namespace TimeSheet.Controllers
                         string month = new CultureInfo("pt-BR").DateTimeFormat.GetMonthName(Convert.ToInt32(mes));
                         lista.AnoMesDescricao = char.ToUpper(month[0]) + month.Substring(1) + "/" + ano;
                     }
-
                 }
                 return View(list);
             }

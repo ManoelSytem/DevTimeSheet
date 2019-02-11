@@ -111,12 +111,12 @@
                 <th class="text-center">Atrasos</th>
                 <th class="text-center">Abonos</th>
                 <th class="text-center">Total Horas</th>
-                <th class="text-center">Divergência (quantidade)</th>
+                <th class="text-center">Divergência(S/N)</th>
             </tr>
 
         </thead>
         <tbody>
-            @if (Model != null)
+            @if (Model.Fechamento != null)
             {
             <tr>
                 <th scope="row">@Model.Fechamento.Datafechamento.ToDateProtheusReverseformate()</th>
@@ -146,8 +146,9 @@
             @if (Model != null)
             {
                 var datalancamento = "0";
+                var dataApontametoLista = "0";
                 var primeiraHora = TimeSpan.Parse("00:00:00");
-                @foreach (var item in Model.apontamento)
+                @foreach (var item in Model.apontamento.OrderBy(x => x.dataApontamento))
                 {
 
                     <tr>
@@ -166,52 +167,60 @@
                                     continue;
                                 }
                             }
+
                         }
                     </tr>
-                }
-            }
-        </tbody>
-    </table>
-    <table class="table">
-        <thead>
-            <tr>
-                <th colspan="5"><b>Lançamentos</b></th>
-            </tr>
-            <tr>
-                <th class="text-center">Data</th>
-                <th class="text-center">Hora Início</th>
-                <th class="text-center">Hora Fim</th>
-                <th class="text-center">Projeto</th>
-                <th class="text-center">Código Divergência</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null)
-            {
-                @foreach (var item in Model.listLancamento.OrderBy(x => x.DateFormatado))
-                {
-                    <tr>
-                        <th scope="row">@item.DateFormatado</th>
-                        <td>@item.HoraInicio</td>
-                        <td>@item.HoraFim</td>
-                        <td>@item.DescricaoEmp</td>
-                        <td>@item.CodDivergencia</td>
-                    </tr>
+                    
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th colspan="5"><b>Lançamentos</b></th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">Data</th>
+                                    <th class="text-center">Hora Início</th>
+                                    <th class="text-center">Hora Fim</th>
+                                    <th class="text-center">Projeto</th>
+                                    <th class="text-center">Código Divergência</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (item.listLancamento != null)
+                                {
+                                   
+                                    if (dataApontametoLista != datalancamento) { 
+                                        @foreach (var itemLista in item.listLancamento)
+                                    {
+                                        dataApontametoLista = itemLista.DateLancamento.ToDateProtheusReverseformate();
+                                            <tr>
+                                                <th scope="row">@itemLista.DateLancamento.ToDateProtheusReverseformate()</th>
+                                                <td>@itemLista.HoraInicio</td>
+                                                <td>@itemLista.HoraFim</td>
+                                                <td>@itemLista.DescricaoEmp</td>
+                                                <td>@itemLista.CodDivergencia</td>
+                                            </tr>
 
-                    @if (item.Observacao != null)
-                    {
-                        <tr>
-                            <td class="text-left" colspan="5" style="font-size:18px;">
-                                <b>
-                                    Observação:
-                                </b>
-                                @item.Observacao
-                            </td>
-                        </tr>
+                                            @if (itemLista.Observacao != null)
+                                            {
+                                                <tr>
+                                                    <td class="text-left" colspan="5" style="font-size:18px;">
+                                                        <b>
+                                                            Observação:
+                                                        </b>
+                                                        @itemLista.Observacao
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
                     }
                 }
-            }
-        </tbody>
+            </tbody>
     </table>
+   
 </body>
 </html>

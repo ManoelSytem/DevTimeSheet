@@ -20,7 +20,7 @@ namespace TimeSheet.Controllers
     public class RelatorioController : Controller
     {
 
-        private readonly IProtheus _prothuesService;
+        private readonly IProtheus _protheusService;
         private readonly IConfiguracao _configuracao;
         private readonly IMarcacao _marcacao;
         private readonly ILancamento _lancamentoerviceRepository;
@@ -32,7 +32,7 @@ namespace TimeSheet.Controllers
 
         public RelatorioController(IFechamento fechamentoServiceRepository, IProtheus prothuesService, IMarcacao marcacaoServiceRepository, IMapper mapper, IConfiguracao configuracao, IMarcacao marcacao, ILancamento lancamento, IJornadaTrabalho jornada)
         {
-            _prothuesService = prothuesService;
+            _protheusService = prothuesService;
             _marcacaoServiceRepository = marcacaoServiceRepository;
             _mapper = mapper;
             _configuracao = configuracao;
@@ -52,22 +52,21 @@ namespace TimeSheet.Controllers
                 Marcacao marcacao = new Marcacao();
                 ViewModelMacacao viewModelMarcacao = new ViewModelMacacao();
                 ViewModelRelatorio viewModelRelatorio = new ViewModelRelatorio();
+                List<Apontamento> listaApontamento = new List<Apontamento>();
                 Usuario user = new Usuario();
-               
 
-                user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
+
+                user = _protheusService.ObterUsuarioNome(User.GetDados("Matricula"));
                 user.Nome = user.Nome;
                 user.SubjectId = User.GetDados("Matricula");
                 user.Gerencia = User.GetDados("Coordenacao");
 
                 viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
                 viewModelRelatorio.marcacao = viewModelMarcacao;
-                viewModelRelatorio.Fechamento = CalcularQuantidadeDeDiverGencia(id,_mapper.Map<ViewModelFechamento>(_fechamentoServiceRepository.ObterFechamento(id, User.GetDados("Matricula"))));
-                viewModelRelatorio.listLancamento = _mapper.Map<List<Lancamento>, List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")));
+                viewModelRelatorio.Fechamento = _mapper.Map<ViewModelFechamento>(_fechamentoServiceRepository.ObterFechamento(id, User.GetDados("Matricula")));
                 viewModelRelatorio.user = user;
-                viewModelRelatorio.apontamento = ListaApontamentoPorLancamento(viewModelRelatorio.listLancamento);
-
-
+                //viewModelRelatorio.apontamento = _protheusService.ObterApontamentos(User.GetDados("Matricula"), User.GetDados("Filial"), "20180703");
+                viewModelRelatorio.apontamento = ListaApontamentoPorLancamento(_mapper.Map<List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"))));
                 return new ViewAsPdf("EspelhoDePonto", viewModelRelatorio);
             }
             catch (Exception e)
@@ -86,19 +85,19 @@ namespace TimeSheet.Controllers
         {
             try
             {
-              
+
                 ViewModelRelatorio viewModelRelatorio = new ViewModelRelatorio();
                 Usuario user = new Usuario();
                 ViewModelMacacao viewModelMarcacao = new ViewModelMacacao();
 
-                user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
+                user = _protheusService.ObterUsuarioNome(User.GetDados("Matricula"));
                 user.Nome = user.Nome;
                 user.SubjectId = User.GetDados("Matricula");
                 user.Gerencia = User.GetDados("Coordenacao");
 
                 viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
                 viewModelRelatorio.marcacao = viewModelMarcacao;
-                viewModelRelatorio.Fechamento = CalcularQuantidadeDeDiverGencia(id, _mapper.Map<ViewModelFechamento>(_fechamentoServiceRepository.ObterFechamento(id, User.GetDados("Matricula"))));
+                viewModelRelatorio.Fechamento =  _mapper.Map<ViewModelFechamento>(_fechamentoServiceRepository.ObterFechamento(id, User.GetDados("Matricula")));
                 viewModelRelatorio.user = user;
 
 
@@ -115,6 +114,15 @@ namespace TimeSheet.Controllers
 
         }
 
+        private List<Apontamento> ListarApontamentoPorLancamento(List<Lancamento> listlancamentoViewModel)
+        {
+            return listlancamentoViewModel.GroupBy(x => x.DateLancamento).Select(x => new Apontamento()
+            {
+                dataApontamento = x.Key.ToDateProtheusReverseformate(),
+                listLancamento = x.Select(y => y).OrderBy(y => y.DateLancamento).ToList()
+            }).OrderBy(x => x.dataApontamento).ToList();
+        }
+
 
         private List<Apontamento> ListaApontamentoPorLancamento(List<ViewModelLancamento> listlancamentoViewModel)
         {
@@ -123,15 +131,27 @@ namespace TimeSheet.Controllers
 
             foreach (ViewModelLancamento lancamento in listlancamentoViewModel.OrderBy(x => x.DateLancamento))
             {
+
                 if (datalancamento != lancamento.DateLancamento)
                 {
-                    var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
+
+                    var listApontamento = _protheusService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
                     datalancamento = lancamento.DateLancamento;
                     foreach (Apontamento apontamentoResult in listApontamento)
                     {
                         Apontamento novo = new Apontamento();
+                        List<Lancamento> listaLancamentoPorApontamento = new List<Lancamento>();
                         novo.dataApontamento = datalancamento.ToDateProtheusReverseformate();
                         novo.apontamento = apontamentoResult.apontamento;
+                        foreach (ViewModelLancamento listaLacamento in listlancamentoViewModel)
+                        {
+                            if (novo.dataApontamento == listaLacamento.DateLancamento.ToDateProtheusReverseformate())
+                            {
+                                if (!listaLancamentoPorApontamento.Contains(_mapper.Map<Lancamento>(listaLacamento)))
+                                    listaLancamentoPorApontamento.Add(_mapper.Map<Lancamento>(listaLacamento));
+                            }
+                        }
+                        novo.listLancamento = listaLancamentoPorApontamento;
                         listaApontamento.Add(novo);
                     }
 
@@ -142,7 +162,7 @@ namespace TimeSheet.Controllers
             return listaApontamento;
         }
 
-        private  string ObterMesAnoDaMarcacao(ViewModelMacacao marcacaoViewModel)
+        private string ObterMesAnoDaMarcacao(ViewModelMacacao marcacaoViewModel)
         {
             var mes = marcacaoViewModel.AnoMes.ToString().Substring(4, 2);
             var ano = marcacaoViewModel.AnoMes.ToString().Substring(0, 4);
@@ -150,22 +170,6 @@ namespace TimeSheet.Controllers
             return char.ToUpper(month[0]) + month.Substring(1) + "/" + ano; ;
         }
 
-
-        private ViewModelFechamento CalcularQuantidadeDeDiverGencia(string id, ViewModelFechamento fechamento)
-        {
-            int total = 0;
-            Configuracao config = new Configuracao();
-            config = _configuracao.ObterConfiguracao();
-            foreach(Lancamento lancamento in _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")))
-            {
-                if (lancamento.CodDivergencia == Convert.ToInt16(config.CodDivergencia))
-                {
-                    total++;
-                }
-            }
-            fechamento.Divergencia = Convert.ToString(total);
-            return fechamento;
-        }
     }
 
 }
