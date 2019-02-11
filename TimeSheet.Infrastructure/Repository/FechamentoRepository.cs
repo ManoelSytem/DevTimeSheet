@@ -46,7 +46,7 @@ namespace TimeSheet.Infrastructure.Repository
         }
 
 
-        public List<Fechamento> ObterListaLancamentoPorDataMatricula(string data, string matricula)
+        public Fechamento ObterListaFechamentoPorMatriculaEMarcacao(string codigoMarcacao, string matricula)
         {
             try
             {
@@ -58,10 +58,10 @@ namespace TimeSheet.Infrastructure.Repository
                                      LTRIM(RTRIM(ZYU_THORAB)) as TotalAbono,
                                      LTRIM(RTRIM(ZYU_THORAS))as TotalHora
                                      from ZYU010
-                                     where ZYU_MATUSU =  LTRIM(RTRIM('{matricula}')) AND D_E_L_E_T_ <> '*' ";
+                                     where ZYU_CODIGO = '{codigoMarcacao}' AND ZYU_MATUSU = '{matricula}' AND D_E_L_E_T_ <> '*' ";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
-                    return dbConnection.Query<Fechamento>(sQuery).ToList();
+                    return dbConnection.QueryFirst<Fechamento>(sQuery);
 
                 }
             }

@@ -252,7 +252,7 @@ namespace TimeSheet.Domain.Enty
 
         public Fechamento ValidaUltimaLancamento(Lancamento lancamento, List<Apontamento> apontamentolist)
         {
-            var mensagem = "";
+            var mensagem = "Existe uma diferença entre a última batida do relógio e o último lançamento no sistema. Não foi informado um código de divergência.";
             if(apontamentolist.Count > 0) { 
             if (lancamento.HoraFim != apontamentolist.LastOrDefault().horaFim && lancamento.CodDivergencia == 0)
                 mensagem = "Existe uma diferença entre a última batida do relógio e o último lançamento no sistema. Não foi informado um código de divergência.";

@@ -9,9 +9,10 @@ namespace TimeSheet.ViewModel
 {
     public class ViewModelRelatorio
     {
-        public List<ViewModelFechamento> listFechamento { get; set;}
+        public ViewModelFechamento Fechamento { get; set;}
         public List<ViewModelLancamento> listLancamento { get; set; }
         public List<Apontamento> apontamento { get; set; }
+        public ViewModelMacacao marcacao { get; set; }
         public Usuario user { get; set; }
     }
 }

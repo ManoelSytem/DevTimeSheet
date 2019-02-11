@@ -74,6 +74,7 @@
     </style>
 </head>
 <body>
+    Data de emisão:  @DateTime.Now.ToString("dd/MM/yyyy")
     <table style="height:50px; text-align: center; font-size:20px;" class="table">
         <tr>
             <td><b>ESPELHO DE PONTO</b></td>
@@ -100,31 +101,31 @@
     <table class="table">
         <thead>
             <tr>
-                <th colspan="6"><b>Fechamento</b></th>
+                <th colspan="6"><b>Fechamento @Model.marcacao.AnoMesDescricao</b></th>
             </tr>
 
             <tr>
-                <th class="text-center">Data</th>
+                <th class="text-center">Data Fechamento</th>
                 <th class="text-center">Horas Execedentes</th>
                 <th class="text-center">Atrasos</th>
+                <th class="text-center">Abonos</th>
                 <th class="text-center">Total Horas</th>
-                <th class="text-center">Divergência (S/N)</th>
+                <th class="text-center">Divergência (quantidade)</th>
             </tr>
 
         </thead>
         <tbody>
             @if (Model != null)
-            {@foreach (var item in Model.listFechamento)
-                {
-                    <tr>
-                        <th scope="row">@item.Datafechamento</th>
-                        <td>@item.TotalHoraExedente</td>
-                        <td>@item.TotalAtraso</td>
-                        <td>@item.TotalHora</td>
-                        <td>@item.Divergencia</td>
-                    </tr>
-                }
-        }
+            {
+            <tr>
+                <th scope="row">@Model.Fechamento.Datafechamento.ToDateProtheusReverseformate()</th>
+                <td>@Model.Fechamento.TotalHoraExedente</td>
+                <td>@Model.Fechamento.TotalAtraso</td>
+                <td>@Model.Fechamento.TotalAbono</td>
+                <td>@Model.Fechamento.TotalHora</td>
+                <td>@Model.Fechamento.Divergencia</td>
+            </tr>
+            }
         </tbody>
     </table>
 </body>

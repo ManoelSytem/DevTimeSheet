@@ -8,7 +8,7 @@ namespace TimeSheet.Domain.Interface
     public interface IFechamento
     {
         void SalvarFechamento(Fechamento item, string filial, string dataProtheus, string matUser, string centroCusto, string projeto, string status, string fase);
-        List<Fechamento> ObterFechamento(string data, string matricula);
+        Fechamento ObterFechamento(string data, string matricula);
        
     }
 }

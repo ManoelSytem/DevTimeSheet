@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
 using Rotativa.AspNetCore;
+using TimeSheet.Domain;
 using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
@@ -48,6 +50,7 @@ namespace TimeSheet.Controllers
             {
                 Fechamento fechamento = new Fechamento();
                 Marcacao marcacao = new Marcacao();
+                ViewModelMacacao viewModelMarcacao = new ViewModelMacacao();
                 ViewModelRelatorio viewModelRelatorio = new ViewModelRelatorio();
                 Usuario user = new Usuario();
                
@@ -57,13 +60,12 @@ namespace TimeSheet.Controllers
                 user.SubjectId = User.GetDados("Matricula");
                 user.Gerencia = User.GetDados("Coordenacao");
 
-
-                viewModelRelatorio.listFechamento = _mapper.Map<List<ViewModelFechamento>>(_fechamentoServiceRepository.ObterFechamento(id, User.GetDados("Matricula")));
+                viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
+                viewModelRelatorio.marcacao = viewModelMarcacao;
+                viewModelRelatorio.Fechamento = CalcularQuantidadeDeDiverGencia(id,_mapper.Map<ViewModelFechamento>(_fechamentoServiceRepository.ObterFechamento(id, User.GetDados("Matricula"))));
                 viewModelRelatorio.listLancamento = _mapper.Map<List<Lancamento>, List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")));
                 viewModelRelatorio.user = user;
                 viewModelRelatorio.apontamento = ListaApontamentoPorLancamento(viewModelRelatorio.listLancamento);
-
-
 
 
                 return new ViewAsPdf("EspelhoDePonto", viewModelRelatorio);
@@ -87,15 +89,16 @@ namespace TimeSheet.Controllers
               
                 ViewModelRelatorio viewModelRelatorio = new ViewModelRelatorio();
                 Usuario user = new Usuario();
-
+                ViewModelMacacao viewModelMarcacao = new ViewModelMacacao();
 
                 user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
                 user.Nome = user.Nome;
                 user.SubjectId = User.GetDados("Matricula");
                 user.Gerencia = User.GetDados("Coordenacao");
 
-
-                viewModelRelatorio.listFechamento = _mapper.Map<List<ViewModelFechamento>>(_fechamentoServiceRepository.ObterFechamento(id, User.GetDados("Matricula")));
+                viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
+                viewModelRelatorio.marcacao = viewModelMarcacao;
+                viewModelRelatorio.Fechamento = CalcularQuantidadeDeDiverGencia(id, _mapper.Map<ViewModelFechamento>(_fechamentoServiceRepository.ObterFechamento(id, User.GetDados("Matricula"))));
                 viewModelRelatorio.user = user;
 
 
@@ -139,6 +142,30 @@ namespace TimeSheet.Controllers
             return listaApontamento;
         }
 
+        private  string ObterMesAnoDaMarcacao(ViewModelMacacao marcacaoViewModel)
+        {
+            var mes = marcacaoViewModel.AnoMes.ToString().Substring(4, 2);
+            var ano = marcacaoViewModel.AnoMes.ToString().Substring(0, 4);
+            string month = new CultureInfo("pt-BR").DateTimeFormat.GetMonthName(Convert.ToInt32(mes));
+            return char.ToUpper(month[0]) + month.Substring(1) + "/" + ano; ;
+        }
+
+
+        private ViewModelFechamento CalcularQuantidadeDeDiverGencia(string id, ViewModelFechamento fechamento)
+        {
+            int total = 0;
+            Configuracao config = new Configuracao();
+            config = _configuracao.ObterConfiguracao();
+            foreach(Lancamento lancamento in _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")))
+            {
+                if (lancamento.CodDivergencia == Convert.ToInt16(config.CodDivergencia))
+                {
+                    total++;
+                }
+            }
+            fechamento.Divergencia = Convert.ToString(total);
+            return fechamento;
+        }
     }
 
 }

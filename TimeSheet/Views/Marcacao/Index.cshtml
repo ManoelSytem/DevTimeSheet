@@ -24,14 +24,14 @@
                     foreach (var item in Model)
                     {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.AnoMesDescricao)</td>
+                    <td >@Html.DisplayFor(modelItem => item.AnoMesDescricao)</td>
                     @if (item.Status == "1")
                     {
                         <td>Aberto</td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="location.href='@Url.Action("Details", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-eye"></i></button>
-                            <button type="button" class="btn btn-sm btn-editar" name="editar" onclick="location.href='@Url.Action("Edit", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-pen"></i></button>
-                            <button type="button" class="btn btn-sm btn-excluir" name="excluir" onclick="Delete('@item.Codigo','@item.AnoMesDescricao')"><i class="fas fa-trash"></i></button>
+                            <button type="button" class="btn btn-sm btn-visualizar" name="visualizar" title="Visualizar Marcação" onclick="location.href='@Url.Action("Details", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-eye"></i></button>
+                            <button type="button" class="btn btn-sm btn-editar" name="editar" title="Editar Marcação"  onclick="location.href='@Url.Action("Edit", "Marcacao", new { id = item.Codigo})'"><i class="fas fa-pen"></i></button>
+                            <button type="button" class="btn btn-sm btn-excluir" name="excluir" title="Excluir Marcação" onclick="Delete('@item.Codigo','@item.AnoMesDescricao')"><i class="fas fa-trash"></i></button>
                             <button type="button" data-toggle="tooltip" data-placement="top" title="Realizar Fechamento" onclick="location.href='@Url.Action("ValidarFechamento", "Fechamento", new { id = item.Codigo})'" class="btn btn-sm btn-aprovar" name="lock"><i class="fa fa-unlock-alt"></i></button>
                             <button type="button" title="Imprimir espelho de ponto" onclick="setaDadosModal('@item.Codigo')" data-toggle="modal" data-target="#myModalRelatorio" class="btn btn-sm btn-imprimir"><i class="fas fa-print"></i></button>
                         </td>
