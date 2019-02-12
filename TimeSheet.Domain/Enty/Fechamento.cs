@@ -281,9 +281,7 @@ namespace TimeSheet.Domain.Enty
             {
                 return new Fechamento()
                 {
-                    Divergencia = "Divergência",
-                    DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate(),
-                    Descricao = "Lançamento sem Apontamento"
+                    Descricao = null
                 };
             }
 
