@@ -64,8 +64,7 @@ namespace TimeSheet.Controllers
                 viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
                 viewModelRelatorio.marcacao = viewModelMarcacao;
                 viewModelRelatorio.Fechamento = _mapper.Map<ViewModelFechamento>(_fechamentoServiceRepository.ObterFechamento(id, User.GetDados("Matricula")));
-                viewModelRelatorio.user = user;
-                //viewModelRelatorio.apontamento = _protheusService.ObterApontamentos(User.GetDados("Matricula"), User.GetDados("Filial"), "20180703");
+                viewModelRelatorio.user = user;         
                 viewModelRelatorio.apontamento = ListaApontamentoPorLancamento(_mapper.Map<List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"))));
                 return new ViewAsPdf("EspelhoDePonto", viewModelRelatorio);
             }
@@ -114,15 +113,7 @@ namespace TimeSheet.Controllers
 
         }
 
-        private List<Apontamento> ListarApontamentoPorLancamento(List<Lancamento> listlancamentoViewModel)
-        {
-            return listlancamentoViewModel.GroupBy(x => x.DateLancamento).Select(x => new Apontamento()
-            {
-                dataApontamento = x.Key.ToDateProtheusReverseformate(),
-                listLancamento = x.Select(y => y).OrderBy(y => y.DateLancamento).ToList()
-            }).OrderBy(x => x.dataApontamento).ToList();
-        }
-
+  
 
         private List<Apontamento> ListaApontamentoPorLancamento(List<ViewModelLancamento> listlancamentoViewModel)
         {
@@ -143,11 +134,11 @@ namespace TimeSheet.Controllers
                         List<Lancamento> listaLancamentoPorApontamento = new List<Lancamento>();
                         novo.dataApontamento = datalancamento.ToDateProtheusReverseformate();
                         novo.apontamento = apontamentoResult.apontamento;
-                        foreach (ViewModelLancamento listaLacamento in listlancamentoViewModel)
+                        foreach (ViewModelLancamento listaLacamento in listlancamentoViewModel.OrderBy(x => x.DateLancamento))
                         {
                             if (novo.dataApontamento == listaLacamento.DateLancamento.ToDateProtheusReverseformate())
                             {
-                                if (!listaLancamentoPorApontamento.Contains(_mapper.Map<Lancamento>(listaLacamento)))
+                                if (!listaLancamentoPorApontamento.Contains(_mapper.Map<Lancamento>(listaLacamento),new ComparerDados()))
                                     listaLancamentoPorApontamento.Add(_mapper.Map<Lancamento>(listaLacamento));
                             }
                         }
@@ -162,6 +153,22 @@ namespace TimeSheet.Controllers
             return listaApontamento;
         }
 
+        private List<Fechamento> CalcularFechamentoPorData(string id)
+        {
+            Lancamento lancamento = new Lancamento();
+            Marcacao marcacao = new Marcacao();
+            List<Fechamento> listaFechamentoPorData = new List<Fechamento>();
+
+            marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
+            marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"));
+            var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
+
+            var configuracao = _configuracao.ObterConfiguracao();
+            var viewModelFechamento = _mapper.Map<ViewModelFechamento>(lancamento.CalcularLancamentoPorData(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho, configuracao));
+
+            return listaFechamentoPorData;
+        }
+
         private string ObterMesAnoDaMarcacao(ViewModelMacacao marcacaoViewModel)
         {
             var mes = marcacaoViewModel.AnoMes.ToString().Substring(4, 2);
@@ -170,6 +177,22 @@ namespace TimeSheet.Controllers
             return char.ToUpper(month[0]) + month.Substring(1) + "/" + ano; ;
         }
 
+
+    }
+
+
+    public class ComparerDados : IEqualityComparer<Lancamento>
+    {
+        public bool Equals(Lancamento x, Lancamento y)
+        {
+            return (x.HoraInicio.Equals(y.HoraInicio)) &&
+                (x.HoraFim.Equals(y.HoraFim));
+        }
+
+        public int GetHashCode(Lancamento obj)
+        {
+            return 0;
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace TimeSheet.Domain.Enty
@@ -34,6 +35,95 @@ namespace TimeSheet.Domain.Enty
                 }
             }
 
+        }
+
+        public Fechamento CalcularLancamentoPorData(IOrderedEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura)
+        {
+            Fechamento Fechamento = new Fechamento();
+            Fechamento.TotalHoraExedente = Math.Round(CalcularTotalHoraExedente(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
+            Fechamento.TotalAtraso = Math.Round(CalcularAtraso(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
+            Fechamento.TotalFalta = CalcularQuantidadeDeDiaSemApontamento(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho);
+            Fechamento.TotalAbono = CalcularTotalDeAbono(orderedlistalancamento.OrderBy(c => c.DateLancamento), configura);
+            Fechamento.TotalHora = Math.Round(CalcularTotalHoras(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
+            return Fechamento;
+
+        }
+
+        private int CalcularQuantidadeDeDiaSemApontamento(IOrderedEnumerable<Lancamento> orderedEnumerable, JornadaTrabalho jornadaTrabalho)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double CalcularTotalHoraExedente(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada)
+        {
+            TimeSpan totalHoraDiaLancamento = TimeSpan.Parse("00:00:00");
+            TimeSpan totalLancamento;
+            TimeSpan totalHoraExedenteTimeSpan;
+            string datalancamento = "0";
+            double totalHoraExedente;
+            var jrDiaria = jornada.JornadaDiaria;
+
+            foreach (Lancamento LancamentoResult in lancamentoList)
+            {
+
+                if (datalancamento != LancamentoResult.DateLancamento && datalancamento != "0")
+                {
+                    totalHoraDiaLancamento -= jrDiaria;
+                }
+                datalancamento = LancamentoResult.DateLancamento;
+                totalLancamento = LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+            }
+
+            totalHoraExedenteTimeSpan = jrDiaria - totalHoraDiaLancamento;
+            totalHoraExedente = totalHoraExedenteTimeSpan.TotalHours;
+            if (totalHoraExedenteTimeSpan > jrDiaria)
+            {
+                return totalHoraExedente;
+            }
+            else
+            {
+                return totalHoraExedente = 0;
+            }
+        }
+
+        public int CalcularTotalDeAbono(IOrderedEnumerable<Lancamento> lancamentoList, Configuracao config)
+        {
+            int totalAbono = 0;
+            foreach (Lancamento LancamentoResult in lancamentoList)
+            {
+                if (LancamentoResult.CodDivergencia == Convert.ToInt16(config.CodDivergencia))
+                {
+                    totalAbono++;
+                }
+
+            }
+            return totalAbono;
+        }
+
+        public double CalcularAtraso(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada)
+        {
+            TimeSpan TotalAtraso = TimeSpan.Parse("00:00:00");
+            foreach (Lancamento LancamentoResult in lancamentoList)
+            {
+                if (LancamentoResult.HoraInicio > jornada.HoraInicioDe)
+                {
+                    TotalAtraso += LancamentoResult.HoraInicio - jornada.HoraInicioDe;
+                }
+
+            }
+            return TotalAtraso.TotalHours;
+        }
+
+        public double CalcularTotalHoras(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada)
+        {
+            TimeSpan TotalHoras = TimeSpan.Parse("00:00:00");
+            foreach (Lancamento LancamentoResult in lancamentoList)
+            {
+
+                TotalHoras += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+
+            }
+            return TotalHoras.TotalHours;
         }
 
     }

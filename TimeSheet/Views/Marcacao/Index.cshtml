@@ -102,15 +102,13 @@
         function GerarRelatorio() {
             var selecionado  = $("#comboRelatorio option:selected").val();
             if (selecionado === '1') {
-                window.location.href = '/Relatorio/EspelhoDePonto/' + document.getElementById('codmarcacao').value;
+                window.open('/Relatorio/EspelhoDePonto/' + document.getElementById('codmarcacao').value, '_blank');
             }
             if (selecionado === '2') {
-                window.location.href = '/Relatorio/EspelhoDePontoSintetico/' + document.getElementById('codmarcacao').value
+                window.open('/Relatorio/EspelhoDePontoSintetico/'  + document.getElementById('codmarcacao').value, '_blank');
             }
            
     };
-
-
 
     $('#tbCabecalhoMarcacao').DataTable({
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],

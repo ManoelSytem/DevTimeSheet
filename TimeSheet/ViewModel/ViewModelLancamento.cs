@@ -20,7 +20,7 @@ namespace TimeSheet.ViewModel
         public TimeSpan? HoraFim { get; set; }
         public string codEmpredimento { get; set; }
         public string DescricaoEmp { get; set; }
-        [StringLength(250, MinimumLength = 0, ErrorMessage = "campo observação máximo 250 caracteres")]
+        [StringLength(64, MinimumLength = 0, ErrorMessage = "campo observação máximo 60 caracteres")]
         public string Observacao { get; set; }
         public int? CodObservacao { get; set; }
         public int? CodDivergencia { get; set; }
@@ -36,6 +36,8 @@ namespace TimeSheet.ViewModel
                 throw new Exception("Hora lançamento encontra-se divergênte! Favor verificar.");
            
         }
+
+
 
     }
 }

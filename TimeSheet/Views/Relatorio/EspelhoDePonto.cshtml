@@ -78,6 +78,7 @@
     <table style="height:50px; text-align: center; font-size:20px;" class="table">
         <tr>
             <td><b>ESPELHO DE PONTO</b></td>
+            <td style="width:30px;"><b>@Model.marcacao.AnoMesDescricao</b></td>
         </tr>
     </table>
 
@@ -102,7 +103,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th colspan="6"><b>Fechamento @Model.marcacao.AnoMesDescricao</b></th>
+                <th colspan="6"><b>Fechamento</b></th>
             </tr>
 
             <tr>
@@ -130,18 +131,7 @@
         </tbody>
     </table>
     <table class="table">
-        <thead>
-            <tr>
-                <th colspan="5"><b>Relógio</b></th>
-            </tr>
-            <tr>
-                <th class="text-center">Data</th>
-                <th class="text-center">Hora</th>
-                <th class="text-center">Hora</th>
-                <th class="text-center">Hora</th>
-                <th class="text-center">Hora</th>
-            </tr>
-        </thead>
+
         <tbody>
             @if (Model != null)
             {
@@ -154,73 +144,90 @@
                     <tr>
                         @if (datalancamento != item.dataApontamento)
                         {
-                            <th scope="row">@item.dataApontamento</th>
-                            datalancamento = item.dataApontamento;
-                            @foreach (var itemA in Model.apontamento)
+                    <thead>
+                        <tr>
+                            <th colspan="5"><b>Relógio</b></th>
+                        </tr>
+                        <tr>
+                            <th class="text-center">Data</th>
+                            <th class="text-center">Hora</th>
+                            <th class="text-center">Hora</th>
+                            <th class="text-center">Hora</th>
+                            <th class="text-center">Hora</th>
+                        </tr>
+                    </thead>
+                    <th scope="row">@item.dataApontamento</th>
+                    datalancamento = item.dataApontamento;
+                    @foreach (var itemA in Model.apontamento)
+                    {
+                        @if (datalancamento == itemA.dataApontamento)
+                        {
+                            <td>@itemA.apontamento</td>
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+
+                }
+                        </tr>
+
+
+                        @if (item.listLancamento != null)
+                        {
+
+                            if (dataApontametoLista != datalancamento)
                             {
-                                @if (datalancamento == itemA.dataApontamento)
-                                {
-                                    <td>@itemA.apontamento</td>
-                                }
-                                else
-                                {
-                                    continue;
-                                }
+
+
+                                <thead>
+                                    <tr>
+                                        <th colspan="5"><b>Lançamentos</b></th>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-center">Data</th>
+                                        <th class="text-center">Hora Início</th>
+                                        <th class="text-center">Hora Fim</th>
+                                        <th class="text-center">Projeto</th>
+                                        <th class="text-center">Código Divergência</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var itemLista in item.listLancamento.OrderBy(x => x.HoraInicio))
+                                    {
+                                        dataApontametoLista = itemLista.DateLancamento.ToDateProtheusReverseformate();
+                                        <tr>
+                                            <th scope="row">@itemLista.DateLancamento.ToDateProtheusReverseformate()</th>
+                                            <td>@itemLista.HoraInicio</td>
+                                            <td>@itemLista.HoraFim</td>
+                                            <td>@itemLista.DescricaoEmp</td>
+                                            <td>@itemLista.CodDivergencia</td>
+                                        </tr>
+
+                                        @if (itemLista.Observacao != null)
+                                        {
+                                            <tr>
+                                                <td class="text-left" colspan="5" style="font-size:15px;">
+                                                    <b>
+                                                        Observação:
+                                                    </b>
+                                                    @itemLista.Observacao
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+
                             }
 
                         }
-                    </tr>
-                    
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th colspan="5"><b>Lançamentos</b></th>
-                                </tr>
-                                <tr>
-                                    <th class="text-center">Data</th>
-                                    <th class="text-center">Hora Início</th>
-                                    <th class="text-center">Hora Fim</th>
-                                    <th class="text-center">Projeto</th>
-                                    <th class="text-center">Código Divergência</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (item.listLancamento != null)
-                                {
-                                   
-                                    if (dataApontametoLista != datalancamento) { 
-                                        @foreach (var itemLista in item.listLancamento)
-                                    {
-                                        dataApontametoLista = itemLista.DateLancamento.ToDateProtheusReverseformate();
-                                            <tr>
-                                                <th scope="row">@itemLista.DateLancamento.ToDateProtheusReverseformate()</th>
-                                                <td>@itemLista.HoraInicio</td>
-                                                <td>@itemLista.HoraFim</td>
-                                                <td>@itemLista.DescricaoEmp</td>
-                                                <td>@itemLista.CodDivergencia</td>
-                                            </tr>
 
-                                            @if (itemLista.Observacao != null)
-                                            {
-                                                <tr>
-                                                    <td class="text-left" colspan="5" style="font-size:18px;">
-                                                        <b>
-                                                            Observação:
-                                                        </b>
-                                                        @itemLista.Observacao
-                                                    </td>
-                                                </tr>
-                                            }
-                                        }
-                                    }
-                                }
 
-                            </tbody>
-                        </table>
                     }
-                }
+            }
             </tbody>
-    </table>
+        </table>
    
 </body>
 </html>

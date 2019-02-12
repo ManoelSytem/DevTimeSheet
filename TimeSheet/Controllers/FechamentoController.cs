@@ -166,19 +166,34 @@ namespace TimeSheet.Controllers
             Fechamento fechamento = new Fechamento();
 
             //Mit Validação 8.4.1
-            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+            var listLancamento = ValidaDiasComLancameto(id);
+            var listSemLancamento = ValidaDiasSemLancameto(id);
 
-            foreach (Lancamento lancamento in listLancamento)
+            foreach (Fechamento fechamentolist in listLancamento.OrderBy(x=> x.DataLancamento))
             {
-
-                var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
-                var fechamentoReturn = fechamento.ValidarApontamentoImpar(lancamento, listApontamento);
+                var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), fechamentolist.DataLancamento.ToDateProtheusConvert());
+                var fechamentoReturn = fechamento.ValidarApontamentoImpar(fechamentolist, listApontamento);
 
                 if (fechamentoReturn.Divergencia != null)
                 {
-                    listFechamento.Add(fechamentoReturn);
+                    Fechamento novoFechamento = new Fechamento();
+                    novoFechamento = fechamentoReturn;
+                    listFechamento.Add(novoFechamento);
                 }
 
+            }
+            //Mit Validação 8.4.1
+            foreach (Fechamento fechamentolist in listSemLancamento.OrderBy(x => x.DataLancamento))
+            {
+                var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), fechamentolist.DataLancamento.ToDateProtheusConvert());
+                var fechamentoReturn = fechamento.ValidarApontamentoImpar(fechamentolist, listApontamento);
+
+                if (fechamentoReturn.Divergencia != null)
+                {
+                    Fechamento novoFechamento = new Fechamento();
+                    novoFechamento = fechamentoReturn;
+                    listFechamento.Add(novoFechamento);
+                }
 
             }
 
@@ -293,11 +308,15 @@ namespace TimeSheet.Controllers
 
                     if (fechamentoRetornoPrimeiro.Descricao != null)
                     {
-                        listaFechamentoFinal.Add(fechamentoRetornoUltimo);
+                        Fechamento novoFechamento = new Fechamento();
+                        novoFechamento = fechamentoRetornoPrimeiro;
+                        listaFechamentoFinal.Add(novoFechamento);
                     }
                     if (fechamentoRetornoUltimo.Descricao != null)
                     {
-                        listaFechamentoFinal.Add(fechamentoRetornoUltimo);
+                        Fechamento novoFechamento = new Fechamento();
+                        novoFechamento = fechamentoRetornoUltimo;
+                        listaFechamentoFinal.Add(novoFechamento);
                     }
 
                 }
@@ -381,13 +400,23 @@ namespace TimeSheet.Controllers
 
         private List<Fechamento> ValidaDiasSemLancameto(string id)
         {
-            Fechamento fechamento = new Fechamento();
+            ViewModelFechamento viewModelfechamento = new ViewModelFechamento();
+            Marcacao marcacao = new Marcacao();
+
+            marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+            
+            return viewModelfechamento.ValidaDiasSemLancamento(listLancamento.ToList(), marcacao, User.GetDados("Filial"));
+        }
+        private List<Fechamento> ValidaDiasComLancameto(string id)
+        {
+            ViewModelFechamento viewModelfechamento = new ViewModelFechamento();
             Marcacao marcacao = new Marcacao();
 
             marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
             var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
 
-            return fechamento.ValidaDiasSemLancamento(listLancamento.ToList(), marcacao);
+            return viewModelfechamento.ValidaDiasComLancamento(listLancamento.ToList(), marcacao, User.GetDados("Filial"));
         }
 
         private List<Fechamento> ValidaLancamentoForaDeIntervalo(string id)
@@ -412,15 +441,21 @@ namespace TimeSheet.Controllers
 
                     if (fechamentoRetornoPrimeiro.Descricao != null)
                     {
-                        listaFechamentoFinal.Add(fechamentoRetornoUltimo);
+                        Fechamento novo = new Fechamento();
+                        novo = fechamentoRetornoPrimeiro;
+                        listaFechamentoFinal.Add(novo);
                     }
                     if (fechamentoRetornoUltimo.Descricao != null)
                     {
-                        listaFechamentoFinal.Add(fechamentoRetornoUltimo);
+                        Fechamento novo = new Fechamento();
+                        novo = fechamentoRetornoUltimo;
+                        listaFechamentoFinal.Add(novo);
                     }
                     if (fechamentoRetornoForaIntervalo.Descricao != null)
                     {
-                        listaFechamentoFinal.Add(fechamentoRetornoForaIntervalo);
+                        Fechamento novo = new Fechamento();
+                        novo = fechamentoRetornoForaIntervalo;
+                        listaFechamentoFinal.Add(novo);
                     }
 
                 }
@@ -445,7 +480,7 @@ namespace TimeSheet.Controllers
         {
             Fechamento fechamento = new Fechamento();
 
-            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
+            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).LastOrDefault();
 
             var FechamentoResult = fechamento.ValidarUltimoLancamentoForaDeJornada(LancamentoDiario, jornada);
 
