@@ -6,10 +6,11 @@ namespace TimeSheet.ViewModel
     public class ViewModelCadastroHora
     {
         public string Codigo { get; set; }
+        public string Filial { get; set; }
         public string DescJornada { get; set; }
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? DataInicio { get; set; }
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? DataFim { get; set; }
         public TimeSpan JornadaDiaria { get; set; }
         public TimeSpan HoraInicioDe { get; set; }

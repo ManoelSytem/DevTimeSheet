@@ -24,8 +24,8 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
-                    string sQuery = $@"INSERT INTO ZYV010 (ZYV_DESCR, ZYV_DTINI, ZYV_DTFIN, ZYV_JORNAD, ZYV_HRINI, ZYV_HRIFIN,ZYV_HFINAL, ZYV_INTINI,ZYV_INTFIN, ZYV_INTMIN,ZYV_INTMAX, R_E_C_N_O_)
-                                    VALUES('{item.DescJornada}', '{Convert.ToString(item.DataInicio).ToDateProtheusConvert()}', '{Convert.ToString(item.DataFim).ToDateProtheusConvert()}', '{item.JornadaDiaria}', '{item.HoraInicioDe}','{item.HoraInicioAte}',
+                    string sQuery = $@"INSERT INTO ZYV010 (ZYV_FILIAL,ZYV_DESCR, ZYV_DTINI, ZYV_DTFIN, ZYV_JORNAD, ZYV_HRINI, ZYV_HRIFIN,ZYV_HFINAL, ZYV_INTINI,ZYV_INTFIN, ZYV_INTMIN,ZYV_INTMAX, R_E_C_N_O_)
+                                    VALUES('{item.Filial}','{item.DescJornada}', '{Convert.ToString(item.DataInicio).ToDateProtheusConvert()}', '{Convert.ToString(item.DataFim).ToDateProtheusConvert()}', '{item.JornadaDiaria}', '{item.HoraInicioDe}','{item.HoraInicioAte}',
                                                '{item.HoraFinal}',  '{item.InterInicio}', '{item.InterFim}','{item.InterMin}', '{item.InterMax}', (SELECT MAX(X.R_E_C_N_O_)+1 FROM ZYV010 X))";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
@@ -47,6 +47,7 @@ namespace TimeSheet.Infrastructure.Repository
                 {
                    
                     string sQuery = $@"Select LTRIM(RTRIM(ZYV_CODIGO)) AS Codigo,
+                                     LTRIM(RTRIM(ZYV_FILIAL)) AS Filial,
                                      LTRIM(RTRIM(ZYV_DESCR)) AS DescJornada,
                                      LTRIM(RTRIM(ZYV_DTINI)) AS DataInicio,
                                      LTRIM(RTRIM(ZYV_DTFIN)) AS DataFim,
@@ -76,6 +77,7 @@ namespace TimeSheet.Infrastructure.Repository
                         jornadaTrabalho.InterFim = TimeSpan.Parse(QueryResult.InterFim);
                         jornadaTrabalho.InterMin = TimeSpan.Parse(QueryResult.InterMin);
                         jornadaTrabalho.InterMax = TimeSpan.Parse(QueryResult.InterMax);
+                        jornadaTrabalho.Filial = QueryResult.Filial;
                         listJornadaTrabalho.Add(jornadaTrabalho);
                     }
 
@@ -97,7 +99,7 @@ namespace TimeSheet.Infrastructure.Repository
                     string sQuery = $@"UPDATE ZYV010  
                             SET ZYV_DESCR = '{item.DescJornada}' , ZYV_DTINI = '{Convert.ToString(item.DataInicio).ToDateProtheusConvert()}', ZYV_DTFIN = '{Convert.ToString(item.DataFim).ToDateProtheusConvert()}',
                             ZYV_JORNAD = '{item.JornadaDiaria}', ZYV_HRINI = '{item.HoraInicioDe}', ZYV_HRIFIN =  '{item.HoraInicioAte}', ZYV_HFINAL =  '{item.HoraFinal}',
-                            ZYV_INTINI= '{item.InterInicio}', ZYV_INTFIN = '{item.InterFim}',  ZYV_INTMIN = '{item.InterFim}', ZYV_INTMAX = '{item.InterMax}'
+                            ZYV_INTINI= '{item.InterInicio}', ZYV_INTFIN = '{item.InterFim}',  ZYV_INTMIN = '{item.InterFim}', ZYV_INTMAX = '{item.InterMax}', ZYV_FILIAL = '{item.Filial}'
                             WHERE ZYV_CODIGO ='{item.Codigo}'";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
@@ -116,6 +118,7 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 dbConnection.Open();
                 var sQuery = $@"Select LTRIM(RTRIM(ZYV_CODIGO)) AS Codigo,
+                                     LTRIM(RTRIM(ZYV_FILIAL)) AS Filial,
                                      LTRIM(RTRIM(ZYV_DESCR)) AS DescJornada,
                                      LTRIM(RTRIM(ZYV_DTINI)) AS DataInicio,
                                      LTRIM(RTRIM(ZYV_DTFIN)) AS DataFim,
@@ -143,6 +146,7 @@ namespace TimeSheet.Infrastructure.Repository
                     jornadaTrabalho.InterMin = TimeSpan.Parse(QueryResult.InterMin);
                     jornadaTrabalho.InterMax = TimeSpan.Parse(QueryResult.InterMax);
                     jornadaTrabalho.JornadaDiaria = TimeSpan.Parse(QueryResult.JornadaDiaria);
+                    jornadaTrabalho.Filial = QueryResult.Filial;
                 return jornadaTrabalho;
             }
         }

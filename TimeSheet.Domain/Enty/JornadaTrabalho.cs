@@ -7,6 +7,7 @@ namespace TimeSheet.Domain.Enty
     public class JornadaTrabalho
     {
         public string Codigo { get; set; }
+        public string Filial { get; set; }
         public string DescJornada { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
@@ -73,6 +74,7 @@ namespace TimeSheet.Domain.Enty
     public class JornadaTrabalhoDb
     {
         public string Codigo { get; set; }
+        public string Filial { get; set; }
         public string DescJornada { get; set; }
         public string DataInicio { get; set; }
         public string DataFim { get; set; }

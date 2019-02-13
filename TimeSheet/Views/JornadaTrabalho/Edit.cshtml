@@ -38,19 +38,13 @@
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="row">
-                        <div class="col-xs-6 col-sm-4"></div>
                         <div class="col-xs-6 col-sm-4">Período da Jornada:</div>
+                        <div class="col-xs-6 col-sm-4"></div>
                         <!-- Optional: clear the XS cols if their content doesn't match in height -->
                         <div class="clearfix visible-xs-block"></div>
                         <div class="col-xs-6 col-sm-4"></div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-6 col-sm-4">
-                            <label for="DescricaodaJornada">Descrição da Jornada</label>
-                            @Html.HiddenFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control", @placeholder = "", } })
-                            @Html.EditorFor(model => model.DescJornada, new { htmlAttributes = new { @class = "form-control col-md-12", @placeholder = "Descrição da Jornada..." } })
-                            <span asp-validation-for="DescJornada" class="text-danger"></span>
-                        </div>
                         <div class="col-md-2 col-sm-4">
                             <label for="DataInicio">Data início</label>
                             <input type="date" value="@Model.DataInicio?.ToString("yyyy-MM-dd")" id="DataInicio" class="form-control" name="DataInicio" />
@@ -60,6 +54,20 @@
                             <label for="DataFim">Data fim</label>
                             <input type="date" value="@Model.DataFim?.ToString("yyyy-MM-dd")" id="DataFim" class="form-control" name="DataFim" />
                             @Html.ValidationMessageFor(model => model.DataFim, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-xs-6 col-sm-2">
+                            <label for="Filial">Filial</label>
+                            @Html.EditorFor(model => model.Filial, new { htmlAttributes = new { @type= "number", @class = "form-control col-md-12", @placeholder = "Informe o código da filial..." } })
+                            <span asp-validation-for="Filial" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-4">
+                            <label for="DescricaodaJornada">Descrição da Jornada</label>
+                            @Html.HiddenFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control", @placeholder = "", } })
+                            @Html.EditorFor(model => model.DescJornada, new { htmlAttributes = new { @class = "form-control col-md-12", @placeholder = "Descrição da Jornada..." } })
+                            <span asp-validation-for="DescJornada" class="text-danger"></span>
                         </div>
                     </div>
                     <br />

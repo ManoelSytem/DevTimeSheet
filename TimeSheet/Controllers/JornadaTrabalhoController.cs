@@ -100,19 +100,22 @@ namespace TimeSheet.Controllers
             TempData["CreateSucesso"] = null;
             try
             {
-                viewModelCadastroHora.ValidaHorario();
-                viewModelCadastroHora.ValidaIntervalo();
-                viewModelCadastroHora.ValidaJornadaDiaria();
-                 viewModelCadastroHora.ValidaData();
-                var JornadaTrb = _mapper.Map<JornadaTrabalho>(viewModelCadastroHora);
-                _jornadaTrbServiceRepository.AtualizarJornada(JornadaTrb);
-                TempData["CreateSucesso"] = true;
+                if (ModelState.IsValid)
+                {
+                    viewModelCadastroHora.ValidaHorario();
+                    viewModelCadastroHora.ValidaIntervalo();
+                    viewModelCadastroHora.ValidaJornadaDiaria();
+                    viewModelCadastroHora.ValidaData();
+                    var JornadaTrb = _mapper.Map<JornadaTrabalho>(viewModelCadastroHora);
+                    _jornadaTrbServiceRepository.AtualizarJornada(JornadaTrb);
+                    TempData["CreateSucesso"] = true;
+                }
                 return View(viewModelCadastroHora);
             }
             catch (Exception e)
             {
                 TempData["Createfalse"] = e.Message;
-                return View();
+                return View(viewModelCadastroHora);
             }
         }
 

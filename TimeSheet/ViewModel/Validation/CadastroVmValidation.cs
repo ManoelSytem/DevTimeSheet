@@ -14,6 +14,10 @@ namespace TimeSheet.ViewModel.Validation
              .NotEmpty().WithMessage("* obrigatório")
             .Length(1, 30).WithMessage("O campo não deve ser maior que 30 caracteres");
 
+            RuleFor(x => x.Filial)
+            .NotEmpty().WithMessage("* obrigatório")
+            .Must(ContagemCaractere).WithMessage("Código filial inválido.");
+
             RuleFor(x => x.DataInicio)
                                .NotEmpty().WithMessage("* obrigatório");
 
@@ -47,9 +51,19 @@ namespace TimeSheet.ViewModel.Validation
             RuleFor(x => x.InterMax)
                                       .NotEmpty().WithMessage("* obrigatório");
 
-
         }
 
+        private static bool ContagemCaractere(string Filial)
+        {
+            if(Filial.ToString().Length > 2)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
     }
 }
