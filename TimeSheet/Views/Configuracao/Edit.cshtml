@@ -26,54 +26,114 @@
         </div>
     </div>
 }
-    <div class="my-row">
-        <div class="col-md-12">
-            <div class="card azulc-azule">
-                <div class="card-header">
-                    @ViewBag.Title
-                </div>
-                <div class="card-body">
-                    @using (Html.BeginForm())
-                    {
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="row">
-                            <div class="col-xs-6 col-sm-2"></div>
-                            <div class="col-xs-6 col-sm-4">Dia inícial e final do período de marcações:</div>
-                            <!-- Optional: clear the XS cols if their content doesn't match in height -->
-                            <div class="clearfix visible-xs-block"></div>
-                            <div class="col-xs-6 col-sm-4"></div>
+<div class="my-row">
+    <div class="col-md-12">
+        <div class="card azulc-azule">
+            <div class="card-header">
+                @ViewBag.Title
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label for="DiaMesLimiteFecha">
+                                Dia do mês limite fechamento
+                                <span data-toggle="tooltip" data-placement="right"><i title="Último dia do mês para os colaboradores realizar o fechamento das marcações." class='fas fa-info-circle'></i></span>
+                            </label>
+                            @Html.EditorFor(model => model.DiaMesLimiteFecha, new { htmlAttributes = new { @class = "form-control", @placeholder = "Dia do Mês" } })
+                            <span asp-validation-for="DiaMesLimiteFecha" class="text-danger"></span>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-6 col-sm-2">
-                                <label for="DiaMesLimiteFecha">Dia do mês limite fechamento</label>
-                                @Html.HiddenFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control", @placeholder = "", } })
-                                @Html.EditorFor(model => model.DiaMesLimiteFecha, new { htmlAttributes = new { @class = "form-control col-md-6", @placeholder = "Dia do Mês" } })
-                                <span asp-validation-for="DiaMesLimiteFecha" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-1 col-sm-4">
-                                <label for="DiaFim">Início</label>
-                                @Html.EditorFor(model => model.DiaInicio, new { htmlAttributes = new { @class = "form-control col-md-12", @placeholder = "Início" } })
-                                <span asp-validation-for="DiaInicio" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-2 col-sm-4">
-                                <label for="DiaFim">Fim</label>
-                                @Html.EditorFor(model => model.DiaFim, new { htmlAttributes = new { @class = "form-control  col-md-6", @placeholder = "Fim" } })
-                                @Html.ValidationMessageFor(model => model.DiaFim, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-md-2 col-sm-4 coddivergencia">
-                                <label for="DiaFim">Código de divergência para atestado</label>
-                                <div class="input-group mb-3">
-                                    @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "searchInput", @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
 
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
-                                    </div>
+                        <div class="col-sm-1">
+                            <span data-toggle="tooltip" data-placement="right"><i title="Dia inícial e final do período de marcações." class='fas fa-info-circle'></i></span>
+                            <label for="DiaFim">Dia início</label>
+                            @Html.EditorFor(model => model.DiaInicio, new { htmlAttributes = new { @class = "form-control", @placeholder = "Início" } })
+                            <span asp-validation-for="DiaInicio" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="DiaFim">Dia fim</label>
+                            @Html.EditorFor(model => model.DiaFim, new { htmlAttributes = new { @class = "form-control", @placeholder = "Fim" } })
+                            @Html.ValidationMessageFor(model => model.DiaFim, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-2 col-sm-4 coddivergencia">
+                            <label for="DiaFim">Código de divergência</label>
+                            <div class="input-group mb-3">
+                                @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "searchInput", @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
                                 </div>
                             </div>
                             @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
                         </div>
-                        <script>
+                    </div>
+
+
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-2"> <b>Configurações de e-mail:</b></div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-2">
+                            <label for="FrequenciaEmail">
+                                Frequência de envio de e-mail
+                                <span data-toggle="tooltip" data-placement="right"><i title="É a frequência de envio do e-mail de aviso sobre fechamento." class='fas fa-info-circle'></i></span>
+                            </label>
+                            @Html.DropDownListFor(model => model.Frequencia_email, new List<SelectListItem>
+                             {
+                               new SelectListItem { Text="Escolha a opção..", Value = "0"},
+                                new SelectListItem{ Text="Diário", Value = "1"},
+                                new SelectListItem{ Text="Semanal", Value = "2"}}, new { @class = "form-control grid-control" })
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <label for="DiasEnvioEmail">
+                                Dias para início do envio do e-mail   <span data-toggle="tooltip" data-placement="right"><i title="Quantidade de dias para envio do e-mail antes da data do fechamento. Ex: Dia fechamento é 25, dias para envio de e-mail é 5. A data de envio será todo dia 20 mês." class='fas fa-info-circle'></i></span>
+                            </label>
+                            @Html.EditorFor(model => model.Qtddiadatafechamento, new { htmlAttributes = new { @class = "form-control col-md-4", @placeholder = "Ínicio envio" } })
+                            @Html.ValidationMessageFor(model => model.Qtddiadatafechamento, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6">
+                            <label for="TextoEmail">
+                                Assunto
+                            </label>
+                            @Html.EditorFor(model => model.AssuntoEmail, new { htmlAttributes = new { @class = "form-control  col-md-12", @placeholder = "Assunto" } })
+                            @Html.ValidationMessageFor(model => model.AssuntoEmail, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6">
+                            <label for="TextoEmail">
+                                Texto
+                            </label>
+                            @Html.TextAreaFor(model => model.TextoEmail, new { @Id = "comentario", @class = "form-control comment", @cols = 50, @rows = 7 })
+                            @Html.ValidationMessageFor(model => model.TextoEmail, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+   
+</div>
+
+<div class="btn-ft">
+    <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
+    <label class="btn-ft-item-open" for="btn-ft-open">
+        <span><i class="fas fa-plus"></i></span>
+    </label>
+    <a onclick="$('form').submit();" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></a>
+    <a href="@Url.Action("Index", "Configuracao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
+</div>
+
+<script>
     $("#searchInput").autocomplete({
         source: function (request, response) {
             $.ajax({
@@ -91,76 +151,17 @@
             });
         }
     });
-                        </script>
 
-                        <br />
-                        <br />
-                        <div class="row">
-                            <div class="col-xs-6 col-sm-2"> <b>Configurações de Email:</b></div>
-                        </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-xs-6 col-sm-2">
-                                <label for="FrequenciaEmail">
-                                    Frequência de envio de email
-                                </label>
-                                @Html.DropDownListFor(model => model.Frequencia_email, new List<SelectListItem>
-                                 {
-                                   new SelectListItem { Text="Escolha a opção..", Value = "0"},
-                                    new SelectListItem{ Text="Diário", Value = "1"},
-                                    new SelectListItem{ Text="Semanal", Value = "2"}}, new { @class = "form-control grid-control" })
-                            </div>
-                            <div class="col-md-4 col-sm-4">
-                                <label for="DiasEnvioEmail">
-                                    Dias para início do envio do e-mail
-                                </label>
-                                @Html.EditorFor(model => model.Qtddiadatafechamento, new { htmlAttributes = new { @class = "form-control col-md-4", @placeholder = "Ínicio envio" } })
-                                @Html.ValidationMessageFor(model => model.Qtddiadatafechamento, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <br />
-                        <br />
-                        <div class="row">
-                            <div class="col-xs-6 col-sm-6">
-                                <label for="TextoEmail">
-                                    Assunto
-                                </label>
-                                @Html.EditorFor(model => model.AssuntoEmail, new { htmlAttributes = new { @class = "form-control  col-md-12", @placeholder = "Assunto" } })
-                                @Html.ValidationMessageFor(model => model.AssuntoEmail, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6 col-sm-6">
-                                <label for="TextoEmail">
-                                    Texto
-                                </label>
-                                @Html.TextAreaFor(model => model.TextoEmail, new { @Id = "comentario", @class = "form-control comment", @cols = 50, @rows = 7 })
-                                @Html.ValidationMessageFor(model => model.TextoEmail, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                    }
-                </div>
-            </div>
-        </div>
-        <script>
-            var Myeditor;
-            ClassicEditor.create(document.querySelector('.comment'), {
-                language: 'pt-br'
-            }).then(editor => {
-                Myeditor = editor;
-                console.log(editor);
-            }).catch(error => {
-                console.error(error);
-            });
-        </script>
-    </div>
- 
-<div class="btn-ft">
-    <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
-    <label class="btn-ft-item-open" for="btn-ft-open">
-        <span><i class="fas fa-plus"></i></span>
-    </label>
-    <a onclick="$('form').submit();" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></a>
-    <a href="@Url.Action("Index", "Configuracao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
-</div>
+        var Myeditor;
+        ClassicEditor.create(document.querySelector('.comment'), {
+            language: 'pt-br'
+        }).then(editor => {
+            Myeditor = editor;
+            console.log(editor);
+        }).catch(error => {
+            console.error(error);
+        });
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

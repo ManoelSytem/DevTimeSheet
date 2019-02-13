@@ -36,46 +36,49 @@
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="row">
-                            <div class="col-xs-6 col-sm-2"></div>
-                            <div class="col-xs-6 col-sm-4">Dia inícial e final do período de marcações:</div>
-                            <!-- Optional: clear the XS cols if their content doesn't match in height -->
-                            <div class="clearfix visible-xs-block"></div>
-                            <div class="col-xs-6 col-sm-4"></div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label for="DiaMesLimiteFecha">
+                                Dia do mês limite fechamento
+                                <span data-toggle="tooltip" data-placement="right"><i title="Último dia do mês para os colaboradores realizar o fechamento das marcações." class='fas fa-info-circle'></i></span>
+                            </label>
+                            @Html.EditorFor(model => model.DiaMesLimiteFecha, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled", @placeholder = "Dia do Mês" } })
+                            <span asp-validation-for="DiaMesLimiteFecha" class="text-danger"></span>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-6 col-sm-2">
-                                <label for="DiaMesLimiteFecha">Dia do mês limite fechamento</label>
-                                @Html.HiddenFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control", @placeholder = "", } })
-                                @Html.EditorFor(model => model.DiaMesLimiteFecha, new { htmlAttributes = new { @class = "form-control col-md-6", @disabled = "disabled", @placeholder = "Dia do Mês" } })
-                                <span asp-validation-for="DiaMesLimiteFecha" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-1 col-sm-4">
-                                <label for="DiaFim">Início</label>
-                                @Html.EditorFor(model => model.DiaInicio, new { htmlAttributes = new { @class = "form-control col-md-12", @disabled = "disabled", @placeholder = "Início" } })
-                                <span asp-validation-for="DiaInicio" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-2 col-sm-4">
-                                <label for="DiaFim">Fim</label>
-                                @Html.EditorFor(model => model.DiaFim, new { htmlAttributes = new { @class = "form-control  col-md-6", @disabled = "disabled", @placeholder = "Fim" } })
-                                @Html.ValidationMessageFor(model => model.DiaFim, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-md-2 col-sm-4 coddivergencia">
-                                <label for="DiaFim">Código de divergência para atestado</label>
-                                @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @class = "form-control  col-md-12", @disabled = "disabled", @placeholder = "Código divergência..." } })
-                                @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
-                            </div>
+
+                        <div class="col-sm-1">
+                            <span data-toggle="tooltip" data-placement="right"><i title="Dia inícial e final do período de marcações." class='fas fa-info-circle'></i></span>
+                            <label for="DiaFim">Dia início</label>
+                            @Html.EditorFor(model => model.DiaInicio, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled", @placeholder = "Início" } })
+                            <span asp-validation-for="DiaInicio" class="text-danger"></span>
                         </div>
+                        <div class="col-md-1">
+                            <label for="DiaFim">Dia fim</label>
+                            @Html.EditorFor(model => model.DiaFim, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled", @placeholder = "Fim" } })
+                            @Html.ValidationMessageFor(model => model.DiaFim, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-2 col-sm-4 coddivergencia">
+                            <label for="DiaFim">Código de divergência</label>
+                            <div class="input-group mb-3">
+                                @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "searchInput", @disabled = "disabled", @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.CodDivergencia, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
                         <br />
                         <br />
                         <div class="row">
-                            <div class="col-xs-6 col-sm-2"> <b>Configurações de email:</b></div>
+                            <div class="col-xs-6 col-sm-2"> <b>Configurações de e-mail:</b></div>
                         </div>
                         <br />
                         <div class="row">
                             <div class="col-xs-6 col-sm-2">
                                 <label for="FrequenciaEmail">
-                                    Frequência de envio de email
+                                    Frequência de envio de e-mail
+                                    <span data-toggle="tooltip" data-placement="right"><i title="É a frequência de envio do e-mail de aviso sobre fechamento." class='fas fa-info-circle'></i></span>
                                 </label>
                                 @Html.DropDownListFor(model => model.Frequencia_email, new List<SelectListItem>
                                  {
@@ -86,6 +89,7 @@
                             <div class="col-md-4 col-sm-4">
                                 <label for="DiasEnvioEmail">
                                     Dias para início do envio do e-mail
+                                    <span data-toggle="tooltip" data-placement="right"><i title="Quantidade de dias para envio do e-mail antes da data do fechamento. Ex: Dia fechamento é 25, dias para envio de e-mail é 5. A data de envio será todo dia 20 mês." class='fas fa-info-circle'></i></span>
                                 </label>
                                 @Html.EditorFor(model => model.Qtddiadatafechamento, new { htmlAttributes = new { @class = "form-control col-md-4", @disabled = "disabled", @placeholder = "Ínicio envio" } })
                                 @Html.ValidationMessageFor(model => model.Qtddiadatafechamento, "", new { @class = "text-danger" })
@@ -124,6 +128,10 @@
                 console.log(editor);
             }).catch(error => {
                 console.error(error);
+                });
+
+            $(document).ready(function () {
+                $('[data-toggle="tooltip"]').tooltip();
             });
         </script>
     </div>
