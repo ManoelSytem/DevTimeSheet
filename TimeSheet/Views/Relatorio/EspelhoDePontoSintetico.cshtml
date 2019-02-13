@@ -110,22 +110,25 @@
                 <th class="text-center">Horas Execedentes</th>
                 <th class="text-center">Atrasos</th>
                 <th class="text-center">Abonos</th>
-                <th class="text-center">Total Horas</th>
-                <th class="text-center">Divergência (quantidade)</th>
+                <th class="text-center">Total horas trabalhadas</th>
+                <th class="text-center">Divergência</th>
             </tr>
 
         </thead>
         <tbody>
-            @if (Model.Fechamento != null)
+            @if (Model.FechamentoPorDatalancamento != null)
             {
+               foreach(var item in Model.FechamentoPorDatalancamento.OrderBy(x => x.DataLancamento))
+                {
             <tr>
-                <th scope="row">@Model.Fechamento.Datafechamento.ToDateProtheusReverseformate()</th>
-                <td>@Model.Fechamento.TotalHoraExedente</td>
-                <td>@Model.Fechamento.TotalAtraso</td>
-                <td>@Model.Fechamento.TotalAbono</td>
-                <td>@Model.Fechamento.TotalHora</td>
-                <td>@Model.Fechamento.Divergencia</td>
+                <th scope="row">@item.DataLancamento.ToDateProtheusReverseformate()</th>
+                <td>@item.TotalHoraExedente</td>
+                <td>@item.TotalAtraso</td>
+                <td>@item.TotalAbono</td>
+                <td>@item.TotalHora</td>
+                <td>@item.Divergencia</td>
             </tr>
+                }
             }
         </tbody>
     </table>

@@ -96,10 +96,9 @@ namespace TimeSheet.Controllers
 
                 viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
                 viewModelRelatorio.marcacao = viewModelMarcacao;
-                viewModelRelatorio.Fechamento =  _mapper.Map<ViewModelFechamento>(_fechamentoServiceRepository.ObterFechamento(id, User.GetDados("Matricula")));
+                viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorData(id));
                 viewModelRelatorio.user = user;
-
-
+                
                 return new ViewAsPdf("EspelhoDePontoSintetico", viewModelRelatorio);
             }
             catch (Exception e)
@@ -164,8 +163,7 @@ namespace TimeSheet.Controllers
             var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
 
             var configuracao = _configuracao.ObterConfiguracao();
-            var viewModelFechamento = _mapper.Map<ViewModelFechamento>(lancamento.CalcularLancamentoPorData(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho, configuracao));
-
+            listaFechamentoPorData = lancamento.CalcularLancamentoPorData(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho, configuracao);
             return listaFechamentoPorData;
         }
 

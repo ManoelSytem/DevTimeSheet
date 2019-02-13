@@ -37,16 +37,16 @@ namespace TimeSheet.Domain.Enty
 
         }
 
-        public Fechamento CalcularLancamentoPorData(IOrderedEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura)
+        public List<Fechamento> CalcularLancamentoPorData(IOrderedEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura)
         {
-            Fechamento Fechamento = new Fechamento();
-            Fechamento.TotalHoraExedente = Math.Round(CalcularTotalHoraExedente(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
-            Fechamento.TotalAtraso = Math.Round(CalcularAtraso(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
-            Fechamento.TotalFalta = CalcularQuantidadeDeDiaSemApontamento(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho);
-            Fechamento.TotalAbono = CalcularTotalDeAbono(orderedlistalancamento.OrderBy(c => c.DateLancamento), configura);
-            Fechamento.TotalHora = Math.Round(CalcularTotalHoras(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
-            return Fechamento;
+            List<Fechamento> listaFechamentoPorData = new List<Fechamento>();
 
+            listaFechamentoPorData = CalcularTotalHoraExedenteETrabalhada(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho);
+            //Fechamento.TotalAtraso = Math.Round(CalcularAtraso(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
+            //Fechamento.TotalFalta = CalcularQuantidadeDeDiaSemApontamento(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho);
+            //Fechamento.TotalAbono = CalcularTotalDeAbono(orderedlistalancamento.OrderBy(c => c.DateLancamento), configura);
+            //Fechamento.TotalHora = Math.Round(CalcularTotalHoras(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
+            return listaFechamentoPorData;
         }
 
         private int CalcularQuantidadeDeDiaSemApontamento(IOrderedEnumerable<Lancamento> orderedEnumerable, JornadaTrabalho jornadaTrabalho)
@@ -54,50 +54,67 @@ namespace TimeSheet.Domain.Enty
             throw new NotImplementedException();
         }
 
-        public double CalcularTotalHoraExedente(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada)
+        public List<Fechamento> CalcularTotalHoraExedenteETrabalhada(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada)
         {
+           
+            List<Fechamento> listFechamentoHorasExedentes = new List<Fechamento>();
             TimeSpan totalHoraDiaLancamento = TimeSpan.Parse("00:00:00");
-            TimeSpan totalLancamento;
-            TimeSpan totalHoraExedenteTimeSpan;
+            TimeSpan totalLancamento = TimeSpan.Parse("00:00:00");
             string datalancamento = "0";
-            double totalHoraExedente;
             var jrDiaria = jornada.JornadaDiaria;
 
+            foreach (Lancamento LancamentoResult in lancamentoList)
+            {
+                
+                if (datalancamento != LancamentoResult.DateLancamento && datalancamento != "0")
+                {
+                    Fechamento novo = new Fechamento();
+                    if (totalLancamento > jrDiaria)
+                    {
+                        novo.TotalHora = Math.Round(Convert.ToDouble(totalLancamento.TotalHours), 2);
+                        novo.DataLancamento = LancamentoResult.DateLancamento;
+                        totalLancamento = totalLancamento - jrDiaria;
+                        novo.TotalHoraExedente = Math.Round(Convert.ToDouble(totalLancamento.TotalHours),2);
+                        listFechamentoHorasExedentes.Add(novo);
+                        totalLancamento = TimeSpan.Parse("00:00:00");
+                    }
+                    else  {
+                        novo.TotalHoraExedente = 0;
+                        novo.DataLancamento = LancamentoResult.DateLancamento;
+                        novo.TotalHora = Math.Round(Convert.ToDouble(totalLancamento.TotalHours), 2);
+                        listFechamentoHorasExedentes.Add(novo);
+                    }
+                   
+                }
+                datalancamento = LancamentoResult.DateLancamento;
+                totalLancamento += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+            }
+
+            return listFechamentoHorasExedentes;
+        }
+
+
+        public List<Fechamento> CalcularTotalDeAbono(IOrderedEnumerable<Lancamento> lancamentoList, Configuracao config)
+        {
+            List<Fechamento> listFechamentoTotalAbono = new List<Fechamento>();
+            int totalAbono = 0;
+            string datalancamento = "0";
             foreach (Lancamento LancamentoResult in lancamentoList)
             {
 
                 if (datalancamento != LancamentoResult.DateLancamento && datalancamento != "0")
                 {
-                    totalHoraDiaLancamento -= jrDiaria;
+                    if (LancamentoResult.CodDivergencia == Convert.ToInt16(config.CodDivergencia))
+                    {
+                        Fechamento novo = new Fechamento();
+                        novo.TotalAbono = totalAbono++;
+                    }
                 }
                 datalancamento = LancamentoResult.DateLancamento;
-                totalLancamento = LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
-            }
-
-            totalHoraExedenteTimeSpan = jrDiaria - totalHoraDiaLancamento;
-            totalHoraExedente = totalHoraExedenteTimeSpan.TotalHours;
-            if (totalHoraExedenteTimeSpan > jrDiaria)
-            {
-                return totalHoraExedente;
-            }
-            else
-            {
-                return totalHoraExedente = 0;
-            }
-        }
-
-        public int CalcularTotalDeAbono(IOrderedEnumerable<Lancamento> lancamentoList, Configuracao config)
-        {
-            int totalAbono = 0;
-            foreach (Lancamento LancamentoResult in lancamentoList)
-            {
-                if (LancamentoResult.CodDivergencia == Convert.ToInt16(config.CodDivergencia))
-                {
-                    totalAbono++;
-                }
+                totalAbono++;
 
             }
-            return totalAbono;
+            return listFechamentoTotalAbono;
         }
 
         public double CalcularAtraso(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada)
