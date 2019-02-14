@@ -49,6 +49,7 @@ namespace TimeSheet.Infrastructure.Repository
                                LTRIM(RTRIM(ZYY_SEQ)) as Seq,
                                LTRIM(RTRIM(ZYY_FASE)) as Fase,
                                LTRIM(RTRIM(ZYY_DATA)) as DateLancamento, 
+                               LTRIM(RTRIM(ZYY_PROJET)) as codEmpredimento,
                                ZYY_HORINI as  HoraInicio,
                                ZYY_HORFIN as HoraFim,
                                ZYY_PROJET as codEmpredimento,
@@ -97,10 +98,11 @@ namespace TimeSheet.Infrastructure.Repository
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
                     string sQuery = $@" Select 
-                              LTRIM(RTRIM(ZYY_SEQ)) as Seq,
-                              LTRIM(RTRIM(ZYY_DATA)) as DateLancamento,
-                              LTRIM(RTRIM(SZ.ZA_FASE)) as Fase,
-                              ZYY_CODIGO as Codigo,
+                               LTRIM(RTRIM(ZYY_SEQ)) as Seq,
+                               LTRIM(RTRIM(ZYY_DATA)) as DateLancamento,
+                               LTRIM(RTRIM(SZ.ZA_FASE)) as Fase,
+                               ZYY_CODIGO as Codigo,
+                               LTRIM(RTRIM(ZYY_PROJET)) as codEmpredimento,
                                ZYY_HORINI as  HoraInicio,
                                ZYY_HORFIN as HoraFim,
                                LTRIM(RTRIM(ZYY_OBSERV)) as Observacao,
@@ -144,13 +146,13 @@ namespace TimeSheet.Infrastructure.Repository
                 {
                     string sQuery = $@" Select DISTINCT 
                                LTRIM(RTRIM(ZYY_SEQ)) as Seq,
-                              LTRIM(RTRIM(ZYY_DATA)) as DateLancamento,
+                               LTRIM(RTRIM(ZYY_DATA)) as DateLancamento,
+                               LTRIM(RTRIM(ZYY_PROJET)) as codEmpredimento,
                                LTRIM(RTRIM(SZ.ZA_FASE)) as Fase,
                                ZYY_CODIGO as Codigo,
                                LTRIM(RTRIM(ZYY_OBSERV)) as Observacao,
                                ZYY_HORINI as  HoraInicio,
                                ZYY_HORFIN as HoraFim,
-                               ZYY_PROJET as codEmpredimento,
                                ZYY_CODDIV AS CodDivergencia,
                                SZ.ZA_DESC AS DescricaoEmp
                                FROM ZYY010 ZA
@@ -190,6 +192,10 @@ namespace TimeSheet.Infrastructure.Repository
 
             try
             {
+                if (string.IsNullOrWhiteSpace(item.Observacao))
+                {
+                    item.Observacao = " ";
+                }
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
                     string sQuery = $@"UPDATE ZYY010

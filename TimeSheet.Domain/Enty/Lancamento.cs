@@ -136,6 +136,7 @@ namespace TimeSheet.Domain.Enty
         public string[] EmpreendimentoIds { get; set; }
         public virtual ICollection<Empreendimento> Projetos { get; set; }
         public string Fase { get; set; }
+        public string CodigoProjeto { get; set; }
     }
       
 }

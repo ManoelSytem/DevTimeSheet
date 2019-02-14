@@ -45,6 +45,36 @@ namespace TimeSheet.Infrastructure.Repository
             }
         }
 
+        public void SalvarFechamentoPordia(List<Fechamento> fechamentosPordiaLancamento, string filial, string dataProtheus, string matUser, string centroCusto,string status)
+        {
+            try
+            {
+               
+                using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+                {
+                    dbConnection.Open();
+                    foreach (Fechamento item in fechamentosPordiaLancamento)
+                    { 
+                      string sQuery = $@"INSERT INTO ZYU010 (ZYU_FILIAL,ZYU_CODIGO,ZYU_DATA,ZYU_HORA,ZYU_MATUSU,ZYU_THOREX,ZYU_THORAT,ZYU_THORFT,ZYU_THORAB,ZYU_THORAS,ZYU_CCUSTO,ZYU_PROJET,ZYU_STATUS,ZYU_FASE,ZYU_DTMARC, R_E_C_N_O_,  R_E_C_D_E_L_) 
+                                    VALUES ('{filial}','{item.CodigoMarcacao}',
+                                            '{dataProtheus}',
+                                            '{DateTime.Now.ToShortTimeString().Replace(":", "")}',
+                                            '{matUser}', {Convert.ToString(item.TotalHoraExedente).Replace(",", ".")},
+                                            {Convert.ToString(item.TotalAtraso).Replace(",", ".")},{item.TotalFalta},
+                                            {Convert.ToString(item.TotalAbono).Replace(",", ".")},
+                                            {Convert.ToString(item.TotalHora).Replace(",", ".")},'{centroCusto}',
+                                           '{item.CodigoProjeto}',
+                                           '{status}',
+                                           '{item.Fase}','{item.DataLancamento}',(SELECT NVL(MAX(X.R_E_C_N_O_),0)+1 FROM ZYU010 X),0)";
+                        dbConnection.Execute(sQuery);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public Fechamento ObterListaFechamentoPorMatriculaEMarcacao(string codigoMarcacao, string matricula)
         {

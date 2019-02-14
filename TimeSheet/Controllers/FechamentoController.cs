@@ -138,13 +138,26 @@ namespace TimeSheet.Controllers
         {
             try
             {
+                List<Fechamento> listaFechamentoPorData = new List<Fechamento>();
+                List<Fechamento> listaDeDiasSemLancamento = new List<Fechamento>();
+                LancamentoNegocio LancamentoNegocio = new LancamentoNegocio();
                 Marcacao marcacao = new Marcacao();
+
                 marcacao.ValidaMarcacaoFoiFechada(_marcacaoServiceRepository.ObterMarcacao(viewModelfechamento.CodigoMarcacao));
+                marcacao = _marcacaoServiceRepository.ObterMarcacao(viewModelfechamento.CodigoMarcacao);
+                marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(viewModelfechamento.CodigoMarcacao, User.GetDados("Matricula"));
+
+                var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
+                var configuracao = _configuracao.ObterConfiguracao();
+
+                listaFechamentoPorData = LancamentoNegocio.CalcularLancamentoPorData(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho, configuracao);
+
 
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
-                var fechamento = _mapper.Map<Fechamento>(viewModelfechamento);
-                _fechamentoServiceRepository.SalvarFechamento(fechamento, User.GetDados("Filial"), DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), User.GetDados("Centro de Custo"), "0" , "2", "0" );
+                
+                _fechamentoServiceRepository.SalvarFechamentoPorDiaLancamento(listaFechamentoPorData, User.GetDados("Filial"), DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), User.GetDados("Centro de Custo"), "2");
                 _marcacaoServiceRepository.UpdateStatusFechamento(viewModelfechamento.CodigoMarcacao);
+
                 NotificarFechamento(viewModelfechamento);
                 return Json(new { sucesso = "Fechamento realizado com sucesso!" });
             }

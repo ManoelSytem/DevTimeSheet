@@ -21,6 +21,8 @@ namespace TimeSheet.Domain.Enty
         public string Descricao { get; set; }
         public string Divergencia { get; set; }
         public string StatusFechamento { get; set; }
+        public string CodigoProjeto { get; set; }
+        public string Fase { get; set; }
 
         public Fechamento()
         {

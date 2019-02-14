@@ -46,6 +46,9 @@ namespace TimeSheet.Negocio
                     {
                         novo.TotalHora = Math.Round(Convert.ToDouble(totalLancamento.TotalHours), 2);
                         novo.DataLancamento = LancamentoResult.DateLancamento;
+                        novo.CodigoProjeto = LancamentoResult.codEmpredimento;
+                        novo.CodigoMarcacao = LancamentoResult.Codigo;
+                        novo.Fase = LancamentoResult.Fase;
                         totalLancamento = totalLancamento - jrDiaria;
                         if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
                         novo.TotalHoraExedente = Math.Round(Convert.ToDouble(totalLancamento.TotalHours), 2);
@@ -58,6 +61,9 @@ namespace TimeSheet.Negocio
                         novo.TotalHoraExedente = 0;
                         novo.TotalAtraso = Math.Round(Convert.ToDouble(totalLancamento.TotalHours), 2);
                         novo.DataLancamento = LancamentoResult.DateLancamento;
+                        novo.CodigoProjeto = LancamentoResult.codEmpredimento;
+                        novo.CodigoMarcacao = LancamentoResult.Codigo;
+                        novo.Fase = LancamentoResult.Fase;
                         if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
                         novo.TotalHora = Math.Round(Convert.ToDouble(totalLancamento.TotalHours), 2);
                         listFechamentoHorasExedentes.Add(novo);

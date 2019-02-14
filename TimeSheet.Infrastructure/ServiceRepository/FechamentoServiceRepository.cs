@@ -25,5 +25,10 @@ namespace TimeSheet.Infrastructure.ServiceRepository
         {
             _FechamentoRepository.Add(item, filial, dataProtheus, matUser, centroCusto, projeto, status, fase);
         }
+
+        public void SalvarFechamentoPorDiaLancamento(List<Fechamento> itens, string filial, string dataProtheus, string matUser, string centroCusto, string status)
+        {
+            _FechamentoRepository.SalvarFechamentoPordia(itens, filial, dataProtheus, matUser, centroCusto, status);
+        }
     }
 }
