@@ -11,6 +11,7 @@ using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
 using TimeSheet.Domain.Util;
+using TimeSheet.Negocio;
 using TimeSheet.Util;
 using TimeSheet.ViewModel;
 
@@ -400,23 +401,23 @@ namespace TimeSheet.Controllers
 
         private List<Fechamento> ValidaDiasSemLancameto(string id)
         {
-            ViewModelFechamento viewModelfechamento = new ViewModelFechamento();
+            FechamentoNegocio fechamentoNegocio = new FechamentoNegocio();
             Marcacao marcacao = new Marcacao();
 
             marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
             var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
             
-            return viewModelfechamento.ValidaDiasSemLancamento(listLancamento.ToList(), marcacao, User.GetDados("Filial"));
+            return fechamentoNegocio.ValidaDiasSemLancamento(listLancamento.ToList(), marcacao, User.GetDados("Filial"));
         }
         private List<Fechamento> ValidaDiasComLancameto(string id)
         {
-            ViewModelFechamento viewModelfechamento = new ViewModelFechamento();
+            FechamentoNegocio fechamentoNegocio = new FechamentoNegocio();
             Marcacao marcacao = new Marcacao();
 
             marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
             var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
 
-            return viewModelfechamento.ValidaDiasComLancamento(listLancamento.ToList(), marcacao, User.GetDados("Filial"));
+            return fechamentoNegocio.ValidaDiasComLancamento(listLancamento.ToList(), marcacao, User.GetDados("Filial"));
         }
 
         private List<Fechamento> ValidaLancamentoForaDeIntervalo(string id)

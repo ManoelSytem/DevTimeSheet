@@ -13,6 +13,7 @@ using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
 using TimeSheet.Domain.Util;
+using TimeSheet.Negocio;
 using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers
@@ -154,16 +155,19 @@ namespace TimeSheet.Controllers
 
         private List<Fechamento> CalcularFechamentoPorData(string id)
         {
-            Lancamento lancamento = new Lancamento();
-            Marcacao marcacao = new Marcacao();
+           
             List<Fechamento> listaFechamentoPorData = new List<Fechamento>();
+            LancamentoNegocio lancamentoNegocio = new LancamentoNegocio();
+            Marcacao marcacao = new Marcacao();
+        
 
             marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
             marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"));
             var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
 
             var configuracao = _configuracao.ObterConfiguracao();
-            listaFechamentoPorData = lancamento.CalcularLancamentoPorData(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho, configuracao);
+            listaFechamentoPorData = lancamentoNegocio.CalcularLancamentoPorData(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho, configuracao);
+             
             return listaFechamentoPorData;
         }
 
@@ -175,6 +179,7 @@ namespace TimeSheet.Controllers
             return char.ToUpper(month[0]) + month.Substring(1) + "/" + ano; ;
         }
 
+    
 
     }
 
