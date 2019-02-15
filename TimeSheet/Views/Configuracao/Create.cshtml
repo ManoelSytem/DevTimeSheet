@@ -47,7 +47,7 @@
                         </div>
 
                         <div class="col-sm-1">
-                            <span data-toggle="tooltip" data-placement="right"><i title="Dia inícial e final do período de marcações." class='fas fa-info-circle'></i></span>
+                            <span data-toggle="tooltip" data-placement="right"><i title="Dia inicial e final, para apontamento das marcações." class='fas fa-info-circle'></i></span>
                             <label for="DiaFim">Dia início</label>
                             @Html.EditorFor(model => model.DiaInicio, new { htmlAttributes = new { @class = "form-control", @placeholder = "Início" } })
                             <span asp-validation-for="DiaInicio" class="text-danger"></span>
@@ -59,6 +59,7 @@
                         </div>
                         <div class="col-md-2 col-sm-4 coddivergencia">
                             <label for="DiaFim">Código de divergência</label>
+                            <span data-toggle="tooltip" data-placement="right"><i title="Código de divergência para aprovação da GERHU." class='fas fa-info-circle'></i></span>
                             <div class="input-group mb-3">
                                 @Html.EditorFor(model => model.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "searchInput", @class = "form-control  col-md-12", @placeholder = "Código divergência..." } })
                                 <div class="input-group-append">
@@ -89,7 +90,10 @@
                         <div class="col-md-4 col-sm-4">
                             <label for="DiasEnvioEmail">
                                 Dias para início do envio do e-mail
-                                <span  data-toggle="tooltip" data-placement="right"><i title="Quantidade de dias para envio do e-mail antes da data do fechamento. Ex: Dia fechamento é 25, dias para envio de e-mail é 5. A data de envio será todo dia 20 mês."  class='fas fa-info-circle'></i></span>
+                                <span  data-toggle="tooltip" data-placement="right"><i title="Quantidade de dias, antes do fechamento para inicio do envio do e-mail. 
+Funciona casado com os campos Dia do mês limite fechamento e Frequência de envio de e-mail.
+Ex.: Dia do mês fechamento for 10, Frequência de envio de e-mail = Semanal, Dias para início do envio do e-mail = 20
+        Semanalmente, a partir do dia 21 o tecnico começará a receber e-mail avisando quer precisa fechar o timesheet."  class='fas fa-info-circle'></i></span>
                             </label>
                             @Html.EditorFor(model => model.Qtddiadatafechamento, new { htmlAttributes = new { @class = "form-control col-md-4", @placeholder = "Início envio" } })
                             @Html.ValidationMessageFor(model => model.Qtddiadatafechamento, "", new { @class = "text-danger" })

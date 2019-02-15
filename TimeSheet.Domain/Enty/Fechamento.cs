@@ -328,6 +328,14 @@ namespace TimeSheet.Domain.Enty
                 novo.Descricao = "Sábados, domingos e feriados com lançamento e sem código de divergência";
 
             }
+            if ((Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Sunday |
+               Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Saturday | feriado.Descricao != null) && lancamento.CodDivergencia != 0)
+            {
+                novo.Divergencia = "Divergência";
+                novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
+                novo.Descricao = "Sábados, domingos e feriados com lançamentos";
+
+            }
             return novo;
         }
 

@@ -159,16 +159,21 @@
                     <th scope="row">@item.dataApontamento</th>
                     datalancamento = item.dataApontamento;
                     @foreach (var itemA in Model.apontamento)
-                    {
+                    { var count = 0;
                         @if (datalancamento == itemA.dataApontamento)
                         {
-                            <td>@itemA.apontamento</td>
+                           
+                            <td>@itemA.apontamento</td> 
+
+
                         }
                         else
                         {
+
                             continue;
                         }
                     }
+
 
                 }
                         </tr>

@@ -181,6 +181,16 @@ namespace TimeSheet.Controllers
         {
             List<Fechamento> listFechamento = new List<Fechamento>();
             Fechamento fechamento = new Fechamento();
+          
+            //Mit Validação 8.4.6 não concluirá o fechamento caso possuir divergências.
+            var listD = ValidaSabadoDomingoEFeriado(id);
+            if (listD.Count > 0)
+            {
+                foreach (Fechamento fechamentoResult in listD.ToList())
+                {
+                    listFechamento.Add(fechamentoResult);
+                }
+            }
 
             //Mit Validação 8.4.1
             var listLancamento = ValidaDiasComLancameto(id);
@@ -193,9 +203,12 @@ namespace TimeSheet.Controllers
 
                 if (fechamentoReturn.Divergencia != null)
                 {
-                    Fechamento novoFechamento = new Fechamento();
-                    novoFechamento = fechamentoReturn;
-                    listFechamento.Add(novoFechamento);
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentolist))
+                    {
+                        Fechamento novoFechamento = new Fechamento();
+                        novoFechamento = fechamentoReturn;
+                        listFechamento.Add(novoFechamento);
+                    }
                 }
 
             }
@@ -207,9 +220,12 @@ namespace TimeSheet.Controllers
 
                 if (fechamentoReturn.Divergencia != null)
                 {
-                    Fechamento novoFechamento = new Fechamento();
-                    novoFechamento = fechamentoReturn;
-                    listFechamento.Add(novoFechamento);
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentolist))
+                    {
+                       Fechamento novoFechamento = new Fechamento();
+                       novoFechamento = fechamentoReturn;
+                       listFechamento.Add(novoFechamento);
+                    }
                 }
 
             }
@@ -220,7 +236,7 @@ namespace TimeSheet.Controllers
             {
                 foreach (Fechamento fechamentoResult in listA.ToList())
                 {
-
+                    if(!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
                     listFechamento.Add(fechamentoResult);
                 }
             }
@@ -232,8 +248,10 @@ namespace TimeSheet.Controllers
             {
                 foreach (Fechamento fechamentoResult in listB.ToList())
                 {
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult)) { 
                     fechamentoResult.StatusFechamento = "B";  // status bloqueado para fechamento caso exista.
                     listFechamento.Add(fechamentoResult);
+                    }
                 }
             }
 
@@ -244,20 +262,12 @@ namespace TimeSheet.Controllers
             {
                 foreach (Fechamento fechamentoResult in listC.ToList())
                 {
-                    listFechamento.Add(fechamentoResult);
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
+                        listFechamento.Add(fechamentoResult);
                 }
             }
 
-            //Mit Validação 8.4.6 não concluirá o fechamento caso possuir divergências.
-            var listD = ValidaSabadoDomingoEFeriado(id);
-            if (listD.Count > 0)
-            {
-                foreach (Fechamento fechamentoResult in listD.ToList())
-                {
-                    fechamentoResult.StatusFechamento = "B";  // status bloqueado para fechamento caso exista.
-                    listFechamento.Add(fechamentoResult);
-                }
-            }
+          
 
             //Mit Validação 8.4.7
             var listE = ValidaDiasSemLancameto(id);
@@ -265,7 +275,8 @@ namespace TimeSheet.Controllers
             {
                 foreach (Fechamento fechamentoResult in listE.ToList())
                 {
-                    listFechamento.Add(fechamentoResult);
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
+                        listFechamento.Add(fechamentoResult);
                 }
             }
 
@@ -275,14 +286,32 @@ namespace TimeSheet.Controllers
             {
                 foreach (Fechamento fechamentoResult in listF.ToList())
                 {
-                    fechamentoResult.StatusFechamento = "B";  // status bloqueado para fechamento caso exista.
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult)) {
+                        fechamentoResult.StatusFechamento = "B";  // status bloqueado para fechamento caso exista.
                     listFechamento.Add(fechamentoResult);
+                    }
                 }
+
             }
 
             return listFechamento;
         }
 
+        private bool VerificaSeDataEsabadoDomingoOUferiado(List<Fechamento> listafechamento, Fechamento fechamentoCompara)
+        {
+            foreach(Fechamento fechamento in listafechamento) {
+                if(fechamento.DataLancamento == fechamentoCompara.DataLancamento){
+                    return true;
+                    break;
+                }
+                else
+                {
+                    return false;
+                    break;
+                }
+            }
+            return false;
+        }
 
         private List<Fechamento> ValidaDiferencaTotalHoraDiaLancamentoMacacao(string id)
         {
