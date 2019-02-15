@@ -22,6 +22,10 @@ namespace TimeSheet.Infrastructure.Repository
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(item.Observacao))
+                {
+                    item.Observacao = " ";
+                }
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
                     string sQuery = $@"INSERT INTO ZYY010 (ZYY_CODIGO, ZYY_FILIAL, ZYY_DATA , ZYY_HORINI,ZYY_HORFIN, ZYY_PROJET,ZYY_CODDIV,ZYY_OBSERV,ZYY_FASE, R_E_C_N_O_,  R_E_C_D_E_L_)

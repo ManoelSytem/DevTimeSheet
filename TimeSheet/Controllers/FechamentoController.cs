@@ -15,6 +15,8 @@ using TimeSheet.Domain.Util;
 using TimeSheet.Negocio;
 using TimeSheet.Util;
 using TimeSheet.ViewModel;
+using FluigService;
+using Exception = System.Exception;
 
 namespace TimeSheet.Controllers
 {
@@ -30,6 +32,7 @@ namespace TimeSheet.Controllers
         private readonly IJornadaTrabalho _jornadaTrbServiceRepository;
         private readonly IFechamento _fechamentoServiceRepository;
         private readonly INotificacao _Notificacao;
+      
 
         public FechamentoController(IFechamento fechamentoServiceRepository, IProtheus prothuesService, IMarcacao marcacaoServiceRepository, IMapper mapper, IConfiguracao configuracao, IMarcacao marcacao, ILancamento lancamento, IJornadaTrabalho jornada, INotificacao notificacao)
         {
@@ -155,10 +158,9 @@ namespace TimeSheet.Controllers
 
 
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
-                
+
                 _fechamentoServiceRepository.SalvarFechamentoPorDiaLancamento(listaFechamentoPorData, User.GetDados("Filial"), DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), User.GetDados("Centro de Custo"), "2");
                 _marcacaoServiceRepository.UpdateStatusFechamento(viewModelfechamento.CodigoMarcacao);
-
                 NotificarFechamento(viewModelfechamento);
                 return Json(new { sucesso = "Fechamento realizado com sucesso!" });
             }
@@ -522,66 +524,49 @@ namespace TimeSheet.Controllers
 
         }
 
-        //private void StartProcessoFluig()
-        //{
+        private void StartProcessoFluig()
+        {
 
-        //    ECMWorkflowEngineService.R process = new ECMWorkflowEngineService.startProcess();
+            WorkflowEngineServiceClient fluigcliente = new WorkflowEngineServiceClient();
 
-        //    process.
-        //    servico.startProcessAsync(process);
 
-        //    ECMWorkflowEngineService.startProcess process = new ECMWorkflowEngineService.startProcess();
+            processTaskAppointmentDto[] appointment = new processTaskAppointmentDto[] { };
+            processAttachmentDto[] attachments = new processAttachmentDto[] { };
 
-        //        process.
+            Task<startProcessResponse> retorno; ;
 
-        //    processTaskAppointmentDto[] appointment = processTaskAppointmentDto[] { };
-        //    processAttachmentDto[] attachments = processAttachmentDto[] { };
+      
+
+
+
+            string UserName = "fluig_getin";
+            string Pswd = "bahiagas@123";
+            string CompanyId = "1";
+            string IdProcesso = "TimeSheet";
+            int Atividade = 0;
+            bool Completatarefa = true;
+            bool Gestor = false;
+            string[] ColleagueId = new string[1];
+            
+            ColleagueId[0] = "Pool:Group:GERENCIA_GETIN"; //AREA
+
+            string[][] cardData = new string[4][];
+
+            cardData[0] = new string[] { "txtGrupoGerencia", "Getin"};
+            cardData[1] = new string[] { "hddFilial", "01"};
+            cardData[2] = new string[] { "hddCodProjeto", "00015" };
+            cardData[3] = new string[] { "TxtMatricula", "010106" };
+
+
+            retorno = fluigcliente.startProcessAsync(UserName, Pswd, Convert.ToInt32(CompanyId), IdProcesso, Atividade,
+                                                                        ColleagueId, "", UserName, Completatarefa, attachments,
+                                                                         cardData, appointment, Gestor);
 
             
 
-        //    string UserName = "adminfluig";
-        //    string Pswd = "Totvs@123";
-        //    string CompanyId = "1";
-        //    string IdProcesso = "VerificacaoNota";
-        //    int Atividade = 0;
-        //    bool Completatarefa = true;
-        //    bool Gestor = false;
-        //    string[] ColleagueId = new string[1];
+        }
 
-        //    ColleagueId[0] = "Pool:Group:Nome_do_grupo";
-
-        //    string[][] cardData = new string[23][];
-
-        //    cardData[0] = new string[] { "txtCodOrigem", };
-        //    cardData[1] = new string[] { "txtDescRazao", };
-        //    cardData[2] = new string[] { "txtCodDestino", };
-        //    cardData[3] = new string[] { "txtDescDestino", };
-        //    cardData[4] = new string[] { "txtCodAgenda", };
-        //    cardData[5] = new string[] { "txtDescAgenda", };
-        //    cardData[6] = new string[] { "txtNota", };
-        //    cardData[7] = new string[] { "txtSerie", };
-        //    cardData[8] = new string[] { "txtDataEmissao", };
-        //    cardData[9] = new string[] { "txtDataImpressao", };
-        //    cardData[10] = new string[] { "txtCodTarefa", };
-        //    cardData[11] = new string[] { "txtDescTitulo", };
-        //    cardData[12] = new string[] { "txtDataCriacao", };
-        //    cardData[13] = new string[] { "txtCodSituacao", };
-        //    cardData[14] = new string[] { "txtDescSituacao", };
-        //    cardData[15] = new string[] { "txtCriador", };
-        //    cardData[16] = new string[] { "txtDtPrevIni", };
-        //    cardData[17] = new string[] { "txtDtPrevTer", };
-        //    cardData[18] = new string[] { "txtResponsavel", };
-        //    cardData[19] = new string[] { "txtAlocado", };
-        //    cardData[20] = new string[] { "txtCodErro", };
-        //    cardData[21] = new string[] { "txtDescErro", };
-        //    cardData[22] = new string[] { "txtDescricao", };
-
-        //    string[][] retorno = servico.startProcess(UserName, Pswd, (int)CompanyId, IdProcesso, (int)Atividade,
-        //                                                                ColleagueId, Comentario, UserName, (bool)Completatarefa, attachments,
-        //                                                                 cardData, appointment, (bool)Gestor);
-
-        //}
-
+       
     }
 
     public class LancamentoComparer : IEqualityComparer<Lancamento>

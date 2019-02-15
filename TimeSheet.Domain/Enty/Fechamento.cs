@@ -222,7 +222,13 @@ namespace TimeSheet.Domain.Enty
         public Fechamento ValidaDiferencaTotalHoraDiaLancamentoTotalApontamento(Lancamento lancamento, decimal totalLancamento, decimal totalApontamento)
         {
             Fechamento novo = new Fechamento();
-            if (totalApontamento < totalLancamento | totalApontamento > totalLancamento)
+            if ((totalApontamento < totalLancamento | totalApontamento > totalLancamento ) && lancamento.CodDivergencia == 0)
+            {
+                novo.Divergencia = "Erro";
+                novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
+                novo.Descricao = "Dia com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema";
+            }
+            else if((totalApontamento < totalLancamento | totalApontamento > totalLancamento) && lancamento.CodDivergencia != 0)
             {
                 novo.Divergencia = "Divergência";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
@@ -293,6 +299,12 @@ namespace TimeSheet.Domain.Enty
         {
             Fechamento novo = new Fechamento();
             if (totalLancamento < Math.Round(Convert.ToDecimal(jornada.JornadaDiaria.TotalHours), 2))
+            {
+                novo.Divergencia = "Divergência";
+                novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
+                novo.Descricao = "Dia com diferença entre o total apontado e a jornada diária";
+            }
+            else if(totalLancamento > Math.Round(Convert.ToDecimal(jornada.JornadaDiaria.TotalHours), 2))
             {
                 novo.Divergencia = "Divergência";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
