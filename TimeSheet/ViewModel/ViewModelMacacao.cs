@@ -21,7 +21,6 @@ namespace TimeSheet.ViewModel
         public string CodLancamento { get; set; }
         public string codigojornada { get; set; }
         public virtual ViewModelLancamento Lancamento { get; set; }
-        public virtual List<MesCalendario> MesCalendarioLancamneto { get; set; }
         public virtual List<ViewModelLancamento> Lancamentolist { get; set; }
 
     }
