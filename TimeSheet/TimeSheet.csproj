@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TimeSheet.Application\TimeSheet.Application.csproj" />
     <ProjectReference Include="..\TimeSheet.Domain\TimeSheet.Domain.csproj" />
     <ProjectReference Include="..\TimeSheet.Infrastructure\TimeSheet.Infrastructure.csproj" />
   </ItemGroup>

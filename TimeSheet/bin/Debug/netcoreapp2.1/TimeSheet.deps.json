@@ -35,6 +35,7 @@
           "System.ServiceModel.Http": "4.4.4",
           "System.ServiceModel.NetTcp": "4.4.4",
           "System.ServiceModel.Security": "4.4.4",
+          "TimeSheet.Application": "1.0.0",
           "TimeSheet.Domain": "1.0.0",
           "TimeSheet.Infrastructure": "1.0.0"
         },
@@ -771,6 +772,18 @@
         }
       },
       "System.ValueTuple/4.5.0": {},
+      "TimeSheet.Application/1.0.0": {
+        "dependencies": {
+          "TimeSheet.Domain": "1.0.0",
+          "TimeSheet.Infrastructure": "1.0.0"
+        },
+        "runtime": {
+          "TimeSheet.Application.dll": {}
+        },
+        "compile": {
+          "TimeSheet.Application.dll": {}
+        }
+      },
       "TimeSheet.Domain/1.0.0": {
         "runtime": {
           "TimeSheet.Domain.dll": {}
@@ -4042,6 +4055,11 @@
       "sha512": "sha512-xZtSZNEHGa+tGsKuP4sh257vxJ/yemShz4EusmomkynMzuEDDjVaErBNewpzEF6swUgbcrSQAX3ELsEp1zCOwA==",
       "path": "system.valuetuple/4.5.0",
       "hashPath": "system.valuetuple.4.5.0.nupkg.sha512"
+    },
+    "TimeSheet.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "TimeSheet.Domain/1.0.0": {
       "type": "project",

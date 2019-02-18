@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
 using Rotativa.AspNetCore;
+using TimeSheet.Application;
 using TimeSheet.Domain;
 using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
 using TimeSheet.Domain.Util;
-using TimeSheet.Negocio;
 using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers

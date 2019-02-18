@@ -4846,6 +4846,20 @@
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
       },
+      "TimeSheet.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v2.1",
+        "dependencies": {
+          "TimeSheet.Domain": "1.0.0",
+          "TimeSheet.Infrastructure": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/TimeSheet.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TimeSheet.Application.dll": {}
+        }
+      },
       "TimeSheet.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v2.1",
@@ -13116,6 +13130,11 @@
         "system.xml.xpath.xdocument.nuspec"
       ]
     },
+    "TimeSheet.Application/1.0.0": {
+      "type": "project",
+      "path": "../TimeSheet.Application/TimeSheet.Application.csproj",
+      "msbuildProject": "../TimeSheet.Application/TimeSheet.Application.csproj"
+    },
     "TimeSheet.Domain/1.0.0": {
       "type": "project",
       "path": "../TimeSheet.Domain/TimeSheet.Domain.csproj",
@@ -13140,6 +13159,7 @@
       "System.ServiceModel.Http >= 4.4.*",
       "System.ServiceModel.NetTcp >= 4.4.*",
       "System.ServiceModel.Security >= 4.4.*",
+      "TimeSheet.Application >= 1.0.0",
       "TimeSheet.Domain >= 1.0.0",
       "TimeSheet.Infrastructure >= 1.0.0"
     ]
@@ -13174,6 +13194,9 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
+            "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Application\\TimeSheet.Application.csproj": {
+              "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Application\\TimeSheet.Application.csproj"
+            },
             "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj": {
               "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj"
             },

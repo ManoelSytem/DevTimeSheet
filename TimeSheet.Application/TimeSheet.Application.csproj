@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TimeSheet.Domain\TimeSheet.Domain.csproj" />
+    <ProjectReference Include="..\TimeSheet.Infrastructure\TimeSheet.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

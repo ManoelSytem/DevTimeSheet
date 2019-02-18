@@ -12,11 +12,11 @@ using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
 using TimeSheet.Domain.Util;
-using TimeSheet.Negocio;
 using TimeSheet.Util;
 using TimeSheet.ViewModel;
 using FluigService;
 using Exception = System.Exception;
+using TimeSheet.Application;
 
 namespace TimeSheet.Controllers
 {
@@ -112,7 +112,7 @@ namespace TimeSheet.Controllers
         {
             try
             {
-                Fechamento fechamento = new Fechamento();
+                FechamentoNegocio fechamento = new FechamentoNegocio();
                 Marcacao marcacao = new Marcacao();
                 
          
@@ -180,7 +180,7 @@ namespace TimeSheet.Controllers
         public List<Fechamento> ValidacaoFechamento(string id)
         {
             List<Fechamento> listFechamento = new List<Fechamento>();
-            Fechamento fechamento = new Fechamento();
+            FechamentoNegocio fechamento = new FechamentoNegocio();
           
             //Mit Validação 8.4.6 não concluirá o fechamento caso possuir divergências.
             var listD = ValidaSabadoDomingoEFeriado(id);
@@ -301,13 +301,11 @@ namespace TimeSheet.Controllers
         {
             foreach(Fechamento fechamento in listafechamento) {
                 if(fechamento.DataLancamento == fechamentoCompara.DataLancamento){
-                    return true;
-                    break;
+                    return true;           
                 }
                 else
                 {
-                    return false;
-                    break;
+                    return false;    
                 }
             }
             return false;
@@ -315,7 +313,7 @@ namespace TimeSheet.Controllers
 
         private List<Fechamento> ValidaDiferencaTotalHoraDiaLancamentoMacacao(string id)
         {
-            Fechamento fechamento = new Fechamento();
+            FechamentoNegocio fechamento = new FechamentoNegocio();
             List<Fechamento> listFechamento = new List<Fechamento>();
 
             var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
@@ -373,7 +371,7 @@ namespace TimeSheet.Controllers
 
         private Fechamento ValidarPrimeiroLancamentoPorDia(string datalancamento)
         {
-            Fechamento fechamento = new Fechamento();
+            FechamentoNegocio fechamento = new FechamentoNegocio();
 
             var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
 
@@ -385,18 +383,18 @@ namespace TimeSheet.Controllers
 
          private Fechamento ValidarUltimoLancamentoPorDia(string datalancamento)
         {
-            Fechamento fechamento = new Fechamento();
+            FechamentoNegocio fechamento = new FechamentoNegocio();
 
             var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).Last();
             var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), LancamentoDiario.DateLancamento);
-            var FechamentoResult = fechamento.ValidaUltimaLancamento(LancamentoDiario, listApontamento);
+            var FechamentoResult = fechamento.ValidaUltimoLancamento(LancamentoDiario, listApontamento);
 
             return FechamentoResult;
         }
 
         private List<Fechamento> ValidaDiferencaTotalHoraLancamentoPorDiaETotalHoraJornadaDiaria(string id)
         {
-            Fechamento fechamento = new Fechamento();
+            FechamentoNegocio fechamento = new FechamentoNegocio();
             List<Fechamento> listFechamento = new List<Fechamento>();
 
             Marcacao marcacao = new Marcacao();
@@ -423,7 +421,7 @@ namespace TimeSheet.Controllers
 
         private List<Fechamento> ValidaSabadoDomingoEFeriado(string id)
         {
-            Fechamento fechamento = new Fechamento();
+            FechamentoNegocio fechamento = new FechamentoNegocio();
             List<Fechamento> listFechamento = new List<Fechamento>();
 
             var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
@@ -512,7 +510,7 @@ namespace TimeSheet.Controllers
 
         private Fechamento ValidarPrimeiroLancamentoForaJornadaPorDia(string datalancamento, JornadaTrabalho jornada)
         {
-            Fechamento fechamento = new Fechamento();
+            FechamentoNegocio fechamento = new FechamentoNegocio();
 
             var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
 
@@ -524,7 +522,7 @@ namespace TimeSheet.Controllers
 
         private Fechamento ValidarUltimoLancamentoForaJornadaPorDia(string datalancamento, JornadaTrabalho jornada)
         {
-            Fechamento fechamento = new Fechamento();
+            FechamentoNegocio fechamento = new FechamentoNegocio();
 
             var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).LastOrDefault();
 
@@ -535,7 +533,7 @@ namespace TimeSheet.Controllers
 
         private Fechamento ValidarPrimeiroLancamentoForaIntervaloPorDia(string datalancamento, JornadaTrabalho jornada)
         {
-            Fechamento fechamento = new Fechamento();
+            FechamentoNegocio fechamento = new FechamentoNegocio();
 
             var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
             var FechamentoResult = fechamento.ValidarLancamentoForaDeIntervaloInicio(LancamentoDiario, jornada);

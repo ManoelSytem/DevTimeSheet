@@ -38,7 +38,21 @@ namespace TimeSheet.ViewModel
            
         }
 
-       
+
+        public void ValidaHorasLancamentoOutraMarcacao(List<Lancamento> listlancamentoRelizado)
+        {
+            foreach (Lancamento LancamentoResult in listlancamentoRelizado)
+            {
+                if (LancamentoResult.Seq != this.Seq)
+                {
+                    if (!(this.HoraInicio >= LancamentoResult.HoraFim || this.HoraInicio <= LancamentoResult.HoraInicio && this.HoraFim <= LancamentoResult.HoraInicio))
+                        throw new Exception("Não pode existir horas sobrepostas para o mesmo dia.");
+                }
+            }
+
+        }
+
+
     }
 }
 
