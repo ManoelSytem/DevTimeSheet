@@ -51,7 +51,8 @@
                         <label for="Observacao">
                             Observação
                         </label>
-                        @Html.TextAreaFor(model => model.Lancamento.Observacao, new { @Id = "comentario", @class = "form-control comment", @cols = 50, @rows = 7 })
+                        @Html.TextAreaFor(model => model.Lancamento.Observacao, new { @Id = "comentario", @maxlength="60", @class = "form-control comment", @cols = 50, @rows = 7 })
+                        <h7 class="float-right" id="totalCar"></h7>
                         @Html.ValidationMessageFor(model => model.Lancamento.Observacao, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -104,5 +105,25 @@
         }
     }
 
+    var carMaximo = $('.comment').attr('maxlength');
+    $('#totalCar').html(carMaximo + ' restante(s)');
 
+    $('.comment').keyup(function () {
+        var countCar = $(this).val().length;
+        var calcCar = carMaximo - countCar;
+        var texto = $(this).parent().find('h7').first();
+
+        if (calcCar <= 30 && calcCar >= 15) {
+            texto.css("color", "red");
+        }
+        else if (calcCar <= 14) {
+            texto.css("color", "#990000");
+        }
+        else {
+            texto.css("color", "black");
+        }
+
+        texto.html(calcCar + ' restante(s)');
+
+    });
 </script>
