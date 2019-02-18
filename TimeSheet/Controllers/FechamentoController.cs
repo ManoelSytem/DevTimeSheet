@@ -182,7 +182,7 @@ namespace TimeSheet.Controllers
             List<Fechamento> listFechamento = new List<Fechamento>();
             FechamentoNegocio fechamento = new FechamentoNegocio();
           
-            //Mit Validação 8.4.6 não concluirá o fechamento caso possuir divergências.
+            //Mit Validação 8.4.4 erro não concluirá o fechamento caso possuir divergências.
             var listD = ValidaSabadoDomingoEFeriado(id);
             if (listD.Count > 0)
             {
@@ -241,8 +241,18 @@ namespace TimeSheet.Controllers
                 }
             }
 
+            //Mit Validação 8.4.3
+            var listE = ValidaDiasSemLancameto(id);
+            if (listE.Count > 0)
+            {
+                foreach (Fechamento fechamentoResult in listE.ToList())
+                {
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
+                        listFechamento.Add(fechamentoResult);
+                }
+            }
 
-            //Mit Validação 8.4.3 e  Validação 8.4.4 não concluirá o fechamento caso possuir divergências.
+            //Mit Validação 8.4.5 e  Validação 8.4.7 não concluirá o fechamento caso possuir divergências.
             var listB = ValidaDiferencaBatida(id);
             if (listB.Count > 0)
             {
@@ -256,7 +266,7 @@ namespace TimeSheet.Controllers
             }
 
 
-            //Mit Validação 8.4.5
+            //Mit Validação 8.4.8  a  Validação 8.4.10
             var listC = ValidaDiferencaTotalHoraLancamentoPorDiaETotalHoraJornadaDiaria(id);
             if (listC.Count > 0)
             {
@@ -267,18 +277,8 @@ namespace TimeSheet.Controllers
                 }
             }
 
-          
 
-            //Mit Validação 8.4.7
-            var listE = ValidaDiasSemLancameto(id);
-            if (listE.Count > 0)
-            {
-                foreach (Fechamento fechamentoResult in listE.ToList())
-                {
-                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
-                        listFechamento.Add(fechamentoResult);
-                }
-            }
+
 
             //Mit Validação 8.4.8 e 8.4.9 e 8.4.10 não concluirá o fechamento caso possuir divergências.
             var listF = ValidaLancamentoForaDeIntervalo(id);
@@ -321,13 +321,14 @@ namespace TimeSheet.Controllers
             foreach (Lancamento lancamento in listLancamento)
             {
                 var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
-                var totalApontamentoPorLancentoDia = fechamento.CalcularTotalApontamentoPorDiaLancamento(listApontamento);
                 var lancamentolist = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, User.GetDados("Matricula"));
-                var totalHoraDecimalLancmanetoPorDia = fechamento.CalcularTotalHoraLancamentoPorDia(lancamentolist);
-                var FechamentoResultValidacao = fechamento.ValidaDiferencaTotalHoraDiaLancamentoTotalApontamento(lancamento, totalHoraDecimalLancmanetoPorDia, totalApontamentoPorLancentoDia);
-                if (FechamentoResultValidacao.Descricao != null)
+                var FechamentoResultValidacao = fechamento.ValidaSeExisteMarcacaoAntesEdepoisDoApontamento(lancamentolist,listApontamento);
+                foreach (Fechamento LancamentoResult in FechamentoResultValidacao)
                 {
-                    listFechamento.Add(FechamentoResultValidacao);
+                    if (LancamentoResult.Descricao != null)
+                    {
+                        listFechamento.Add(LancamentoResult);
+                    }
                 }
 
             }

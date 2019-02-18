@@ -12,7 +12,7 @@ namespace TimeSheet.Application
     {
         public FechamentoNegocio()
         {
-                
+
         }
         //Inicio Calculo Fechamento.
         public Fechamento CalcularFechamento(IOrderedEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura)
@@ -179,7 +179,7 @@ namespace TimeSheet.Application
                         if (!ValidaEferiado(initialDate.ToString("dd/MM/yyyy").ToDateProtheusConvert(), filial))
                         {
                             dataSemLancamento.DataLancamento = initialDate.ToShortDateString();
-                            dataSemLancamento.Divergencia = "Divergência";
+                            dataSemLancamento.Divergencia = "Divergência a justificar";
                             dataSemLancamento.Descricao = "Dia úteis sem marcação";
                             fechamentoSemLancamento.Add(dataSemLancamento);
                         }
@@ -296,7 +296,7 @@ namespace TimeSheet.Application
             }
         }
 
-        public decimal CalcularTotalApontamentoPorDiaLancamento(List<Apontamento> apontamentolist)
+        public decimal CalcularTotalApontamentoPorDiaLancamento(List<Apontamento> apontamentolist, List<Lancamento> listlancamento)
         {
             TimeSpan totalhoraApontamemto = TimeSpan.Parse("00:00:00");
             if (!VerificaImpar(apontamentolist))
@@ -315,29 +315,49 @@ namespace TimeSheet.Application
             TimeSpan totalhoraLancamentoDia = TimeSpan.Parse("00:00:00");
             foreach (Lancamento LancamentoResult in lancamento)
             {
-                totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+                if (LancamentoResult.CodDivergencia != 0)
+                {
+                    totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+                }
             }
             return Math.Round(Convert.ToDecimal(totalhoraLancamentoDia.TotalHours), 2);
         }
 
 
-        public Fechamento ValidaDiferencaTotalHoraDiaLancamentoTotalApontamento(Lancamento lancamento, decimal totalLancamento, decimal totalApontamento)
+        public List<Fechamento> ValidaSeExisteMarcacaoAntesEdepoisDoApontamento(List<Lancamento> listlancamento, List<Apontamento> apontamentolist)
         {
-            Fechamento novo = new Fechamento();
-            if ((totalApontamento < totalLancamento | totalApontamento > totalLancamento) && lancamento.CodDivergencia == 0)
+            List<Fechamento> listFechamento = new List<Fechamento>();
+           
+            if (listlancamento.Count > 0)
             {
-                novo.Divergencia = "Erro";
-                novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                novo.Descricao = "Dia com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema";
-            }
-            else if ((totalApontamento < totalLancamento | totalApontamento > totalLancamento) && lancamento.CodDivergencia != 0)
-            {
-                novo.Divergencia = "Divergência";
-                novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                novo.Descricao = "Dia com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema";
-            }
+                foreach (Lancamento LancamentoResult in listlancamento)
+                {
+                    if (!VerificaImpar(apontamentolist))
+                    {
+                        if(apontamentolist.Count > 0) { 
+                        if ((LancamentoResult.HoraInicio < apontamentolist.FirstOrDefault().apontamento | LancamentoResult.HoraFim > apontamentolist.LastOrDefault().apontamento) && LancamentoResult.CodDivergencia == 0)
+                        {
+                            Fechamento novo = new Fechamento();
+                            novo.Divergencia = "Divergência a justificar";
+                            novo.DataLancamento = LancamentoResult.DateLancamento.ToDateProtheusReverseformate();
+                            novo.Descricao = "Dia com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema";
+                            listFechamento.Add(novo);
+                        }
+                        else if ((LancamentoResult.HoraInicio < apontamentolist.FirstOrDefault().apontamento | LancamentoResult.HoraFim > apontamentolist.LastOrDefault().apontamento) && LancamentoResult.CodDivergencia != 0)
+                        {
+                            Fechamento novo = new Fechamento();
+                            novo.Divergencia = "Divergência justificada";
+                            novo.DataLancamento = LancamentoResult.DateLancamento.ToDateProtheusReverseformate();
+                            novo.Descricao = "Dia com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema";
+                            listFechamento.Add(novo);
+                        }
 
-            return novo;
+                        }
+                    }
+
+                }
+            }
+            return listFechamento;
         }
 
         public Fechamento ValidaPrimeiroLancamento(Lancamento lancamento, List<Apontamento> apontamentolist)
@@ -350,11 +370,18 @@ namespace TimeSheet.Application
                     if ((lancamento.HoraInicio < TimeSpan.Parse(Convert.ToString(apontamentolist[i].apontamento)) | lancamento.HoraInicio > TimeSpan.Parse(Convert.ToString(apontamentolist[i].apontamento))) && lancamento.CodDivergencia == 0)
                     {
                         Fechamento novo = new Fechamento();
-                        novo.Divergencia = "Erro";
+                        novo.Divergencia = "Divergência a justificar";
                         novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                        novo.Descricao = "diferença entre a primeira batida do relógio e o primeiro lançamento no sistema e sem código de divergência";
+                        novo.Descricao = "Dia com diferença entre a primeira batida do relógio e o primeiro lançamento no sistema e sem código de divergência";
                         return novo;
 
+                    }else if ((lancamento.HoraInicio < TimeSpan.Parse(Convert.ToString(apontamentolist[i].apontamento)) | lancamento.HoraInicio > TimeSpan.Parse(Convert.ToString(apontamentolist[i].apontamento))) && lancamento.CodDivergencia != 0)
+                    {
+                        Fechamento novo = new Fechamento();
+                        novo.Divergencia = "Divergência  justificada";
+                        novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
+                        novo.Descricao = "Dia com diferença entre a primeira batida do relógio e o primeiro lançamento no sistema e sem código de divergência";
+                        return novo;
                     }
                     break;
                 }
@@ -365,20 +392,29 @@ namespace TimeSheet.Application
 
         public Fechamento ValidaUltimoLancamento(Lancamento lancamento, List<Apontamento> apontamentolist)
         {
-            var mensagem = "Existe uma diferença entre a última batida do relógio e o último lançamento no sistema. Não foi informado um código de divergência.";
+            var mensagem = "Dia com diferença entre a última batida do relógio e o último lançamento no sistema.";
             if (apontamentolist.Count > 0)
             {
                 if (lancamento.HoraFim > apontamentolist.LastOrDefault().horaFim && lancamento.CodDivergencia == 0)
                 {
-                    mensagem = "Existe uma diferença entre a última batida do relógio e o último lançamento no sistema. Não foi informado um código de divergência.";
+                    mensagem = "Dia com diferença entre a última batida do relógio e o último lançamento no sistema.";
 
                     return new Fechamento()
                     {
-                        Divergencia = "Erro",
+                        Divergencia = "Divergência a justificar",
                         DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate(),
                         Descricao = mensagem
                     };
 
+                }
+                else if (lancamento.HoraFim > apontamentolist.LastOrDefault().horaFim && lancamento.CodDivergencia != 0)
+                {
+                    return new Fechamento()
+                    {
+                        Divergencia = "Divergência a justificada",
+                        DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate(),
+                        Descricao = mensagem
+                    };
                 }
                 else
                 {
@@ -424,7 +460,7 @@ namespace TimeSheet.Application
             if ((Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Sunday |
                Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Saturday | feriado.Descricao != null) && lancamento.CodDivergencia == 0)
             {
-                novo.Divergencia = "Erro";
+                novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
                 novo.Descricao = "Sábados, domingos e feriados com lançamento e sem código de divergência";
 
@@ -432,7 +468,7 @@ namespace TimeSheet.Application
             if ((Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Sunday |
                Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Saturday | feriado.Descricao != null) && lancamento.CodDivergencia != 0)
             {
-                novo.Divergencia = "Divergência";
+                novo.Divergencia = "Divergência justificada";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
                 novo.Descricao = "Sábados, domingos e feriados com lançamentos";
 
@@ -448,7 +484,15 @@ namespace TimeSheet.Application
             if ((lancamento.HoraInicio > jornada.HoraInicioDe | lancamento.HoraInicio < jornada.HoraInicioAte) && lancamento.CodDivergencia == 0)
             {
                 Fechamento novo = new Fechamento();
-                novoFechamento.Divergencia = "Erro";
+                novoFechamento.Divergencia = "Divergência a justificar";
+                novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
+                novoFechamento.Descricao = "Dia onde a primeira marcação esteja fora do intervalo informado para os campos “Hora Início de” e “Hora inicio até” na tabela de Intervalos para o período do fechamento.";
+                return novo;
+            }
+            if ((lancamento.HoraInicio > jornada.HoraInicioDe | lancamento.HoraInicio < jornada.HoraInicioAte) && lancamento.CodDivergencia != 0)
+            {
+                Fechamento novo = new Fechamento();
+                novoFechamento.Divergencia = "Divergência justificada";
                 novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
                 novoFechamento.Descricao = "Dia onde a primeira marcação esteja fora do intervalo informado para os campos “Hora Início de” e “Hora inicio até” na tabela de Intervalos para o período do fechamento.";
                 return novo;
@@ -464,7 +508,14 @@ namespace TimeSheet.Application
             if ((lancamento.HoraFim < jornada.HoraFinal) && lancamento.CodDivergencia == 0)
             {
                 Fechamento novo = new Fechamento();
-                novoFechamento.Divergencia = "Erro";
+                novoFechamento.Divergencia = "Divergência a justificar";
+                novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
+                novoFechamento.Descricao = "Dia onde a última marcação seja menor que o campo “Hora Saída” na tabela de Intervalos para o período do fechamento.";
+            }
+            if ((lancamento.HoraFim < jornada.HoraFinal) && lancamento.CodDivergencia != 0)
+            {
+                Fechamento novo = new Fechamento();
+                novoFechamento.Divergencia = "Divergência justificada";
                 novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
                 novoFechamento.Descricao = "Dia onde a última marcação seja menor que o campo “Hora Saída” na tabela de Intervalos para o período do fechamento.";
             }
@@ -480,14 +531,14 @@ namespace TimeSheet.Application
             if ((lancamento.HoraInicio >= jornada.InterInicio && lancamento.HoraInicio <= jornada.InterFim) && lancamento.CodDivergencia == 0)
             {
                 Fechamento novo = new Fechamento();
-                novoFechamento.Divergencia = "Erro";
+                novoFechamento.Divergencia = "Divergência a justificar";
                 novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
                 novoFechamento.Descricao = "Dia onde a primeira marcação esteja fora do intervalo informado para os campos “Hora Início de” e “Hora inicio até” na tabela de Intervalos para o período do fechamento.";
             }
             return novoFechamento;
         }
 
-     //Fim Validação Mit.
+        //Fim Validação Mit.
 
     }
 }
