@@ -103,7 +103,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th colspan="6"><b>Fechamento</b></th>
+                <th colspan="7"><b>Fechamento</b></th>
             </tr>
 
             <tr>
@@ -111,6 +111,7 @@
                 <th class="text-center">Horas Execedentes</th>
                 <th class="text-center">Atrasos</th>
                 <th class="text-center">Abonos</th>
+                <th class="text-center">Total Falta</th>
                 <th class="text-center">Total Horas</th>
                 <th class="text-center">Divergência(S/N)</th>
             </tr>
@@ -124,6 +125,7 @@
                 <td>@Model.Fechamento.TotalHoraExedente</td>
                 <td>@Model.Fechamento.TotalAtraso</td>
                 <td>@Model.Fechamento.TotalAbono</td>
+                <td></td>
                 <td>@Model.Fechamento.TotalHora</td>
                 <td>@Model.Fechamento.Divergencia</td>
             </tr>
@@ -158,18 +160,29 @@
                     </thead>
                     <th scope="row">@item.dataApontamento</th>
                     datalancamento = item.dataApontamento;
+                    var count = 0;
                     @foreach (var itemA in Model.apontamento)
-                    { var count = 0;
+                    {
+                        count++;
                         @if (datalancamento == itemA.dataApontamento)
                         {
-                           
-                            <td>@itemA.apontamento</td> 
 
+                            if (count <= 4)
+                            {
 
+                                <td>@itemA.apontamento</td>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <th scope="row">@item.dataApontamento</th>
+                                    <td>@itemA.apontamento</td>
+                                </tr>
+                            }
                         }
                         else
                         {
-
+                            count = 0;
                             continue;
                         }
                     }

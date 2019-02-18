@@ -22,11 +22,11 @@ namespace TimeSheet.Application
             List<Fechamento> listaFechamentoPorData = new List<Fechamento>();
 
 
-            listaFechamentoPorData = CalcularTotalHoraExedenteETrabalhada(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho, configura);
+            listaFechamentoPorData = CalcularTotalHoraExedenteETrabalhadaEabono(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho, configura);
             return listaFechamentoPorData;
         }
 
-        public List<Fechamento> CalcularTotalHoraExedenteETrabalhada(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada, Configuracao config)
+        public List<Fechamento> CalcularTotalHoraExedenteETrabalhadaEabono(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada, Configuracao config)
         {
 
             List<Fechamento> listFechamentoHorasExedentes = new List<Fechamento>();
@@ -39,7 +39,7 @@ namespace TimeSheet.Application
             foreach (Lancamento LancamentoResult in lancamentoList)
             {
 
-                if (datalancamento != LancamentoResult.DateLancamento && datalancamento != "0")
+                if (datalancamento != LancamentoResult.DateLancamento)
                 {
                     Fechamento novo = new Fechamento();
                     if (totalLancamento > jrDiaria)
@@ -59,7 +59,7 @@ namespace TimeSheet.Application
                     else
                     {
                         novo.TotalHoraExedente = 0;
-                        novo.TotalAtraso = Math.Round(Convert.ToDouble(totalLancamento.TotalHours), 2);
+                        novo.TotalAtraso = Math.Round(Convert.ToDouble((jrDiaria - totalLancamento).TotalHours), 2);
                         novo.DataLancamento = LancamentoResult.DateLancamento;
                         novo.CodigoProjeto = LancamentoResult.codEmpredimento;
                         novo.CodigoMarcacao = LancamentoResult.Codigo;
@@ -69,9 +69,8 @@ namespace TimeSheet.Application
                         listFechamentoHorasExedentes.Add(novo);
                         totalAbono = 0;
                     }
-
+                    datalancamento = LancamentoResult.DateLancamento;
                 }
-                datalancamento = LancamentoResult.DateLancamento;
                 totalLancamento += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
                 totalAbono += CalcularTotaAbono(LancamentoResult, config);
             }

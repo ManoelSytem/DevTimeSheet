@@ -103,3 +103,5 @@ C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Release\netcore
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\Marcacao\Details.g.cshtml.cs
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\Relatorio\EspelhoDePonto.g.cshtml.cs
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\obj\Release\netcoreapp2.1\Razor\Views\Relatorio\EspelhoDePontoSintetico.g.cshtml.cs
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\bin\Release\netcoreapp2.1\TimeSheet.Application.dll
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet\bin\Release\netcoreapp2.1\TimeSheet.Application.pdb
