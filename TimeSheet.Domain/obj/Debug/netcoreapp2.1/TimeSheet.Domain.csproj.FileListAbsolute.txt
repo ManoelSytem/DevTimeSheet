@@ -27,9 +27,12 @@ C:\Users\manoelneto\source\repos\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcore
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\bin\Debug\netcoreapp2.1\TimeSheet.Domain.deps.json
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\bin\Debug\netcoreapp2.1\TimeSheet.Domain.dll
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\bin\Debug\netcoreapp2.1\TimeSheet.Domain.pdb
-C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.csprojAssemblyReference.cache
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.csproj.CoreCompileInputs.cache
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.AssemblyInfoInputs.cache
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.AssemblyInfo.cs
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.dll
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.pdb
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.csprojAssemblyReference.cache
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\bin\Debug\netcoreapp2.1\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\bin\Debug\netcoreapp2.1\Microsoft.Extensions.Configuration.Abstractions.xml
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Debug\netcoreapp2.1\TimeSheet.Domain.csproj.CopyComplete

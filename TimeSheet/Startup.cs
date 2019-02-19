@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rotativa.AspNetCore;
+using TimeSheet.Application;
 using TimeSheet.Authorization;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
+using TimeSheet.Domain.Interface.Service;
+using TimeSheet.Domain.Service;
 using TimeSheet.Infrastructure.ServiceRepository;
 using TimeSheet.Util;
 
@@ -41,6 +44,10 @@ namespace TimeSheet
             services.AddSingleton<ILancamento, LancamentoServiceRepository>();
             services.AddSingleton<IFechamento, FechamentoServiceRepository>();
             services.AddTransient<INotificacao, Notificacao>();
+            services.AddTransient<IFluigService, FluigService>();
+            services.AddTransient<IFluigAppService, FluigAppService>();
+            services.AddTransient<IFluig, FluigServiceRespository>();
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

@@ -12,5 +12,6 @@ namespace TimeSheet.Domain.Enty
         public TimeSpan apontamento { get; set; }
         public string dataApontamento { get; set; }
         public List<Lancamento> listLancamento { get; set; }
+        
     }
 }

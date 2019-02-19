@@ -16,3 +16,6 @@ C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Release\
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Release\netcoreapp2.1\TimeSheet.Domain.AssemblyInfo.cs
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Release\netcoreapp2.1\TimeSheet.Domain.dll
 C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Release\netcoreapp2.1\TimeSheet.Domain.pdb
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\bin\Release\netcoreapp2.1\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\bin\Release\netcoreapp2.1\Microsoft.Extensions.Configuration.Abstractions.xml
+C:\Users\manoelneto\Desktop\TimeSheet\DevTimeSheet\TimeSheet.Domain\obj\Release\netcoreapp2.1\TimeSheet.Domain.csproj.CopyComplete

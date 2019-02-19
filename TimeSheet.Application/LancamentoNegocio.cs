@@ -41,6 +41,8 @@ namespace TimeSheet.Application
 
                 if (datalancamento != LancamentoResult.DateLancamento)
                 {
+                    totalLancamento += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+                    totalAbono += CalcularTotaAbono(LancamentoResult, config);
                     Fechamento novo = new Fechamento();
                     if (totalLancamento > jrDiaria)
                     {
@@ -71,13 +73,7 @@ namespace TimeSheet.Application
                     }
                     datalancamento = LancamentoResult.DateLancamento;
                 }
-                totalLancamento += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
-                totalAbono += CalcularTotaAbono(LancamentoResult, config);
-            }
-
-            foreach(Lancamento LancamentoResult in lancamentoList)
-            {
-
+                
             }
 
             return listFechamentoHorasExedentes;

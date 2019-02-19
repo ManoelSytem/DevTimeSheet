@@ -1,22 +1,18 @@
-﻿using System;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography.Xml;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TimeSheet.Domain;
+using TimeSheet.Application;
 using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
 using TimeSheet.Domain.Util;
 using TimeSheet.Util;
 using TimeSheet.ViewModel;
-using FluigService;
-using Exception = System.Exception;
-using TimeSheet.Application;
+
 
 namespace TimeSheet.Controllers
 {
@@ -32,9 +28,18 @@ namespace TimeSheet.Controllers
         private readonly IJornadaTrabalho _jornadaTrbServiceRepository;
         private readonly IFechamento _fechamentoServiceRepository;
         private readonly INotificacao _Notificacao;
-      
+        private readonly IFluigAppService _fluigAppService;
 
-        public FechamentoController(IFechamento fechamentoServiceRepository, IProtheus prothuesService, IMarcacao marcacaoServiceRepository, IMapper mapper, IConfiguracao configuracao, IMarcacao marcacao, ILancamento lancamento, IJornadaTrabalho jornada, INotificacao notificacao)
+        public FechamentoController(IFechamento fechamentoServiceRepository,
+            IProtheus prothuesService,
+            IMarcacao marcacaoServiceRepository,
+            IMapper mapper,
+            IConfiguracao configuracao,
+            IMarcacao marcacao,
+            ILancamento lancamento,
+            IJornadaTrabalho jornada,
+            INotificacao notificacao,
+            IFluigAppService fluigAppService)
         {
             _prothuesService = prothuesService;
             _marcacaoServiceRepository = marcacaoServiceRepository;
@@ -45,7 +50,7 @@ namespace TimeSheet.Controllers
             _jornadaTrbServiceRepository = jornada;
             _fechamentoServiceRepository = fechamentoServiceRepository;
             _Notificacao = notificacao;
-
+            _fluigAppService = fluigAppService;
         }
 
         public IActionResult Index()
@@ -114,8 +119,8 @@ namespace TimeSheet.Controllers
             {
                 FechamentoNegocio fechamento = new FechamentoNegocio();
                 Marcacao marcacao = new Marcacao();
-                
-         
+
+
                 marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
                 marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"));
                 var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
@@ -181,7 +186,7 @@ namespace TimeSheet.Controllers
         {
             List<Fechamento> listFechamento = new List<Fechamento>();
             FechamentoNegocio fechamento = new FechamentoNegocio();
-          
+
             //Mit Validação 8.4.4 erro não concluirá o fechamento caso possuir divergências.
             var listD = ValidaSabadoDomingoEFeriado(id);
             if (listD.Count > 0)
@@ -196,7 +201,7 @@ namespace TimeSheet.Controllers
             var listLancamento = ValidaDiasComLancameto(id);
             var listSemLancamento = ValidaDiasSemLancameto(id);
 
-            foreach (Fechamento fechamentolist in listLancamento.OrderBy(x=> x.DataLancamento))
+            foreach (Fechamento fechamentolist in listLancamento.OrderBy(x => x.DataLancamento))
             {
                 var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), fechamentolist.DataLancamento.ToDateProtheusConvert());
                 var fechamentoReturn = fechamento.ValidarApontamentoImpar(fechamentolist, listApontamento);
@@ -222,9 +227,9 @@ namespace TimeSheet.Controllers
                 {
                     if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentolist))
                     {
-                       Fechamento novoFechamento = new Fechamento();
-                       novoFechamento = fechamentoReturn;
-                       listFechamento.Add(novoFechamento);
+                        Fechamento novoFechamento = new Fechamento();
+                        novoFechamento = fechamentoReturn;
+                        listFechamento.Add(novoFechamento);
                     }
                 }
 
@@ -236,8 +241,8 @@ namespace TimeSheet.Controllers
             {
                 foreach (Fechamento fechamentoResult in listA.ToList())
                 {
-                    if(!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
-                    listFechamento.Add(fechamentoResult);
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
+                        listFechamento.Add(fechamentoResult);
                 }
             }
 
@@ -258,9 +263,10 @@ namespace TimeSheet.Controllers
             {
                 foreach (Fechamento fechamentoResult in listB.ToList())
                 {
-                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult)) { 
-                    fechamentoResult.StatusFechamento = "B";  // status bloqueado para fechamento caso exista.
-                    listFechamento.Add(fechamentoResult);
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
+                    {
+                        fechamentoResult.StatusFechamento = "B";  // status bloqueado para fechamento caso exista.
+                        listFechamento.Add(fechamentoResult);
                     }
                 }
             }
@@ -286,9 +292,10 @@ namespace TimeSheet.Controllers
             {
                 foreach (Fechamento fechamentoResult in listF.ToList())
                 {
-                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult)) {
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
+                    {
                         fechamentoResult.StatusFechamento = "B";  // status bloqueado para fechamento caso exista.
-                    listFechamento.Add(fechamentoResult);
+                        listFechamento.Add(fechamentoResult);
                     }
                 }
 
@@ -299,13 +306,15 @@ namespace TimeSheet.Controllers
 
         private bool VerificaSeDataEsabadoDomingoOUferiado(List<Fechamento> listafechamento, Fechamento fechamentoCompara)
         {
-            foreach(Fechamento fechamento in listafechamento) {
-                if(fechamento.DataLancamento == fechamentoCompara.DataLancamento){
-                    return true;           
+            foreach (Fechamento fechamento in listafechamento)
+            {
+                if (fechamento.DataLancamento == fechamentoCompara.DataLancamento)
+                {
+                    return true;
                 }
                 else
                 {
-                    return false;    
+                    return false;
                 }
             }
             return false;
@@ -322,7 +331,7 @@ namespace TimeSheet.Controllers
             {
                 var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
                 var lancamentolist = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, User.GetDados("Matricula"));
-                var FechamentoResultValidacao = fechamento.ValidaSeExisteMarcacaoAntesEdepoisDoApontamento(lancamentolist,listApontamento);
+                var FechamentoResultValidacao = fechamento.ValidaSeExisteMarcacaoAntesEdepoisDoApontamento(lancamentolist, listApontamento);
                 foreach (Fechamento LancamentoResult in FechamentoResultValidacao)
                 {
                     if (LancamentoResult.Descricao != null)
@@ -349,7 +358,7 @@ namespace TimeSheet.Controllers
                 foreach (Lancamento lancamento in listLancamento)
                 {
                     var fechamentoRetornoPrimeiro = ValidarPrimeiroLancamentoPorDia(lancamento.DateLancamento);
-                    var fechamentoRetornoUltimo =   ValidarUltimoLancamentoPorDia(lancamento.DateLancamento);
+                    var fechamentoRetornoUltimo = ValidarUltimoLancamentoPorDia(lancamento.DateLancamento);
 
                     if (fechamentoRetornoPrimeiro.Descricao != null)
                     {
@@ -382,7 +391,7 @@ namespace TimeSheet.Controllers
             return FechamentoResult;
         }
 
-         private Fechamento ValidarUltimoLancamentoPorDia(string datalancamento)
+        private Fechamento ValidarUltimoLancamentoPorDia(string datalancamento)
         {
             FechamentoNegocio fechamento = new FechamentoNegocio();
 
@@ -450,7 +459,7 @@ namespace TimeSheet.Controllers
 
             marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
             var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
-            
+
             return fechamentoNegocio.ValidaDiasSemLancamento(listLancamento.ToList(), marcacao, User.GetDados("Filial"));
         }
         private List<Fechamento> ValidaDiasComLancameto(string id)
@@ -544,57 +553,20 @@ namespace TimeSheet.Controllers
 
         private void NotificarFechamento(ViewModelFechamento fechamento)
         {
-            var  user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
-            var coordenador  = _prothuesService.ObterCoordenadorPorCentroDeCusto(User.GetDados("Centro de Custo"));
+            var user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
+            var coordenador = _prothuesService.ObterCoordenadorPorCentroDeCusto(User.GetDados("Centro de Custo"));
             var mensagem = $"{user.Nome}, realizou o fechamento da marcação: {fechamento.CodigoMarcacao}." + "\r\n" +
                            $"Matrícula : {User.GetDados("Matricula")} ";
             _Notificacao.EnviarEmail(coordenador.Email, mensagem);
 
         }
 
-        private void StartProcessoFluig()
+        private void StartProcessoFluig(string userCodFluig, string matricula, string filial, string projeto, string GrupoGerencia, string PoolGrupo)
         {
-
-            WorkflowEngineServiceClient fluigcliente = new WorkflowEngineServiceClient();
-
-
-            processTaskAppointmentDto[] appointment = new processTaskAppointmentDto[] { };
-            processAttachmentDto[] attachments = new processAttachmentDto[] { };
-
-            Task<startProcessResponse> retorno; ;
-
-      
-
-
-
-            string UserName = "fluig_getin";
-            string Pswd = "bahiagas@123";
-            string CompanyId = "1";
-            string IdProcesso = "TimeSheet";
-            int Atividade = 0;
-            bool Completatarefa = true;
-            bool Gestor = false;
-            string[] ColleagueId = new string[1];
-            
-            ColleagueId[0] = "Pool:Group:GERENCIA_GETIN"; //AREA
-
-            string[][] cardData = new string[4][];
-
-            cardData[0] = new string[] { "txtGrupoGerencia", "Getin"};
-            cardData[1] = new string[] { "hddFilial", "01"};
-            cardData[2] = new string[] { "hddCodProjeto", "00015" };
-            cardData[3] = new string[] { "TxtMatricula", "010106" };
-
-
-            retorno = fluigcliente.startProcessAsync(UserName, Pswd, Convert.ToInt32(CompanyId), IdProcesso, Atividade,
-                                                                        ColleagueId, "", UserName, Completatarefa, attachments,
-                                                                         cardData, appointment, Gestor);
-
-            
-
+            _fluigAppService.IniciarProcesso(userCodFluig, matricula, filial, projeto, GrupoGerencia, PoolGrupo);
         }
 
-       
+
     }
 
     public class LancamentoComparer : IEqualityComparer<Lancamento>

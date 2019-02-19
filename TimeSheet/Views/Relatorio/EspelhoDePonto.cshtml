@@ -99,39 +99,7 @@
             </tr>
         </tbody>
     </table>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th colspan="7"><b>Fechamento</b></th>
-            </tr>
-
-            <tr>
-                <th class="text-center">Data Fechamento</th>
-                <th class="text-center">Horas Execedentes</th>
-                <th class="text-center">Atrasos</th>
-                <th class="text-center">Abonos</th>
-                <th class="text-center">Total Falta</th>
-                <th class="text-center">Total Horas</th>
-                <th class="text-center">Divergência(S/N)</th>
-            </tr>
-
-        </thead>
-        <tbody>
-            @if (Model.Fechamento != null)
-            {
-            <tr>
-                <th scope="row">@Model.Fechamento.Datafechamento.ToDateProtheusReverseformate()</th>
-                <td>@Model.Fechamento.TotalHoraExedente</td>
-                <td>@Model.Fechamento.TotalAtraso</td>
-                <td>@Model.Fechamento.TotalAbono</td>
-                <td></td>
-                <td>@Model.Fechamento.TotalHora</td>
-                <td>@Model.Fechamento.Divergencia</td>
-            </tr>
-                }
-        </tbody>
-    </table>
+   
     <table class="table">
 
         <tbody>
@@ -139,35 +107,80 @@
             {
                 var datalancamento = "0";
                 var dataApontametoLista = "0";
+                var datalancamentoFechamento = "0";
                 var primeiraHora = TimeSpan.Parse("00:00:00");
                 @foreach (var item in Model.apontamento.OrderBy(x => x.dataApontamento))
                 {
+                    @if (datalancamentoFechamento != item.dataApontamento)
+                    {
+                        <thead>
+                            <tr>
+                                <th colspan="7"><b>Fechamento</b></th>
+                            </tr>
 
+                            <tr>
+                                <th class="text-center">Data Lançamento</th>
+                                <th class="text-center">Horas Execedentes</th>
+                                <th class="text-center">Atrasos</th>
+                                <th class="text-center">Abonos</th>
+                                <th class="text-center">Total Falta</th>
+                                <th class="text-center">Total horas trabalhadas</th>
+                                <th class="text-center">Divergência</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            @if (Model.FechamentoPorDatalancamento != null)
+                             {
+                                foreach (var itemF in Model.FechamentoPorDatalancamento.OrderBy(x => x.DataLancamento))
+                                {
+                                    datalancamentoFechamento = itemF.DataLancamento.ToDateProtheusReverseformate();
+                                    if (item.dataApontamento == datalancamentoFechamento)
+                                    {
+                                    <tr>
+                                        <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
+                                        <td>@itemF.TotalHoraExedente</td>
+                                        <td>@itemF.TotalAtraso</td>
+                                        <td>@itemF.TotalAbono</td>
+                                        <td></td>
+                                        <td>@itemF.TotalHora</td>
+                                        <td>@itemF.Divergencia</td>
+                                    </tr>
+                                    }
+                                    else
+                                    {
+                                        datalancamentoFechamento = item.dataApontamento;
+                                    }
+                                }
+                            }
+                        </tbody>
+                    }
+                    var count = 0;
                     <tr>
                         @if (datalancamento != item.dataApontamento)
                         {
-                    <thead>
+                         <thead>
                         <tr>
-                            <th colspan="5"><b>Relógio</b></th>
+                            <th colspan="7"><b>Relógio</b></th>
                         </tr>
                         <tr>
-                            <th class="text-center">Data</th>
+                            <th class="text-center">Hora</th>
+                            <th class="text-center">Hora</th>
+                            <th class="text-center">Hora</th>
                             <th class="text-center">Hora</th>
                             <th class="text-center">Hora</th>
                             <th class="text-center">Hora</th>
                             <th class="text-center">Hora</th>
                         </tr>
                     </thead>
-                    <th scope="row">@item.dataApontamento</th>
                     datalancamento = item.dataApontamento;
-                    var count = 0;
                     @foreach (var itemA in Model.apontamento)
                     {
                         count++;
                         @if (datalancamento == itemA.dataApontamento)
                         {
 
-                            if (count <= 4)
+                            if (count <= 5)
                             {
 
                                 <td>@itemA.apontamento</td>
@@ -175,7 +188,6 @@
                             else
                             {
                                 <tr>
-                                    <th scope="row">@item.dataApontamento</th>
                                     <td>@itemA.apontamento</td>
                                 </tr>
                             }
@@ -201,27 +213,31 @@
 
                                 <thead>
                                     <tr>
-                                        <th colspan="5"><b>Lançamentos</b></th>
+                                        <th colspan="7"><b>Lançamentos</b></th>
                                     </tr>
                                     <tr>
-                                        <th class="text-center">Data</th>
+                                        <th class="text-center">Data Lançamento</th>
                                         <th class="text-center">Hora Início</th>
                                         <th class="text-center">Hora Fim</th>
                                         <th class="text-center">Projeto</th>
                                         <th class="text-center">Código Divergência</th>
+                                        <th class="text-center"></th>
+                                        <th class="text-center"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var itemLista in item.listLancamento.OrderBy(x => x.HoraInicio))
                                     {
                                         dataApontametoLista = itemLista.DateLancamento.ToDateProtheusReverseformate();
-                                        <tr>
-                                            <th scope="row">@itemLista.DateLancamento.ToDateProtheusReverseformate()</th>
-                                            <td>@itemLista.HoraInicio</td>
-                                            <td>@itemLista.HoraFim</td>
-                                            <td>@itemLista.DescricaoEmp</td>
-                                            <td>@itemLista.CodDivergencia</td>
-                                        </tr>
+                                    <tr>
+                                        <td>@itemLista.HoraInicio</td>
+                                        <td>@itemLista.HoraFim</td>
+                                        <td>@itemLista.DescricaoEmp</td>
+                                        <td>@itemLista.CodDivergencia</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
 
                                         @if (itemLista.Observacao != null)
                                         {
@@ -246,6 +262,6 @@
             }
             </tbody>
         </table>
-   
-</body>
+
+    </body>
 </html>

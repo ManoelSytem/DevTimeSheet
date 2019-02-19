@@ -11,6 +11,7 @@ namespace TimeSheet.Domain.Enty
         public string Endpoint { get; set; }
         public string Gerencia { get; set; }
         public string Email { get; set; }
+        public string CodigoFluig { get; set; }
     }
 }
 

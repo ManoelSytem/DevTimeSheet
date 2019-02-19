@@ -64,7 +64,7 @@ namespace TimeSheet.Controllers
 
                 viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
                 viewModelRelatorio.marcacao = viewModelMarcacao;
-                viewModelRelatorio.Fechamento = _mapper.Map<ViewModelFechamento>(_fechamentoServiceRepository.ObterFechamento(id, User.GetDados("Matricula")));
+                viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorData(id));
                 viewModelRelatorio.user = user;         
                 viewModelRelatorio.apontamento = ListaApontamentoPorLancamento(_mapper.Map<List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"))));
                 return new ViewAsPdf("EspelhoDePonto", viewModelRelatorio);
@@ -128,6 +128,7 @@ namespace TimeSheet.Controllers
 
                     var listApontamento = _protheusService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
                     datalancamento = lancamento.DateLancamento;
+                    if(listApontamento.Count > 0) {
                     foreach (Apontamento apontamentoResult in listApontamento)
                     {
                         Apontamento novo = new Apontamento();
@@ -144,6 +145,26 @@ namespace TimeSheet.Controllers
                         }
                         novo.listLancamento = listaLancamentoPorApontamento;
                         listaApontamento.Add(novo);
+                     }
+
+                    }
+                    else
+                    {
+                        
+                            Apontamento novo = new Apontamento();
+                            List<Lancamento> listaLancamentoPorApontamento = new List<Lancamento>();
+                            novo.dataApontamento = datalancamento.ToDateProtheusReverseformate();
+                            foreach (ViewModelLancamento listaLacamento in listlancamentoViewModel.OrderBy(x => x.DateLancamento))
+                            {
+                                if (novo.dataApontamento == listaLacamento.DateLancamento.ToDateProtheusReverseformate())
+                                {
+                                    if (!listaLancamentoPorApontamento.Contains(_mapper.Map<Lancamento>(listaLacamento), new ComparerDados()))
+                                        listaLancamentoPorApontamento.Add(_mapper.Map<Lancamento>(listaLacamento));
+                                }
+                            }
+                            novo.listLancamento = listaLancamentoPorApontamento;
+                            listaApontamento.Add(novo);
+                        
                     }
 
                 }

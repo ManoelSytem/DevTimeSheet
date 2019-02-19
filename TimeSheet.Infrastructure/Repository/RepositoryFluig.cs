@@ -18,13 +18,12 @@ namespace TimeSheet.Infrastructure.Repository
 
         }
 
-
         public Usuario ObterUsuarioFluigPorEmail(string email)
         {
             try
             {
                 Conexao.Open();
-                var sql = $@"Select EMAIL, USER_CODE from FDN_USERTENANT
+                var sql = $@"Select EMAIL, USER_CODE as CodigoFluig from  FDN_USERTENANT
                                 WHERE EMAIL = '{email}' AND USER_STATE = '1'";
                 return Conexao.QueryFirstOrDefault<Usuario>(sql);
             }
