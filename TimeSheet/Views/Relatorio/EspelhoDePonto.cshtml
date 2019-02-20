@@ -113,7 +113,7 @@
                 {
                     @if (datalancamentoFechamento != item.dataApontamento)
                     {
-                        <thead>
+                       
                             <tr>
                                 <th colspan="7"><b>Fechamento</b></th>
                             </tr>
@@ -127,8 +127,6 @@
                                 <th class="text-center">Total horas trabalhadas</th>
                                 <th class="text-center">Divergência</th>
                             </tr>
-
-                        </thead>
                         <tbody>
                             @if (Model.FechamentoPorDatalancamento != null)
                              {
@@ -159,7 +157,7 @@
                     <tr>
                         @if (datalancamento != item.dataApontamento)
                         {
-                         <thead>
+                       
                         <tr>
                             <th colspan="7"><b>Relógio</b></th>
                         </tr>
@@ -172,7 +170,6 @@
                             <th class="text-center">Hora</th>
                             <th class="text-center">Hora</th>
                         </tr>
-                    </thead>
                     datalancamento = item.dataApontamento;
                     @foreach (var itemA in Model.apontamento)
                     {
@@ -210,21 +207,19 @@
                             if (dataApontametoLista != datalancamento)
                             {
 
-
-                                <thead>
+                               
                                     <tr>
                                         <th colspan="7"><b>Lançamentos</b></th>
                                     </tr>
                                     <tr>
-                                        <th class="text-center">Data Lançamento</th>
                                         <th class="text-center">Hora Início</th>
                                         <th class="text-center">Hora Fim</th>
                                         <th class="text-center">Projeto</th>
                                         <th class="text-center">Código Divergência</th>
                                         <th class="text-center"></th>
                                         <th class="text-center"></th>
+                                        <th class="text-center"></th>
                                     </tr>
-                                </thead>
                                 <tbody>
                                     @foreach (var itemLista in item.listLancamento.OrderBy(x => x.HoraInicio))
                                     {

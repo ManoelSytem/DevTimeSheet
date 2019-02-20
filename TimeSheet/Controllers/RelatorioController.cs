@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
 using Rotativa.AspNetCore;
 using TimeSheet.Application;
+using TimeSheet.Application.Interface;
 using TimeSheet.Domain;
 using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
@@ -29,9 +30,17 @@ namespace TimeSheet.Controllers
         private readonly IMapper _mapper;
         private readonly IJornadaTrabalho _jornadaTrbServiceRepository;
         private readonly IFechamento _fechamentoServiceRepository;
+        private readonly ILancamentoNegocio _lancamentoNegocio;
 
 
-        public RelatorioController(IFechamento fechamentoServiceRepository, IProtheus prothuesService, IMarcacao marcacaoServiceRepository, IMapper mapper, IConfiguracao configuracao, IMarcacao marcacao, ILancamento lancamento, IJornadaTrabalho jornada)
+        public RelatorioController(IFechamento 
+            fechamentoServiceRepository, 
+            IProtheus prothuesService, 
+            IMarcacao marcacaoServiceRepository,
+            IMapper mapper,
+            IConfiguracao configuracao, 
+            IMarcacao marcacao, 
+            ILancamento lancamento, IJornadaTrabalho jornada, ILancamentoNegocio lancamentoNegocio)
         {
             _protheusService = prothuesService;
             _marcacaoServiceRepository = marcacaoServiceRepository;
@@ -41,6 +50,7 @@ namespace TimeSheet.Controllers
             _lancamentoerviceRepository = lancamento;
             _jornadaTrbServiceRepository = jornada;
             _fechamentoServiceRepository = fechamentoServiceRepository;
+            _lancamentoNegocio = lancamentoNegocio;
 
 
         }
@@ -176,18 +186,15 @@ namespace TimeSheet.Controllers
 
         private List<Fechamento> CalcularFechamentoPorData(string id)
         {
-           
+
             List<Fechamento> listaFechamentoPorData = new List<Fechamento>();
-            LancamentoNegocio lancamentoNegocio = new LancamentoNegocio();
             Marcacao marcacao = new Marcacao();
         
-
             marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
-            marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"));
+            var listdeLancamentoMensal = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
             var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
-
             var configuracao = _configuracao.ObterConfiguracao();
-            listaFechamentoPorData = lancamentoNegocio.CalcularLancamentoPorData(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho, configuracao);
+            listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(listdeLancamentoMensal,jornadaTrabalho, configuracao, User.GetDados("Matricula"), User.GetDados("Filial"));
              
             return listaFechamentoPorData;
         }

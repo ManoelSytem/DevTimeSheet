@@ -1,6 +1,6 @@
 ﻿using TimeSheet.Domain.Enty;
 
-namespace TimeSheet.Application
+namespace TimeSheet.Application.Interface
 {
     public interface IFluigAppService
     {

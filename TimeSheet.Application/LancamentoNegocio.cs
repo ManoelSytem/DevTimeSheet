@@ -1,85 +1,121 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TimeSheet.Application.Interface;
 using TimeSheet.Domain;
 using TimeSheet.Domain.Enty;
+using TimeSheet.Domain.Enty.Interface;
+using TimeSheet.Domain.Interface;
 using TimeSheet.Domain.Util;
-using TimeSheet.Infrastructure.Repository;
+
 
 namespace TimeSheet.Application
 {
-    public class LancamentoNegocio
+    public class LancamentoNegocio : ILancamentoNegocio
     {
-
-        public LancamentoNegocio()
+        private readonly ILancamento _lancamentoerviceRepository;
+        private readonly IProtheus _serviceProthues;
+        public LancamentoNegocio(ILancamento lancamentoerviceRepository, IProtheus serviceProthues)
         {
-                
+            _lancamentoerviceRepository = lancamentoerviceRepository;
+            _serviceProthues = serviceProthues;
         }
 
-
-        public List<Fechamento> CalcularLancamentoPorData(IOrderedEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura)
+        public List<Fechamento> CalcularLancamentoPorData(IEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura, string matricula, string filial)
         {
             List<Fechamento> listaFechamentoPorData = new List<Fechamento>();
 
 
-            listaFechamentoPorData = CalcularTotalHoraExedenteETrabalhadaEabono(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho, configura);
+            listaFechamentoPorData = CalcularTotalHoraExedenteETrabalhadaEabono(orderedlistalancamento.OrderBy(x => x.DateLancamento), jornadaTrabalho, configura, matricula, filial);
             return listaFechamentoPorData;
         }
 
-        public List<Fechamento> CalcularTotalHoraExedenteETrabalhadaEabono(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada, Configuracao config)
+        public List<Fechamento> CalcularTotalHoraExedenteETrabalhadaEabono(IEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada, Configuracao config, string matricula, string filial)
         {
 
             List<Fechamento> listFechamentoHorasExedentes = new List<Fechamento>();
-            TimeSpan totalHoraDiaLancamento = TimeSpan.Parse("00:00:00");
-            TimeSpan totalLancamento = TimeSpan.Parse("00:00:00");
-            string datalancamento = "0";
+            double totalLancamento = 0;
+            double totalHoraExedente = 0;
             double totalAbono = 0;
             var jrDiaria = jornada.JornadaDiaria;
 
             foreach (Lancamento LancamentoResult in lancamentoList)
             {
 
-                if (datalancamento != LancamentoResult.DateLancamento)
+                var listlancamentoDiario = _lancamentoerviceRepository.ObterLancamento(LancamentoResult.DateLancamento, matricula);
+
+                totalAbono += CalcularTotaAbono(LancamentoResult, config);
+                totalLancamento = CalcularTotalLancamentoPorDia(listlancamentoDiario);
+
+                Fechamento novo = new Fechamento();
+                if (totalLancamento > Math.Round(Convert.ToDouble(jrDiaria.TotalHours), 2))
                 {
-                    totalLancamento += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
-                    totalAbono += CalcularTotaAbono(LancamentoResult, config);
-                    Fechamento novo = new Fechamento();
-                    if (totalLancamento > jrDiaria)
+                    novo.TotalHora = totalLancamento;
+                    novo.DataLancamento = LancamentoResult.DateLancamento;
+                    novo.CodigoProjeto = LancamentoResult.codEmpredimento;
+                    novo.CodigoMarcacao = LancamentoResult.Codigo;
+                    novo.Fase = LancamentoResult.Fase;
+                    totalHoraExedente = totalLancamento - Math.Round(Convert.ToDouble(jrDiaria.TotalHours), 2);
+                    if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
+                    if (ValidaEferiado(LancamentoResult.DateLancamento, filial) | ESabadoOuDomingo(Convert.ToDateTime(LancamentoResult.DateLancamento.ToDateProtheusReverseformate())))
                     {
-                        novo.TotalHora = Math.Round(Convert.ToDouble(totalLancamento.TotalHours), 2);
-                        novo.DataLancamento = LancamentoResult.DateLancamento;
-                        novo.CodigoProjeto = LancamentoResult.codEmpredimento;
-                        novo.CodigoMarcacao = LancamentoResult.Codigo;
-                        novo.Fase = LancamentoResult.Fase;
-                        totalLancamento = totalLancamento - jrDiaria;
-                        if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
-                        novo.TotalHoraExedente = Math.Round(Convert.ToDouble(totalLancamento.TotalHours), 2);
-                        listFechamentoHorasExedentes.Add(novo);
-                        totalLancamento = TimeSpan.Parse("00:00:00");
-                        totalAbono = 0;
+                        novo.TotalHoraExedente = Math.Round(Convert.ToDouble(totalHoraExedente), 2);
                     }
-                    else
-                    {
-                        novo.TotalHoraExedente = 0;
-                        novo.TotalAtraso = Math.Round(Convert.ToDouble((jrDiaria - totalLancamento).TotalHours), 2);
-                        novo.DataLancamento = LancamentoResult.DateLancamento;
-                        novo.CodigoProjeto = LancamentoResult.codEmpredimento;
-                        novo.CodigoMarcacao = LancamentoResult.Codigo;
-                        novo.Fase = LancamentoResult.Fase;
-                        if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
-                        novo.TotalHora = Math.Round(Convert.ToDouble(totalLancamento.TotalHours), 2);
-                        listFechamentoHorasExedentes.Add(novo);
-                        totalAbono = 0;
-                    }
-                    datalancamento = LancamentoResult.DateLancamento;
+                    else { novo.TotalHoraExedente = Math.Round(Convert.ToDouble(totalHoraExedente), 2); }
+                    listFechamentoHorasExedentes.Add(novo);
+                    totalLancamento = 0;
+                    totalAbono = 0;
+                    totalHoraExedente = 0;
                 }
-                
+                else
+                {
+                    if (ValidaEferiado(LancamentoResult.DateLancamento, filial) | ESabadoOuDomingo(Convert.ToDateTime(LancamentoResult.DateLancamento.ToDateProtheusReverseformate())))
+                    {
+                        novo.TotalHoraExedente = totalLancamento;
+                        novo.TotalAtraso = 0;
+                    }
+                    else { novo.TotalHoraExedente = 0;
+                        novo.TotalAtraso = Math.Round(Convert.ToDouble((jrDiaria).TotalHours), 2) - totalLancamento;
+                    }
+                    novo.DataLancamento = LancamentoResult.DateLancamento;
+                    novo.CodigoProjeto = LancamentoResult.codEmpredimento;
+                    novo.CodigoMarcacao = LancamentoResult.Codigo;
+                    novo.Fase = LancamentoResult.Fase;
+                    if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
+                    novo.TotalHora = totalLancamento;
+                    listFechamentoHorasExedentes.Add(novo);
+                    totalAbono = 0;
+                    totalHoraExedente = 0;
+                    totalLancamento = 0;
+                }
+
             }
 
             return listFechamentoHorasExedentes;
         }
 
-        private double CalcularTotaAbono(Lancamento lancamento, Configuracao config)
+
+        public double CalcularTotalLancamentoPorDia(List<Lancamento> listlancamentoDiario)
+        {
+            double totalHorasLancamento = 0;
+            TimeSpan totalLancamento = TimeSpan.Parse("00:00:00");
+            foreach (Lancamento LancamentoResult in listlancamentoDiario)
+            {
+                totalLancamento += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+            }
+
+            return totalHorasLancamento = Math.Round(Convert.ToDouble(totalLancamento.TotalHours), 2);
+        }
+
+        public bool ESabadoOuDomingo(DateTime initialDate)
+        {
+            if (initialDate.DayOfWeek == DayOfWeek.Sunday
+                    &&
+                   initialDate.DayOfWeek == DayOfWeek.Saturday)
+                return true;
+            else return false;
+        }
+        public double CalcularTotaAbono(Lancamento lancamento, Configuracao config)
         {
             int totalAbono = 0;
 
@@ -90,7 +126,7 @@ namespace TimeSheet.Application
             return totalAbono;
         }
 
-        private bool Eabono(Lancamento lancamento, Configuracao config)
+        public bool Eabono(Lancamento lancamento, Configuracao config)
         {
             if (lancamento.HoraInicio != TimeSpan.Parse("00:00:00") && lancamento.CodDivergencia != 0)
             {
@@ -145,8 +181,8 @@ namespace TimeSheet.Application
 
         public bool ValidaEferiado(string data, string filial)
         {
-            ProtheusRepository serviceProthues = new ProtheusRepository();
-            var feriado = serviceProthues.ObterFeriadoProthues(data, filial);
+
+            var feriado = _serviceProthues.ObterFeriadoPorDataLancamento(data, filial);
             if (feriado.Descricao == null)
             {
                 return false;

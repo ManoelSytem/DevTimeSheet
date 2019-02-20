@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using TimeSheet.Application;
+using TimeSheet.Application.Interface;
 using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
@@ -29,6 +30,7 @@ namespace TimeSheet.Controllers
         private readonly IFechamento _fechamentoServiceRepository;
         private readonly INotificacao _Notificacao;
         private readonly IFluigAppService _fluigAppService;
+        private readonly ILancamentoNegocio _lancamentoNegocio;
 
         public FechamentoController(IFechamento fechamentoServiceRepository,
             IProtheus prothuesService,
@@ -39,7 +41,7 @@ namespace TimeSheet.Controllers
             ILancamento lancamento,
             IJornadaTrabalho jornada,
             INotificacao notificacao,
-            IFluigAppService fluigAppService)
+            IFluigAppService fluigAppService, ILancamentoNegocio lancamentoNegocio)
         {
             _prothuesService = prothuesService;
             _marcacaoServiceRepository = marcacaoServiceRepository;
@@ -51,6 +53,7 @@ namespace TimeSheet.Controllers
             _fechamentoServiceRepository = fechamentoServiceRepository;
             _Notificacao = notificacao;
             _fluigAppService = fluigAppService;
+            _lancamentoNegocio = lancamentoNegocio;
         }
 
         public IActionResult Index()
@@ -149,7 +152,6 @@ namespace TimeSheet.Controllers
             {
                 List<Fechamento> listaFechamentoPorData = new List<Fechamento>();
                 List<Fechamento> listaDeDiasSemLancamento = new List<Fechamento>();
-                LancamentoNegocio LancamentoNegocio = new LancamentoNegocio();
                 Marcacao marcacao = new Marcacao();
 
                 marcacao.ValidaMarcacaoFoiFechada(_marcacaoServiceRepository.ObterMarcacao(viewModelfechamento.CodigoMarcacao));
@@ -159,7 +161,7 @@ namespace TimeSheet.Controllers
                 var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
                 var configuracao = _configuracao.ObterConfiguracao();
 
-                listaFechamentoPorData = LancamentoNegocio.CalcularLancamentoPorData(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho, configuracao);
+                listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(marcacao.Lancamentolist, jornadaTrabalho, configuracao, User.GetDados("Matricula"), User.GetDados("Filial"));
 
 
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
