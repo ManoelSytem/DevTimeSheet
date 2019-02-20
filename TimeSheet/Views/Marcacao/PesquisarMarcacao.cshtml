@@ -1,0 +1,60 @@
+﻿@model TimeSheet.ViewModel.ViewModelMacacao
+
+@{
+    ViewData["Title"] = "Pesquisar Marcacao";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="my-row">
+    <div class="col-md-12">
+        <div class="card azulc-azule">
+            <div class="card-header">
+                Pesquisar Marcação
+            </div>
+            <div class="card-body">
+                <div class="row">     
+                    <div class="col-xs-8 col-sm-4">
+                        <div class="form-group col-md-14">
+                            Colaborador
+                            <div class="input-group mb-3">
+                                <input id="nomecolaboradorouMatricula" type="text" placeholder="Informe o nome ou matrícula do colaborador..." class="form-control">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="CarregarListaColaboradoresAssociado()"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                            @Html.DropDownListFor(model => model.Lancamento.Usuarios, new List<SelectListItem>(), new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function CarregarListaColaboradoresAssociado() {
+        if ($("#nomecolaboradorouMatricula").val().length >= 3) {
+            $('.loader-overlay').show();
+            $.ajax({
+                url: '@Url.Action("ObterColaborador", "Marcacao")',
+                data: { descricao: $("#nomecolaboradorouMatricula").val() },
+                type: 'get'
+            }).done(function (data) {
+                CarregarDadosEmpreendimento(data);
+                $('.loader-overlay').hide();
+            });
+        } else {
+            Information("Não é possível realizar pesquisa com menos de 3 caracteres.");
+        }
+    }
+
+        function CarregarDadosEmpreendimento(data) {
+            $('#Lancamento_EmpreendimentoIds').empty();
+            $('#Lancamento_EmpreendimentoIds option:not(:selected)').remove();
+            for (var i in data) {
+                if ($('#Lancamento_Usuarios option[value="' + data[i].subjectId + '"]').val() === undefined) {
+                    $('#Lancamento_Usuarios').append('<option value="' + data[i].subjectId + '">' +'Matrícula - '+ data[i].subjectId + ' - ' + data[i].nome + '</option>');
+                }
+            }
+        }
+</script>

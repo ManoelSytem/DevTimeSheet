@@ -334,8 +334,30 @@ namespace TimeSheet.Controllers
                 return View();
             }
 
-
     }
+
+
+         public ActionResult PesquisarMarcacao()
+         {
+
+            try
+            {
+                return View();
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
+
+        }
+
+
+        [HttpGet]
+        public ActionResult ObterColaborador(string descricao)
+        {
+            return Json(_prothuesService.ObterListColaboradorPorCentroDeCusto(descricao, User.GetDados("Centro de Custo")));
+        }
 
         private string ObterPrimeiroDia(Configuracao configuracao, ViewModelMacacao marcacao)
         {

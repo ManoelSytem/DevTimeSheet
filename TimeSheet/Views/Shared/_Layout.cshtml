@@ -83,17 +83,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-clipboard fa-lg"></i><span class="link-cadastros">Marcações</span></a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="@Url.Action("Index", "Marcacao")">Lançamento de Marcações</a>
-                                <div class="dropdown-divider"></div>
-                            </div>
-                        </li>
-                    }
-                    @if (User.CointainsPerfil(Constantes.COORDENADOR))
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-clipboard fa-lg"></i><span class="link-cadastros">Relatórios</span></a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a data-toggle="modal" data-target="#myModalSelecionarEgenheiroTecnico" class="dropdown-item">Pesquisar</a>
-                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("PesquisarMarcacao", "Marcacao")">Pesquisar</a>
                             </div>
                         </li>
                     }
@@ -125,35 +115,6 @@
             }*@
                 </div>
                 @RenderBody()
-                <div class="modal" id="myModalSelecionarEgenheiroTecnico" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Pesquisar Relatório</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="col-md-12 modal-sm">
-                                    <div class="form-group">
-                                        <label for="exampleFormControlSelect1">Selecione Engenheiro/Técnico</label>
-                                        <select id="comboRelatorio" class="form-control">
-                                            <option>Selecione</option>
-                                            <option value="1">...</option>
-                                            <option value="2">...</option>
-                                        </select>
-                                        <input disabled="disabled" style="display:none" type="text" name="campo" id="codmarcacao">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button onclick="GerarRelatorio()" type="button" class="btn btn-primary">Gerar Relatório</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Sair</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

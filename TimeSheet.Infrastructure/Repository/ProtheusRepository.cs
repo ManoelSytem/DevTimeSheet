@@ -281,24 +281,17 @@ namespace TimeSheet.Infrastructure.Repository
         }
 
 
-        public Usuario ObterListColaborador(string centroCusto)
+        public List<Usuario> ObterListColaborador(string descricao, string centroDeCusto)
         {
             Conexao.Open();
             try
             {
 
-                Usuario usuario = new Usuario(); ;
-                var sqlUser = $@"Select LTRIM(RTRIM(CTT_DESC03)) AS Nome, LTRIM(RTRIM(CTT_EMLGER))  AS Email from CTT010 
-                               where CTT_CUSTO = '{centroCusto}'";
-                var QueryResult = Conexao.Query<Usuario>(sqlUser);
+                var sqlUser = $@"Select LTRIM(RTRIM(RA_MAT)) as SubjectId, LTRIM(RTRIM(RA_NOMECMP))  as Nome from SRA010
+                                  where (LTRIM(RTRIM(RA_NOMECMP)) LIKE UPPER('%{descricao}%') OR LTRIM(RTRIM(RA_MAT)) = '{descricao}') AND LTRIM(RTRIM(RA_CC)) = '{centroDeCusto}'";
+                var QueryResult = Conexao.Query<Usuario>(sqlUser).ToList();
 
-                foreach (Usuario UserGerenciaResult in QueryResult)
-                {
-                    usuario.Nome = UserGerenciaResult.Nome;
-                    usuario.Email = UserGerenciaResult.Email;
-                }
-
-                return usuario;
+                return QueryResult;
             }
             catch (Exception ex)
             {
