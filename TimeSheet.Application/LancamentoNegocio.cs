@@ -56,6 +56,7 @@ namespace TimeSheet.Application
                     novo.CodigoMarcacao = LancamentoResult.Codigo;
                     novo.Fase = LancamentoResult.Fase;
                     totalHoraExedente = totalLancamento - Math.Round(Convert.ToDouble(jrDiaria.TotalHours), 2);
+                    novo.TotalFalta = 0;
                     if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
                     if (ValidaEferiado(LancamentoResult.DateLancamento, filial) | ESabadoOuDomingo(Convert.ToDateTime(LancamentoResult.DateLancamento.ToDateProtheusReverseformate())))
                     {
@@ -81,6 +82,7 @@ namespace TimeSheet.Application
                     novo.CodigoProjeto = LancamentoResult.codEmpredimento;
                     novo.CodigoMarcacao = LancamentoResult.Codigo;
                     novo.Fase = LancamentoResult.Fase;
+                    novo.TotalFalta = 0;
                     if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
                     novo.TotalHora = totalLancamento;
                     listFechamentoHorasExedentes.Add(novo);

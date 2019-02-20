@@ -99,7 +99,7 @@
             </tr>
         </tbody>
     </table>
-   
+
     <table class="table">
 
         <tbody>
@@ -113,91 +113,90 @@
                 {
                     @if (datalancamentoFechamento != item.dataApontamento)
                     {
-                       
-                            <tr>
-                                <th colspan="7"><b>Fechamento</b></th>
-                            </tr>
 
-                            <tr>
-                                <th class="text-center">Data Lançamento</th>
-                                <th class="text-center">Horas Execedentes</th>
-                                <th class="text-center">Atrasos</th>
-                                <th class="text-center">Abonos</th>
-                                <th class="text-center">Total Falta</th>
-                                <th class="text-center">Total horas trabalhadas</th>
-                                <th class="text-center">Divergência</th>
-                            </tr>
-                        <tbody>
-                            @if (Model.FechamentoPorDatalancamento != null)
-                             {
-                                foreach (var itemF in Model.FechamentoPorDatalancamento.OrderBy(x => x.DataLancamento))
+                        <tr>
+                            <th colspan="7"><b>Fechamento</b></th>
+                        </tr>
+                        <tr>
+                            <th style=" font-size:14px;" class="text-center">Data Lançamento</th>
+                            <th style=" font-size:14px;" class="text-center">Horas Execedentes</th>
+                            <th style=" font-size:14px;" class="text-center">Atrasos</th>
+                            <th style=" font-size:14px;" class="text-center">Abonos</th>
+                            <th style=" font-size:14px;" class="text-center">Total Falta</th>
+                            <th style=" font-size:14px;" class="text-center">Total horas trabalhadas</th>
+                            <th style=" font-size:14px;" class="text-center">Divergência</th>
+                        </tr>
+                    <tbody>
+                        @if (Model.FechamentoPorDatalancamento != null)
+                        {
+                            foreach (var itemF in Model.FechamentoPorDatalancamento.OrderBy(x => x.DataLancamento))
+                            {
+                                datalancamentoFechamento = itemF.DataLancamento.ToDateProtheusReverseformate();
+                                if (item.dataApontamento == datalancamentoFechamento)
                                 {
-                                    datalancamentoFechamento = itemF.DataLancamento.ToDateProtheusReverseformate();
-                                    if (item.dataApontamento == datalancamentoFechamento)
-                                    {
                                     <tr>
                                         <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
                                         <td>@itemF.TotalHoraExedente</td>
                                         <td>@itemF.TotalAtraso</td>
                                         <td>@itemF.TotalAbono</td>
-                                        <td></td>
+                                        <td>@itemF.TotalFalta</td>
                                         <td>@itemF.TotalHora</td>
                                         <td>@itemF.Divergencia</td>
                                     </tr>
-                                    }
-                                    else
-                                    {
-                                        datalancamentoFechamento = item.dataApontamento;
-                                    }
+                                }
+                                else
+                                {
+                                    datalancamentoFechamento = item.dataApontamento;
                                 }
                             }
-                        </tbody>
-                    }
+                        }
+                    </tbody>
+                }
                     var count = 0;
                     <tr>
                         @if (datalancamento != item.dataApontamento)
                         {
-                       
+
                         <tr>
                             <th colspan="7"><b>Relógio</b></th>
                         </tr>
                         <tr>
-                            <th class="text-center">Hora</th>
-                            <th class="text-center">Hora</th>
-                            <th class="text-center">Hora</th>
-                            <th class="text-center">Hora</th>
-                            <th class="text-center">Hora</th>
-                            <th class="text-center">Hora</th>
-                            <th class="text-center">Hora</th>
+                            <th style=" font-size:14px;"class="text-center">Hora</th>
+                            <th style=" font-size:14px;"class="text-center">Hora</th>
+                            <th style=" font-size:14px;"class="text-center">Hora</th>
+                            <th style=" font-size:14px;"class="text-center">Hora</th>
+                            <th style=" font-size:14px;"class="text-center">Hora</th>
+                            <th style=" font-size:14px;"class="text-center">Hora</th>
+                            <th style=" font-size:14px;"class="text-center">Hora</th>
                         </tr>
-                    datalancamento = item.dataApontamento;
-                    @foreach (var itemA in Model.apontamento)
-                    {
-                        count++;
-                        @if (datalancamento == itemA.dataApontamento)
+                        datalancamento = item.dataApontamento;
+                        @foreach (var itemA in Model.apontamento)
                         {
-
-                            if (count <= 5)
+                            count++;
+                            @if (datalancamento == itemA.dataApontamento)
                             {
 
-                                <td>@itemA.apontamento</td>
+                                if (count <= 5)
+                                {
+
+                                    <td>@itemA.apontamento</td>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>@itemA.apontamento</td>
+                                    </tr>
+                                }
                             }
                             else
                             {
-                                <tr>
-                                    <td>@itemA.apontamento</td>
-                                </tr>
+                                count = 0;
+                                continue;
                             }
                         }
-                        else
-                        {
-                            count = 0;
-                            continue;
-                        }
+
+
                     }
-
-
-                }
                         </tr>
 
 
@@ -207,32 +206,32 @@
                             if (dataApontametoLista != datalancamento)
                             {
 
-                               
-                                    <tr>
-                                        <th colspan="7"><b>Lançamentos</b></th>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-center">Hora Início</th>
-                                        <th class="text-center">Hora Fim</th>
-                                        <th class="text-center">Projeto</th>
-                                        <th class="text-center">Código Divergência</th>
-                                        <th class="text-center"></th>
-                                        <th class="text-center"></th>
-                                        <th class="text-center"></th>
-                                    </tr>
+
+                                <tr>
+                                    <th colspan="7"><b>Lançamentos</b></th>
+                                </tr>
+                                <tr>
+                                    <th style=" font-size:14px;"class="text-center">Hora Início</th>
+                                    <th style=" font-size:14px;"class="text-center">Hora Fim</th>
+                                    <th style=" font-size:14px;"class="text-center">Projeto</th>
+                                    <th style=" font-size:14px;"class="text-center">Código Divergência</th>
+                                    <th style=" font-size:14px;"class="text-center"></th>
+                                    <th style=" font-size:14px;"class="text-center"></th>
+                                    <th style=" font-size:14px;"class="text-center"></th>
+                                </tr>
                                 <tbody>
                                     @foreach (var itemLista in item.listLancamento.OrderBy(x => x.HoraInicio))
                                     {
                                         dataApontametoLista = itemLista.DateLancamento.ToDateProtheusReverseformate();
-                                    <tr>
-                                        <td>@itemLista.HoraInicio</td>
-                                        <td>@itemLista.HoraFim</td>
-                                        <td>@itemLista.DescricaoEmp</td>
-                                        <td>@itemLista.CodDivergencia</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                                        <tr>
+                                            <td>@itemLista.HoraInicio</td>
+                                            <td>@itemLista.HoraFim</td>
+                                            <td style=" font-size:12px;">@itemLista.DescricaoEmp</td>
+                                            <td>@itemLista.CodDivergencia</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
 
                                         @if (itemLista.Observacao != null)
                                         {

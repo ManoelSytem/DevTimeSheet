@@ -161,9 +161,7 @@ namespace TimeSheet.Controllers
                 var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
                 var configuracao = _configuracao.ObterConfiguracao();
 
-                listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(marcacao.Lancamentolist, jornadaTrabalho, configuracao, User.GetDados("Matricula"), User.GetDados("Filial"));
-
-
+                listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(marcacao.Lancamentolist.Distinct(new LancamentoComparer()), jornadaTrabalho, configuracao, User.GetDados("Matricula"), User.GetDados("Filial"));
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
 
                 _fechamentoServiceRepository.SalvarFechamentoPorDiaLancamento(listaFechamentoPorData, User.GetDados("Filial"), DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), User.GetDados("Centro de Custo"), "2");
@@ -181,8 +179,6 @@ namespace TimeSheet.Controllers
             }
 
         }
-
-
 
         public List<Fechamento> ValidacaoFechamento(string id)
         {
