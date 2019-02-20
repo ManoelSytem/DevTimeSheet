@@ -19,6 +19,7 @@ using TimeSheet.ViewModel;
 
 namespace TimeSheet.Controllers
 {
+    [Authorize]
     public class RelatorioController : Controller
     {
 
@@ -54,7 +55,7 @@ namespace TimeSheet.Controllers
 
 
         }
-        [Authorize]
+       
         public IActionResult EspelhoDePonto(string id)
         {
             try
@@ -90,7 +91,7 @@ namespace TimeSheet.Controllers
 
         }
 
-        [Authorize]
+       
         public IActionResult EspelhoDePontoSintetico(string id)
         {
             try
@@ -123,7 +124,72 @@ namespace TimeSheet.Controllers
 
         }
 
-  
+        public IActionResult EspelhoDePontoSinteticoVisaoGerencia(string id)
+        {
+            try
+            {
+
+                ViewModelRelatorio viewModelRelatorio = new ViewModelRelatorio();
+                Usuario user = new Usuario();
+                ViewModelMacacao viewModelMarcacao = new ViewModelMacacao();
+
+                viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
+                viewModelRelatorio.marcacao = _mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id));
+                viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorDataGerencia(id, viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial));
+                viewModelRelatorio.user = user;
+
+                user = _protheusService.ObterUsuarioNome(viewModelRelatorio.marcacao.MatUsuario);
+                user.Nome = user.Nome;
+                user.SubjectId = viewModelRelatorio.marcacao.MatUsuario;
+                user.Gerencia = User.GetDados("Coordenacao");
+                viewModelRelatorio.user = user;
+
+                return new ViewAsPdf("EspelhoDePontoSintetico", viewModelRelatorio);
+            }
+            catch (Exception e)
+            {
+                return Json(new
+                {
+                    msg = e.Message,
+                    erro = true
+                });
+            }
+
+        }
+        public IActionResult EspelhoDePontoVisaoGerencia(string id)
+        {
+            try
+            {
+                Fechamento fechamento = new Fechamento();
+                Marcacao marcacao = new Marcacao();
+                ViewModelMacacao viewModelMarcacao = new ViewModelMacacao();
+                ViewModelRelatorio viewModelRelatorio = new ViewModelRelatorio();
+                List<Apontamento> listaApontamento = new List<Apontamento>();
+                Usuario user = new Usuario();
+
+                viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
+                viewModelRelatorio.marcacao = _mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id));
+                viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorDataGerencia(id, viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial));
+                viewModelRelatorio.apontamento = ListaApontamentoPorLancamentoGerencia(_mapper.Map<List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, viewModelRelatorio.marcacao.MatUsuario)), viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial);
+
+                user = _protheusService.ObterUsuarioNome(viewModelRelatorio.marcacao.MatUsuario);
+                user.Nome = user.Nome;
+                user.SubjectId = viewModelRelatorio.marcacao.MatUsuario;
+                user.Gerencia = User.GetDados("Coordenacao");
+                viewModelRelatorio.user = user;
+
+                return new ViewAsPdf("EspelhoDePonto", viewModelRelatorio);
+            }
+            catch (Exception e)
+            {
+                return Json(new
+                {
+                    msg = e.Message,
+                    erro = true
+                });
+            }
+
+        }
 
         private List<Apontamento> ListaApontamentoPorLancamento(List<ViewModelLancamento> listlancamentoViewModel)
         {
@@ -207,7 +273,81 @@ namespace TimeSheet.Controllers
             return char.ToUpper(month[0]) + month.Substring(1) + "/" + ano; ;
         }
 
-    
+        private List<Apontamento> ListaApontamentoPorLancamentoGerencia(List<ViewModelLancamento> listlancamentoViewModel, string matriculaColaborador,string filial)
+        {
+            List<Apontamento> listaApontamento = new List<Apontamento>();
+            string datalancamento = "0";
+
+            foreach (ViewModelLancamento lancamento in listlancamentoViewModel.OrderBy(x => x.DateLancamento))
+            {
+
+                if (datalancamento != lancamento.DateLancamento)
+                {
+
+                    var listApontamento = _protheusService.ObterBatidasDePonto(matriculaColaborador, filial, lancamento.DateLancamento);
+                    datalancamento = lancamento.DateLancamento;
+                    if (listApontamento.Count > 0)
+                    {
+                        foreach (Apontamento apontamentoResult in listApontamento)
+                        {
+                            Apontamento novo = new Apontamento();
+                            List<Lancamento> listaLancamentoPorApontamento = new List<Lancamento>();
+                            novo.dataApontamento = datalancamento.ToDateProtheusReverseformate();
+                            novo.apontamento = apontamentoResult.apontamento;
+                            foreach (ViewModelLancamento listaLacamento in listlancamentoViewModel.OrderBy(x => x.DateLancamento))
+                            {
+                                if (novo.dataApontamento == listaLacamento.DateLancamento.ToDateProtheusReverseformate())
+                                {
+                                    if (!listaLancamentoPorApontamento.Contains(_mapper.Map<Lancamento>(listaLacamento), new ComparerDados()))
+                                        listaLancamentoPorApontamento.Add(_mapper.Map<Lancamento>(listaLacamento));
+                                }
+                            }
+                            novo.listLancamento = listaLancamentoPorApontamento;
+                            listaApontamento.Add(novo);
+                        }
+
+                    }
+                    else
+                    {
+
+                        Apontamento novo = new Apontamento();
+                        List<Lancamento> listaLancamentoPorApontamento = new List<Lancamento>();
+                        novo.dataApontamento = datalancamento.ToDateProtheusReverseformate();
+                        foreach (ViewModelLancamento listaLacamento in listlancamentoViewModel.OrderBy(x => x.DateLancamento))
+                        {
+                            if (novo.dataApontamento == listaLacamento.DateLancamento.ToDateProtheusReverseformate())
+                            {
+                                if (!listaLancamentoPorApontamento.Contains(_mapper.Map<Lancamento>(listaLacamento), new ComparerDados()))
+                                    listaLancamentoPorApontamento.Add(_mapper.Map<Lancamento>(listaLacamento));
+                            }
+                        }
+                        novo.listLancamento = listaLancamentoPorApontamento;
+                        listaApontamento.Add(novo);
+
+                    }
+
+                }
+
+            }
+
+            return listaApontamento;
+        }
+
+        private List<Fechamento> CalcularFechamentoPorDataGerencia(string id, string matriculaColaborador, string filial)
+        {
+
+            List<Fechamento> listaFechamentoPorData = new List<Fechamento>();
+            Marcacao marcacao = new Marcacao();
+
+            marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
+            var listdeLancamentoMensal = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matriculaColaborador).Distinct(new LancamentoComparer());
+            var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
+            var configuracao = _configuracao.ObterConfiguracao();
+            listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(listdeLancamentoMensal, jornadaTrabalho, configuracao, matriculaColaborador, filial);
+
+            return listaFechamentoPorData;
+        }
+
 
     }
 

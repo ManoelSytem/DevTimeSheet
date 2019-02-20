@@ -359,6 +359,23 @@ namespace TimeSheet.Controllers
             return Json(_prothuesService.ObterListColaboradorPorCentroDeCusto(descricao, User.GetDados("Centro de Custo")));
         }
 
+        [HttpGet]
+        public ActionResult GetMarcacaoColaborador(string matricula)
+        {
+            var list = _mapper.Map<List<Marcacao>, List<ViewModelMacacao>>(_marcacaoServiceRepository.ObterListMarcacaoPorMatUser(matricula));
+            if (list.Count > 0)
+            {
+                foreach (var lista in list)
+                {
+                    var mes = lista.AnoMes.ToString().Substring(4, 2);
+                    var ano = lista.AnoMes.ToString().Substring(0, 4);
+                    string month = new CultureInfo("pt-BR").DateTimeFormat.GetMonthName(Convert.ToInt32(mes));
+                    lista.AnoMesDescricao = char.ToUpper(month[0]) + month.Substring(1) + "/" + ano;
+                }
+            }
+            return Json(list);
+        }
+
         private string ObterPrimeiroDia(Configuracao configuracao, ViewModelMacacao marcacao)
         {
             DateTime primeiroDiaDoMes = new DateTime(Convert.ToDateTime(marcacao.DataDia).Year, Convert.ToDateTime(marcacao.DataDia).Month, configuracao.DiaInicio);

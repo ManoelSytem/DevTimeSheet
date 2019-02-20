@@ -108,7 +108,7 @@ namespace TimeSheet.Infrastructure.Repository
 
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
-                    string sQuery = $@"Select  LTRIM(RTRIM(ZYZ_DTINIC)) as DataInicio,  LTRIM(RTRIM(ZYZ_DTFINA)) as DataFim,  ZYZ_ANOMES as AnoMes, LTRIM(RTRIM(ZYZ_CODINT)) AS codigojornada, ZYZ_STATUS as Status from ZYZ010
+                    string sQuery = $@"Select LTRIM(RTRIM(ZYZ_MATUSU)) as MatUsuario, LTRIM(RTRIM(ZYZ_FILIAL)) as Filial, LTRIM(RTRIM(ZYZ_DTINIC)) as DataInicio,  LTRIM(RTRIM(ZYZ_DTFINA)) as DataFim,  ZYZ_ANOMES as AnoMes, LTRIM(RTRIM(ZYZ_CODINT)) AS codigojornada, ZYZ_STATUS as Status from ZYZ010
                                         Where ZYZ_CODIGO = '{codigo}' AND  D_E_L_E_T_ <> '*'";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
