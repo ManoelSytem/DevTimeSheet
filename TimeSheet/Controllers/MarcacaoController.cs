@@ -277,10 +277,9 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetMarcacoesProthues(string data)
+        public ActionResult GetMarcacoesProthues(string data, string matricula)
         {
-            
-            return Json(_lancamentoerviceRepository.ObterLancamento(data, User.GetDados("Matricula")).OrderBy(c => c.HoraInicio).ToList());
+            return Json(_lancamentoerviceRepository.ObterLancamento(data, matricula).OrderBy(c => c.HoraInicio).ToList());
         }
 
         public JsonResult Excluir(string codigo)
@@ -336,8 +335,43 @@ namespace TimeSheet.Controllers
 
     }
 
+        public ActionResult DetailsVisaoGerencia(string id)
+        {
 
-         public ActionResult PesquisarMarcacao()
+            try
+            {     Marcacao maracaouser = new Marcacao();
+
+                maracaouser = _marcacao.ObterMarcacao(id);
+                var list = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, maracaouser.MatUsuario).Distinct(new LancamentoComparer());
+                ViewModelMacacao marcacao = new ViewModelMacacao();
+                marcacao = _mapper.Map<ViewModelMacacao>(_marcacaoServiceRepository.ObterMarcacao(id));
+
+                var infoUser = new ViewModelMacacao();
+                var user = new Usuario();
+                user = _prothuesService.ObterUsuarioNome(maracaouser.MatUsuario);
+                marcacao.MatUsuario = marcacao.MatUsuario;
+                marcacao.Coordenacao = User.GetDados("Coordenacao");
+                marcacao.NomeUsuario = user.Nome;
+
+
+                var mes = marcacao.AnoMes.ToString().Substring(4, 2);
+                var ano = marcacao.AnoMes.ToString().Substring(0, 4);
+                string month = new CultureInfo("pt-BR").DateTimeFormat.GetMonthName(Convert.ToInt32(mes));
+
+                marcacao.AnoMesDescricao = char.ToUpper(month[0]) + month.Substring(1) + "/" + ano;
+                marcacao.Lancamentolist = _mapper.Map<List<ViewModelLancamento>>(list);
+                return View("Details",marcacao);
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
+
+        }
+
+
+        public ActionResult PesquisarMarcacao()
          {
 
             try

@@ -31,7 +31,10 @@ namespace TimeSheet.Controllers
         private readonly INotificacao _Notificacao;
         private readonly IFluigAppService _fluigAppService;
         private readonly ILancamentoNegocio _lancamentoNegocio;
-
+        private string filial;
+        private string matricula;
+        private string centrocusto;
+   
         public FechamentoController(IFechamento fechamentoServiceRepository,
             IProtheus prothuesService,
             IMarcacao marcacaoServiceRepository,
@@ -54,13 +57,14 @@ namespace TimeSheet.Controllers
             _Notificacao = notificacao;
             _fluigAppService = fluigAppService;
             _lancamentoNegocio = lancamentoNegocio;
+            
         }
 
         public IActionResult Index()
         {
             try
             {
-                var list = _mapper.Map<List<Marcacao>, List<ViewModelMacacao>>(_marcacaoServiceRepository.ObterListMarcacaoPorMatUser(User.GetDados("Matricula")));
+                var list = _mapper.Map<List<Marcacao>, List<ViewModelMacacao>>(_marcacaoServiceRepository.ObterListMarcacaoPorMatUser(matricula));
                 if (list.Count > 0)
                 {
                     foreach (var lista in list)
@@ -86,6 +90,10 @@ namespace TimeSheet.Controllers
         {
             try
             {
+                matricula = User.GetDados("Matricula");
+                filial = User.GetDados("Filial");
+                centrocusto = User.GetDados("Centro de Custo");
+
                 TempData["Createfalse"] = null;
                 Marcacao marcacao = new Marcacao();
                 Fechamento fechamento = new Fechamento();
@@ -113,7 +121,43 @@ namespace TimeSheet.Controllers
 
         }
 
+        public IActionResult ValidarFechamentoVisaoGerencia(string id)
+        {
+            try
 
+            {
+                Marcacao marcacao = new Marcacao();
+                Fechamento fechamento = new Fechamento();
+
+                marcacao = _marcacao.ObterMarcacao(id);
+                filial = marcacao.Filial;
+                matricula = marcacao.MatUsuario;
+                centrocusto = User.GetDados("Centro de Custo");
+
+                TempData["Createfalse"] = null;
+                
+                var ResultFechamento = ValidacaoFechamento(id);
+
+                if (ResultFechamento.Count > 0)
+                {
+                    foreach (Fechamento fechamentoResult in ResultFechamento)
+                    {
+                        if (fechamentoResult.StatusFechamento == "B")
+                        {
+                            ViewBag.FechamentoBloqueado = "B";
+                        }
+                    }
+                }
+                ViewBag.CodigoMarcacao = id;
+                return View("ValidarFechamento", _mapper.Map<List<ViewModelFechamento>>(ResultFechamento.OrderBy(c => c.DataLancamento)));
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View("ValidarFechamento");
+            }
+
+        }
 
         [HttpGet]
         public IActionResult Fechamento(string id)
@@ -125,7 +169,7 @@ namespace TimeSheet.Controllers
 
 
                 marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
-                marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"));
+                marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula);
                 var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
 
                 var configuracao = _configuracao.ObterConfiguracao();
@@ -156,15 +200,15 @@ namespace TimeSheet.Controllers
 
                 marcacao.ValidaMarcacaoFoiFechada(_marcacaoServiceRepository.ObterMarcacao(viewModelfechamento.CodigoMarcacao));
                 marcacao = _marcacaoServiceRepository.ObterMarcacao(viewModelfechamento.CodigoMarcacao);
-                marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(viewModelfechamento.CodigoMarcacao, User.GetDados("Matricula"));
+                marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(viewModelfechamento.CodigoMarcacao, matricula);
 
                 var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
                 var configuracao = _configuracao.ObterConfiguracao();
 
-                listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(marcacao.Lancamentolist.Distinct(new LancamentoComparer()), jornadaTrabalho, configuracao, User.GetDados("Matricula"), User.GetDados("Filial"));
+                listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(marcacao.Lancamentolist.Distinct(new LancamentoComparer()), jornadaTrabalho, configuracao, matricula, filial);
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
 
-                _fechamentoServiceRepository.SalvarFechamentoPorDiaLancamento(listaFechamentoPorData, User.GetDados("Filial"), DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), User.GetDados("Centro de Custo"), "2");
+                _fechamentoServiceRepository.SalvarFechamentoPorDiaLancamento(listaFechamentoPorData, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
                 _marcacaoServiceRepository.UpdateStatusFechamento(viewModelfechamento.CodigoMarcacao);
                 NotificarFechamento(viewModelfechamento);
                 return Json(new { sucesso = "Fechamento realizado com sucesso!" });
@@ -201,7 +245,7 @@ namespace TimeSheet.Controllers
 
             foreach (Fechamento fechamentolist in listLancamento.OrderBy(x => x.DataLancamento))
             {
-                var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), fechamentolist.DataLancamento.ToDateProtheusConvert());
+                var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, fechamentolist.DataLancamento.ToDateProtheusConvert());
                 var fechamentoReturn = fechamento.ValidarApontamentoImpar(fechamentolist, listApontamento);
 
                 if (fechamentoReturn.Divergencia != null)
@@ -218,7 +262,7 @@ namespace TimeSheet.Controllers
             //Mit Validação 8.4.1
             foreach (Fechamento fechamentolist in listSemLancamento.OrderBy(x => x.DataLancamento))
             {
-                var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), fechamentolist.DataLancamento.ToDateProtheusConvert());
+                var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, fechamentolist.DataLancamento.ToDateProtheusConvert());
                 var fechamentoReturn = fechamento.ValidarApontamentoImpar(fechamentolist, listApontamento);
 
                 if (fechamentoReturn.Divergencia != null)
@@ -323,12 +367,12 @@ namespace TimeSheet.Controllers
             FechamentoNegocio fechamento = new FechamentoNegocio();
             List<Fechamento> listFechamento = new List<Fechamento>();
 
-            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula).Distinct(new LancamentoComparer());
 
             foreach (Lancamento lancamento in listLancamento)
             {
-                var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
-                var lancamentolist = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, User.GetDados("Matricula"));
+                var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, lancamento.DateLancamento);
+                var lancamentolist = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, matricula);
                 var FechamentoResultValidacao = fechamento.ValidaSeExisteMarcacaoAntesEdepoisDoApontamento(lancamentolist, listApontamento);
                 foreach (Fechamento LancamentoResult in FechamentoResultValidacao)
                 {
@@ -348,7 +392,7 @@ namespace TimeSheet.Controllers
             Fechamento fechamento = new Fechamento();
             List<Fechamento> listaFechamentoFinal = new List<Fechamento>();
 
-            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula).Distinct(new LancamentoComparer());
 
             if (listLancamento != null)
             {
@@ -381,9 +425,9 @@ namespace TimeSheet.Controllers
         {
             FechamentoNegocio fechamento = new FechamentoNegocio();
 
-            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
+            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, matricula).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
 
-            var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), LancamentoDiario.DateLancamento);
+            var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, LancamentoDiario.DateLancamento);
             var FechamentoResult = fechamento.ValidaPrimeiroLancamento(LancamentoDiario, listApontamento);
 
             return FechamentoResult;
@@ -393,8 +437,8 @@ namespace TimeSheet.Controllers
         {
             FechamentoNegocio fechamento = new FechamentoNegocio();
 
-            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).Last();
-            var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), LancamentoDiario.DateLancamento);
+            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, matricula).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).Last();
+            var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, LancamentoDiario.DateLancamento);
             var FechamentoResult = fechamento.ValidaUltimoLancamento(LancamentoDiario, listApontamento);
 
             return FechamentoResult;
@@ -409,12 +453,12 @@ namespace TimeSheet.Controllers
             marcacao = _marcacao.ObterMarcacao(id);
             var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
 
-            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula).Distinct(new LancamentoComparer());
 
             foreach (Lancamento lancamento in listLancamento)
             {
-                var listApontamento = _prothuesService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), lancamento.DateLancamento);
-                var lancamentolist = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, User.GetDados("Matricula"));
+                var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, lancamento.DateLancamento);
+                var lancamentolist = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, matricula);
                 var totalHoraDecimalLancamanetoPorDia = fechamento.CalcularTotalHoraLancamentoPorDia(lancamentolist);
                 var FechamentoResultValidacao = fechamento.ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(lancamento, totalHoraDecimalLancamanetoPorDia, jornadaTrabalho);
 
@@ -432,12 +476,12 @@ namespace TimeSheet.Controllers
             FechamentoNegocio fechamento = new FechamentoNegocio();
             List<Fechamento> listFechamento = new List<Fechamento>();
 
-            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula).Distinct(new LancamentoComparer());
 
 
             foreach (Lancamento lancamento in listLancamento)
             {
-                var feriado = _prothuesService.ObterFeriadoPorDataLancamento(lancamento.DateLancamento, User.GetDados("Filial"));
+                var feriado = _prothuesService.ObterFeriadoPorDataLancamento(lancamento.DateLancamento, filial);
                 var FechamentoResultValidacao = fechamento.ValidaSabadoDomingoFeriadoComApontamento(lancamento, feriado);
 
                 if (FechamentoResultValidacao.Descricao != null)
@@ -456,7 +500,7 @@ namespace TimeSheet.Controllers
             Marcacao marcacao = new Marcacao();
 
             marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
-            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula).Distinct(new LancamentoComparer());
 
             return fechamentoNegocio.ValidaDiasSemLancamento(listLancamento.ToList(), marcacao, User.GetDados("Filial"));
         }
@@ -466,9 +510,9 @@ namespace TimeSheet.Controllers
             Marcacao marcacao = new Marcacao();
 
             marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
-            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula).Distinct(new LancamentoComparer());
 
-            return fechamentoNegocio.ValidaDiasComLancamento(listLancamento.ToList(), marcacao, User.GetDados("Filial"));
+            return fechamentoNegocio.ValidaDiasComLancamento(listLancamento.ToList(), marcacao,filial);
         }
 
         private List<Fechamento> ValidaLancamentoForaDeIntervalo(string id)
@@ -480,7 +524,7 @@ namespace TimeSheet.Controllers
             marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
             var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
 
-            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula).Distinct(new LancamentoComparer());
 
             if (listLancamento != null)
             {
@@ -520,7 +564,7 @@ namespace TimeSheet.Controllers
         {
             FechamentoNegocio fechamento = new FechamentoNegocio();
 
-            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
+            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento,matricula).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
 
             var FechamentoResult = fechamento.ValidarLancamentoForaDeJornadaInicio(LancamentoDiario, jornada);
 
@@ -532,7 +576,7 @@ namespace TimeSheet.Controllers
         {
             FechamentoNegocio fechamento = new FechamentoNegocio();
 
-            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).LastOrDefault();
+            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, matricula).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).LastOrDefault();
 
             var FechamentoResult = fechamento.ValidarUltimoLancamentoForaDeJornada(LancamentoDiario, jornada);
 
@@ -543,7 +587,7 @@ namespace TimeSheet.Controllers
         {
             FechamentoNegocio fechamento = new FechamentoNegocio();
 
-            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, User.GetDados("Matricula")).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
+            var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(datalancamento, matricula).OrderBy(c => c.DateLancamento).OrderBy(h => h.HoraInicio).First();
             var FechamentoResult = fechamento.ValidarLancamentoForaDeIntervaloInicio(LancamentoDiario, jornada);
 
             return FechamentoResult;
@@ -551,10 +595,10 @@ namespace TimeSheet.Controllers
 
         private void NotificarFechamento(ViewModelFechamento fechamento)
         {
-            var user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
+            var user = _prothuesService.ObterUsuarioNome(matricula);
             var coordenador = _prothuesService.ObterCoordenadorPorCentroDeCusto(User.GetDados("Centro de Custo"));
             var mensagem = $"{user.Nome}, realizou o fechamento da marcação: {fechamento.CodigoMarcacao}." + "\r\n" +
-                           $"Matrícula : {User.GetDados("Matricula")} ";
+                           $"Matrícula : { matricula} ";
             _Notificacao.EnviarEmail(coordenador.Email, mensagem);
 
         }
