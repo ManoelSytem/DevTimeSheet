@@ -13,5 +13,6 @@ namespace TimeSheet.ViewModel
         public List<Apontamento> apontamento { get; set; }
         public ViewModelMacacao marcacao { get; set; }
         public Usuario user { get; set; }
+        public string status { get; set; }
     }
 }

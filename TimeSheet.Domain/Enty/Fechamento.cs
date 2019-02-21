@@ -13,7 +13,7 @@ namespace TimeSheet.Domain.Enty
         public string HoraFechamento { get; set; }
         public double TotalHoraExedente { get; set; }
         public double TotalAtraso { get; set; }
-        public int TotalFalta { get; set; }
+        public double TotalFalta { get; set; }
         public double TotalAbono { get; set; }
         public double TotalHora { get; set; }
         public string DataLancamento { get; set; }

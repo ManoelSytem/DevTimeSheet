@@ -73,11 +73,13 @@ namespace TimeSheet.Controllers
                 user.SubjectId = User.GetDados("Matricula");
                 user.Gerencia = User.GetDados("Coordenacao");
 
-                viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
+                viewModelMarcacao =_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id));
+                viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(viewModelMarcacao);
                 viewModelRelatorio.marcacao = viewModelMarcacao;
+                viewModelRelatorio.status = viewModelMarcacao.Status;
                 viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorData(id));
                 viewModelRelatorio.user = user;         
-                viewModelRelatorio.apontamento = ListaApontamentoPorLancamento(_mapper.Map<List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"))));
+                viewModelRelatorio.apontamento = ListaApontamentoPorLancamentoEfechamento(_mapper.Map<List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"))),id);
                 return new ViewAsPdf("EspelhoDePonto", viewModelRelatorio);
             }
             catch (Exception e)
@@ -106,8 +108,10 @@ namespace TimeSheet.Controllers
                 user.SubjectId = User.GetDados("Matricula");
                 user.Gerencia = User.GetDados("Coordenacao");
 
-                viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
+                viewModelMarcacao = _mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id));
+                viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(viewModelMarcacao);
                 viewModelRelatorio.marcacao = viewModelMarcacao;
+                viewModelRelatorio.status = viewModelMarcacao.Status;
                 viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorData(id));
                 viewModelRelatorio.user = user;
                 
@@ -133,8 +137,10 @@ namespace TimeSheet.Controllers
                 Usuario user = new Usuario();
                 ViewModelMacacao viewModelMarcacao = new ViewModelMacacao();
 
-                viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
-                viewModelRelatorio.marcacao = _mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id));
+                viewModelMarcacao = _mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id));
+                viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(viewModelMarcacao);
+                viewModelRelatorio.marcacao = viewModelMarcacao;
+                viewModelRelatorio.status = viewModelMarcacao.Status;
                 viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorDataGerencia(id, viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial));
                 viewModelRelatorio.user = user;
 
@@ -167,10 +173,12 @@ namespace TimeSheet.Controllers
                 List<Apontamento> listaApontamento = new List<Apontamento>();
                 Usuario user = new Usuario();
 
-                viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(_mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id)));
-                viewModelRelatorio.marcacao = _mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id));
+                viewModelMarcacao = _mapper.Map<ViewModelMacacao>(_marcacao.ObterMarcacao(id));
+                viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(viewModelMarcacao);
+                viewModelRelatorio.marcacao = viewModelMarcacao;
+                viewModelRelatorio.status = viewModelMarcacao.Status;
                 viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorDataGerencia(id, viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial));
-                viewModelRelatorio.apontamento = ListaApontamentoPorLancamentoGerencia(_mapper.Map<List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, viewModelRelatorio.marcacao.MatUsuario)), viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial);
+                viewModelRelatorio.apontamento = ListaApontamentoPorLancamentoGerencia(_mapper.Map<List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, viewModelRelatorio.marcacao.MatUsuario)), viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial,id);
 
                 user = _protheusService.ObterUsuarioNome(viewModelRelatorio.marcacao.MatUsuario);
                 user.Nome = user.Nome;
@@ -191,11 +199,12 @@ namespace TimeSheet.Controllers
 
         }
 
-        private List<Apontamento> ListaApontamentoPorLancamento(List<ViewModelLancamento> listlancamentoViewModel)
+        private List<Apontamento> ListaApontamentoPorLancamentoEfechamento(List<ViewModelLancamento> listlancamentoViewModel, string codmarcacao)
         {
             List<Apontamento> listaApontamento = new List<Apontamento>();
             string datalancamento = "0";
 
+            //
             foreach (ViewModelLancamento lancamento in listlancamentoViewModel.OrderBy(x => x.DateLancamento))
             {
 
@@ -247,6 +256,32 @@ namespace TimeSheet.Controllers
 
             }
 
+           
+            var listlancamento = _mapper.Map<List<Lancamento>>(listlancamentoViewModel);
+            var marcacao = _marcacao.ObterMarcacao(codmarcacao);
+            var jornada = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
+            var listDiasSemLancamento = _lancamentoNegocio.ObterDiasSemLancamento(listlancamento.Distinct(new LancamentoComparer()).ToList(), marcacao, User.GetDados("Filial"), jornada);
+            foreach (Fechamento fachamento in listDiasSemLancamento.OrderBy(x => x.DataLancamento))
+            {
+                    var listApontamento = _protheusService.ObterBatidasDePonto(User.GetDados("Matricula"), User.GetDados("Filial"), fachamento.DataLancamento);
+                    if (listApontamento.Count > 0) {
+                    foreach (Apontamento apontamentoResult in listApontamento) { 
+                        Apontamento novo = new Apontamento();
+                        List<Lancamento> listaLancamentoPorApontamento = new List<Lancamento>();
+                        novo.dataApontamento = fachamento.DataLancamento.ToDateProtheusReverseformate();
+                        novo.apontamento = apontamentoResult.apontamento;
+                        listaApontamento.Add(novo);
+                    }
+                }
+                else
+                {
+                    Apontamento novo = new Apontamento();
+                    List<Lancamento> listaLancamentoPorApontamento = new List<Lancamento>();
+                    novo.dataApontamento = fachamento.DataLancamento.ToDateProtheusReverseformate();
+                    listaApontamento.Add(novo);
+                }
+
+            }
             return listaApontamento;
         }
 
@@ -260,7 +295,7 @@ namespace TimeSheet.Controllers
             var listdeLancamentoMensal = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
             var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
             var configuracao = _configuracao.ObterConfiguracao();
-            listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(listdeLancamentoMensal,jornadaTrabalho, configuracao, User.GetDados("Matricula"), User.GetDados("Filial"));
+            listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(listdeLancamentoMensal,jornadaTrabalho, configuracao, User.GetDados("Matricula"), User.GetDados("Filial"), id);
              
             return listaFechamentoPorData;
         }
@@ -273,7 +308,7 @@ namespace TimeSheet.Controllers
             return char.ToUpper(month[0]) + month.Substring(1) + "/" + ano; ;
         }
 
-        private List<Apontamento> ListaApontamentoPorLancamentoGerencia(List<ViewModelLancamento> listlancamentoViewModel, string matriculaColaborador,string filial)
+        private List<Apontamento> ListaApontamentoPorLancamentoGerencia(List<ViewModelLancamento> listlancamentoViewModel, string matriculaColaborador,string filial, string codMarcacao)
         {
             List<Apontamento> listaApontamento = new List<Apontamento>();
             string datalancamento = "0";
@@ -330,6 +365,34 @@ namespace TimeSheet.Controllers
 
             }
 
+            var listlancamento = _mapper.Map<List<Lancamento>>(listlancamentoViewModel);
+            var marcacao = _marcacao.ObterMarcacao(codMarcacao);
+            var jornada = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
+            var listDiasSemLancamento = _lancamentoNegocio.ObterDiasSemLancamento(listlancamento.Distinct(new LancamentoComparer()).ToList(), marcacao, User.GetDados("Filial"), jornada);
+            foreach (Fechamento fachamento in listDiasSemLancamento.OrderBy(x => x.DataLancamento))
+            {
+                var listApontamento = _protheusService.ObterBatidasDePonto(matriculaColaborador, filial, fachamento.DataLancamento);
+                if (listApontamento.Count > 0)
+                {
+                    foreach (Apontamento apontamentoResult in listApontamento)
+                    {
+                        Apontamento novo = new Apontamento();
+                        List<Lancamento> listaLancamentoPorApontamento = new List<Lancamento>();
+                        novo.dataApontamento = fachamento.DataLancamento.ToDateProtheusReverseformate();
+                        novo.apontamento = apontamentoResult.apontamento;
+                        listaApontamento.Add(novo);
+                    }
+                }
+                else
+                {
+                    Apontamento novo = new Apontamento();
+                    List<Lancamento> listaLancamentoPorApontamento = new List<Lancamento>();
+                    novo.dataApontamento = fachamento.DataLancamento.ToDateProtheusReverseformate();
+                    listaApontamento.Add(novo);
+                }
+
+            }
+
             return listaApontamento;
         }
 
@@ -343,7 +406,7 @@ namespace TimeSheet.Controllers
             var listdeLancamentoMensal = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matriculaColaborador).Distinct(new LancamentoComparer());
             var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
             var configuracao = _configuracao.ObterConfiguracao();
-            listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(listdeLancamentoMensal, jornadaTrabalho, configuracao, matriculaColaborador, filial);
+            listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(listdeLancamentoMensal, jornadaTrabalho, configuracao, matriculaColaborador, filial, id);
 
             return listaFechamentoPorData;
         }

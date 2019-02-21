@@ -78,6 +78,16 @@
     <table style="height:50px; text-align: center; font-size:20px;" class="table">
         <tr>
             <td><b>ESPELHO DE PONTO</b></td>
+            @if (Model.status == "1")
+            {
+                <td style="width:40px;"><b>Status: Aberto</b></td> }
+            else if (Model.status == "2")
+            {
+                <td style="width:40px;"><b>Status: Fechado</b></td>}
+            else if (Model.status == "3") { 
+                <td style="width:40px;"><b>Status: Aprovado</b></td>}
+             else if (Model.status == "4") { 
+                <td style="width:40px;"><b>Status: Contabilizado</b></td>}
             <td style="width:30px;"><b>@Model.marcacao.AnoMesDescricao</b></td>
         </tr>
     </table>
@@ -126,31 +136,31 @@
                             <th style=" font-size:14px;" class="text-center">Total horas trabalhadas</th>
                             <th style=" font-size:14px;" class="text-center">Divergência</th>
                         </tr>
-                    <tbody>
-                        @if (Model.FechamentoPorDatalancamento != null)
-                        {
-                            foreach (var itemF in Model.FechamentoPorDatalancamento.OrderBy(x => x.DataLancamento))
-                            {
-                                datalancamentoFechamento = itemF.DataLancamento.ToDateProtheusReverseformate();
-                                if (item.dataApontamento == datalancamentoFechamento)
-                                {
-                                    <tr>
-                                        <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
-                                        <td>@itemF.TotalHoraExedente</td>
-                                        <td>@itemF.TotalAtraso</td>
-                                        <td>@itemF.TotalAbono</td>
-                                        <td>@itemF.TotalFalta</td>
-                                        <td>@itemF.TotalHora</td>
-                                        <td>@itemF.Divergencia</td>
-                                    </tr>
-                                }
-                                else
-                                {
-                                    datalancamentoFechamento = item.dataApontamento;
-                                }
-                            }
-                        }
-                    </tbody>
+        <tbody>
+            @if (Model.FechamentoPorDatalancamento != null)
+            {
+                foreach (var itemF in Model.FechamentoPorDatalancamento.OrderBy(x => x.DataLancamento))
+                {
+                    datalancamentoFechamento = itemF.DataLancamento.ToDateProtheusReverseformate();
+                    if (item.dataApontamento == datalancamentoFechamento)
+                    {
+                        <tr>
+                            <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
+                            <td>@itemF.TotalHoraExedente</td>
+                            <td>@itemF.TotalAtraso</td>
+                            <td>@itemF.TotalAbono</td>
+                            <td>@itemF.TotalFalta</td>
+                            <td>@itemF.TotalHora</td>
+                            <td>@itemF.Divergencia</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        datalancamentoFechamento = item.dataApontamento;
+                    }
+                }
+            }
+        </tbody>
                 }
                     var count = 0;
                     <tr>
@@ -176,7 +186,7 @@
                             @if (datalancamento == itemA.dataApontamento)
                             {
 
-                                if (count <= 5)
+                                if (count <= 7)
                                 {
 
                                     <td>@itemA.apontamento</td>

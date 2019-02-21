@@ -83,10 +83,14 @@
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-clipboard fa-lg"></i><span class="link-cadastros">Marcações</span></a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="@Url.Action("Index", "Marcacao")">Lançamento de Marcações</a>
+                                @if (User.CointainsPerfil(Constantes.COORDENADOR)) { 
                                 <a class="dropdown-item" href="@Url.Action("PesquisarMarcacao", "Marcacao")">Pesquisar</a>
+                                }
                             </div>
                         </li>
                     }
+
+
 
                 </ul>
                 <ul class="navbar-nav">

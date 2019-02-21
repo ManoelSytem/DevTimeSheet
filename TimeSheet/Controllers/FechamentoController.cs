@@ -205,7 +205,7 @@ namespace TimeSheet.Controllers
                 var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
                 var configuracao = _configuracao.ObterConfiguracao();
 
-                listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(marcacao.Lancamentolist.Distinct(new LancamentoComparer()), jornadaTrabalho, configuracao, matricula, filial);
+                listaFechamentoPorData = _lancamentoNegocio.CalcularLancamentoPorData(marcacao.Lancamentolist.Distinct(new LancamentoComparer()), jornadaTrabalho, configuracao, matricula, filial, viewModelfechamento.CodigoMarcacao);
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
 
                 _fechamentoServiceRepository.SalvarFechamentoPorDiaLancamento(listaFechamentoPorData, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");

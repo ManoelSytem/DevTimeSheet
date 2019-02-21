@@ -77,8 +77,22 @@
     Data de emisão:  @DateTime.Now.ToString("dd/MM/yyyy")
     <table style="height:50px; text-align: center; font-size:20px;" class="table">
         <tr>
+        <tr>
             <td><b>ESPELHO DE PONTO</b></td>
+            @if (Model.status == "1")
+            {
+                <td style="width:40px;"><b>Status: Aberto</b></td> }
+            else if (Model.status == "2")
+            {
+                <td style="width:40px;"><b>Status: Fechado</b></td>}
+            else if (Model.status == "3")
+            {
+                <td style="width:40px;"><b>Status: Aprovado</b></td>}
+            else if (Model.status == "4")
+            {
+                <td style="width:40px;"><b>Status: Contabilizado</b></td>}
             <td style="width:30px;"><b>@Model.marcacao.AnoMesDescricao</b></td>
+        </tr>
         </tr>
     </table>
 

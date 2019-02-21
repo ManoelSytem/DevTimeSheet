@@ -15,25 +15,27 @@ namespace TimeSheet.Application
     {
         private readonly ILancamento _lancamentoerviceRepository;
         private readonly IProtheus _serviceProthues;
-        public LancamentoNegocio(ILancamento lancamentoerviceRepository, IProtheus serviceProthues)
+        private readonly IMarcacao _marcacao;
+        public LancamentoNegocio(ILancamento lancamentoerviceRepository, IProtheus serviceProthues, IMarcacao marcacao)
         {
             _lancamentoerviceRepository = lancamentoerviceRepository;
             _serviceProthues = serviceProthues;
+            _marcacao = marcacao;
         }
 
-        public List<Fechamento> CalcularLancamentoPorData(IEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura, string matricula, string filial)
+        public List<Fechamento> CalcularLancamentoPorData(IEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura, string matricula, string filial, string codmarcacao)
         {
             List<Fechamento> listaFechamentoPorData = new List<Fechamento>();
 
 
-            listaFechamentoPorData = CalcularTotalHoraExedenteETrabalhadaEabono(orderedlistalancamento.OrderBy(x => x.DateLancamento), jornadaTrabalho, configura, matricula, filial);
+            listaFechamentoPorData = CalcularTotalHoraExedenteETrabalhadaEabonoeFalta(orderedlistalancamento.OrderBy(x => x.DateLancamento), jornadaTrabalho, configura, matricula, filial, codmarcacao);
             return listaFechamentoPorData;
         }
 
-        public List<Fechamento> CalcularTotalHoraExedenteETrabalhadaEabono(IEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada, Configuracao config, string matricula, string filial)
+        public List<Fechamento> CalcularTotalHoraExedenteETrabalhadaEabonoeFalta(IEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada, Configuracao config, string matricula, string filial, string codmarcacao)
         {
 
-            List<Fechamento> listFechamentoHorasExedentes = new List<Fechamento>();
+            List<Fechamento> listFechamentoCalculada = new List<Fechamento>();
             double totalLancamento = 0;
             double totalHoraExedente = 0;
             double totalAbono = 0;
@@ -46,7 +48,6 @@ namespace TimeSheet.Application
 
                 totalAbono += CalcularTotaAbono(LancamentoResult, config);
                 totalLancamento = CalcularTotalLancamentoPorDia(listlancamentoDiario);
-
                 Fechamento novo = new Fechamento();
                 if (totalLancamento > Math.Round(Convert.ToDouble(jrDiaria.TotalHours), 2))
                 {
@@ -63,7 +64,7 @@ namespace TimeSheet.Application
                         novo.TotalHoraExedente = Math.Round(Convert.ToDouble(totalHoraExedente), 2);
                     }
                     else { novo.TotalHoraExedente = Math.Round(Convert.ToDouble(totalHoraExedente), 2); }
-                    listFechamentoHorasExedentes.Add(novo);
+                    listFechamentoCalculada.Add(novo);
                     totalLancamento = 0;
                     totalAbono = 0;
                     totalHoraExedente = 0;
@@ -85,7 +86,7 @@ namespace TimeSheet.Application
                     novo.TotalFalta = 0;
                     if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
                     novo.TotalHora = totalLancamento;
-                    listFechamentoHorasExedentes.Add(novo);
+                    listFechamentoCalculada.Add(novo);
                     totalAbono = 0;
                     totalHoraExedente = 0;
                     totalLancamento = 0;
@@ -93,7 +94,14 @@ namespace TimeSheet.Application
 
             }
 
-            return listFechamentoHorasExedentes;
+           
+              var listlancamentosSemMarcaco = ObterDiasSemLancamento(lancamentoList.ToList(), _marcacao.ObterMarcacao(codmarcacao), filial, jornada);
+             foreach (Fechamento fechamento in listlancamentosSemMarcaco)
+             {
+                listFechamentoCalculada.Add(fechamento);
+             }
+
+            return listFechamentoCalculada;
         }
 
 
@@ -141,11 +149,11 @@ namespace TimeSheet.Application
         }
 
 
-        public List<Fechamento> ValidaDiasSemLancamento(List<Lancamento> lancamentolist, Marcacao marcacao, string filial)
+        public List<Fechamento> ObterDiasSemLancamento(List<Lancamento> lancamentolist, Marcacao marcacao, string filial, JornadaTrabalho jornada)
         {
             List<Fechamento> novalistFechamento = new List<Fechamento>();
             List<Fechamento> fechamentoSemLancamento = new List<Fechamento>();
-
+            var jrDiaria = jornada.JornadaDiaria;
 
             Fechamento dataSemLancamento;
             DateTime initialDate = Convert.ToDateTime(marcacao.DataInicio.ToDateProtheusReverseformate());
@@ -169,9 +177,13 @@ namespace TimeSheet.Application
                     {
                         if (!ValidaEferiado(initialDate.ToString("dd/MM/yyyy").ToDateProtheusConvert(), filial))
                         {
-                            dataSemLancamento.DataLancamento = initialDate.ToShortDateString();
-                            dataSemLancamento.Divergencia = "Divergência";
-                            dataSemLancamento.Descricao = "Dia úteis sem marcação";
+                            
+                            dataSemLancamento.DataLancamento = initialDate.ToString("dd/MM/yyyy").ToDateProtheusConvert();
+                            dataSemLancamento.TotalAbono = 0;
+                            dataSemLancamento.TotalHoraExedente = 0;
+                            dataSemLancamento.TotalFalta = Math.Round(Convert.ToDouble((jrDiaria).TotalHours), 2);
+                            dataSemLancamento.TotalAtraso = 0;
+                            dataSemLancamento.TotalHora = 0;
                             fechamentoSemLancamento.Add(dataSemLancamento);
                         }
                     }
