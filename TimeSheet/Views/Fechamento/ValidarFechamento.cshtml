@@ -51,10 +51,7 @@
                 </tbody>
             </table>
             <div align="center">
-                @if(ViewBag.FechamentoBloqueado != "B") {
-                <button type="button" style="background-color:#f44336; " onclick="RealizarFechamento()" class="btn btn-danger">Realizar Fechamento</button>
-
-                }
+                <button id="fechamento" type="button" style="background-color:#f44336; " onclick="RealizarFechamento()" class="btn btn-danger">Realizar Fechamento</button>
             </div>
         </div>
     </div>
@@ -97,7 +94,8 @@
         "fnRowCallback": function (nRow, aData) {
             if (aData[2] == "Divergência a justificar") {
                 $('td', nRow).css('background-color', 'rgb(248, 161, 158)');
-            }
+                document.getElementById("fechamento").style.display = 'none';
+            } 
         }
     });
 

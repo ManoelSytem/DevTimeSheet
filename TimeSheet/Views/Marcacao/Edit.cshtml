@@ -7,79 +7,75 @@
 
 @using (Html.BeginForm())
 {
-    <div class="my-row">
-        <div class="col-md-12">
-            <div class="card azulc-azule">
-                <div class="card-header">
-                    @ViewBag.Title
+
+    <div class="card azulc-azule">
+        <div class="card-header">
+            @ViewBag.Title
+        </div>
+        <div class="card-body">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-xs-6 col-sm-2">
+                    <label for="Matricula">Mátrícula</label>
+                    @Html.EditorFor(model => model.MatUsuario, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Matrícula" } })
+                    <span asp-validation-for="MatUsuario" class="text-danger"></span>
                 </div>
-                <div class="card-body">
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="row">
-                        <div class="col-xs-6 col-sm-2">
-                            <label for="Matricula">Mátrícula</label>
-                            @Html.EditorFor(model => model.MatUsuario, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Matrícula" } })
-                            <span asp-validation-for="MatUsuario" class="text-danger"></span>
-                        </div>
-                        <div class="col-xs-6 col-sm-4">
-                            <label for="NomeUser">Nome</label>
-                            @Html.EditorFor(model => model.NomeUsuario, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control col-md-18", @placeholder = "Nome" } })
-                            <span asp-validation-for="NomeUsuario" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-xs-6 col-sm-2">
-                            <label for="NomeGerencia">
-                                Coordenação
-                            </label>
-                            @Html.EditorFor(model => model.Coordenacao, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Coordenacao" } })
-                            <span asp-validation-for="Coordenacao" class="text-danger"></span>
-                        </div>
-                        <div class="col-xs-6 col-sm-2">
-                            <label for="DataDia">
-                                Data da marcação
-                            </label>
-                            @Html.EditorFor(model => model.DataDia, new { htmlAttributes = new { @id = "DateSelect", @class = "form-control", @type = "date" } })
-                            <span asp-validation-for="DataDia" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="card azulc-azule">
-                        <div class="card-header">
-                            Batidas do Relógio de Ponto
-                        </div>
-                        <div class="card-body">
-                            <table id="tbCabecalhoMarcacao" class="table table-striped table-bordered table-hover responsive nowrap" cellspacing="0" width="100%">
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="card azulc-azule">
-                        <div class="card-header">
-                            Lançamento de Marcações
-                        </div>
-                        <div class="card-body">
-                            <table id="tbLancamento" class="table table-striped table-bordered table-hover responsive nowrap" cellspacing="0" width="100%">
-                                <thead>
-                                    <tr>
-                                        <th>Hora Início</th>
-                                        <th>Hora Fim</th>
-                                        <th>Projeto</th>
-                                        <th>Observação</th>
-                                        <th>Código Divergência</th>
-                                        <th>Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-
+                <div class="col-xs-6 col-sm-4">
+                    <label for="NomeUser">Nome</label>
+                    @Html.EditorFor(model => model.NomeUsuario, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control col-md-18", @placeholder = "Nome" } })
+                    <span asp-validation-for="NomeUsuario" class="text-danger"></span>
                 </div>
             </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-6 col-sm-2">
+                    <label for="NomeGerencia">
+                        Coordenação
+                    </label>
+                    @Html.EditorFor(model => model.Coordenacao, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Coordenacao" } })
+                    <span asp-validation-for="Coordenacao" class="text-danger"></span>
+                </div>
+                <div class="col-xs-6 col-sm-2">
+                    <label for="DataDia">
+                        Data da marcação
+                    </label>
+                    @Html.EditorFor(model => model.DataDia, new { htmlAttributes = new { @id = "DateSelect", @class = "form-control", @type = "date" } })
+                    <span asp-validation-for="DataDia" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="card azulc-azule">
+        <div class="card-header">
+            Batidas do Relógio de Ponto
+        </div>
+        <div class="card-body">
+            <table id="tbCabecalhoMarcacao" class="table table-striped table-bordered table-hover responsive nowrap" cellspacing="0" width="100%">
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <br />
+    <div class="card azulc-azule">
+        <div class="card-header">
+            Lançamento de Marcações
+        </div>
+        <div class="card-body">
+            <table id="tbLancamento" class="table table-striped table-bordered table-hover responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Hora Início</th>
+                        <th>Hora Fim</th>
+                        <th>Projeto</th>
+                        <th>Observação</th>
+                        <th>Código Divergência</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
     <div id="myModal" class="modal fade" role="dialog">
@@ -258,7 +254,7 @@
                     Success(data.sucesso);
                     ObterListaLancamento();
                     limparCampos();
-                  
+
                 }
             })
             .fail(function (data) {
@@ -303,4 +299,32 @@
                                 Information("Não é possível realizar pesquisa com menos de 3 caracteres.");
                             }
     }
+
+    $('#tbLancamento').DataTable({
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+        "columnDefs": [
+            { className: "text-left", "targets": [0, 1] },
+            { "orderable": false, "targets": [2] }
+        ],
+        "language": {
+            "decimal": "",
+            "emptyTable": "Nenhum registro disponível na tabela",
+            "info": "Visualizando _START_ de _END_ de _TOTAL_ registros",
+            "infoEmpty": "Visualizando 0 de 0 de 0 registros",
+            "infoFiltered": "(filtered from _MAX_ total entries)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ registros",
+            "loadingRecords": "Carregando...",
+            "processing": "Processando...",
+            "search": "Pesquisar:",
+            "zeroRecords": "Nenhum registro correspondente encontrado",
+            "paginate": {
+                "first": "Primeira",
+                "last": "Última",
+                "next": "Próxima",
+                "previous": "Anterior"
+            }
+        },
+    });
 </script>

@@ -49,7 +49,7 @@ namespace TimeSheet
             services.AddTransient<ILancamentoNegocio, LancamentoNegocio>();
             services.AddTransient<IFluigAppService, FluigAppService>();
             services.AddTransient<IFluig, FluigServiceRespository>();
-           
+            services.AddTransient<IFechamentoNegocio, FechamentoNegocio>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

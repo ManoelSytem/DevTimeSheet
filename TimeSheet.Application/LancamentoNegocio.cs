@@ -83,7 +83,7 @@ namespace TimeSheet.Application
                     novo.CodigoProjeto = LancamentoResult.codEmpredimento;
                     novo.CodigoMarcacao = LancamentoResult.Codigo;
                     novo.Fase = LancamentoResult.Fase;
-                    novo.TotalFalta = 0;
+                    novo.TotalFaltaAtraso = 0 + novo.TotalAtraso;
                     if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
                     novo.TotalHora = totalLancamento;
                     listFechamentoCalculada.Add(novo);
@@ -98,6 +98,17 @@ namespace TimeSheet.Application
               var listlancamentosSemMarcaco = ObterDiasSemLancamento(lancamentoList.ToList(), _marcacao.ObterMarcacao(codmarcacao), filial, jornada);
              foreach (Fechamento fechamento in listlancamentosSemMarcaco)
              {
+                fechamento.CodigoMarcacao = codmarcacao;
+                fechamento.Filial = filial;
+                fechamento.TotalAbono = 0;
+                fechamento.TotalAtraso = 0;
+                fechamento.TotalFalta = Math.Round(Convert.ToDouble(jornada.JornadaDiaria.Hours), 2);
+                fechamento.TotalFaltaAtraso = fechamento.TotalAtraso + fechamento.TotalFalta;
+                fechamento.TotalHoraExedente = 0;
+                fechamento.CodigoProjeto = "0";
+                fechamento.Fase = "0";
+                fechamento.TotalHora = 0;
+                fechamento.Divergencia = "0";
                 listFechamentoCalculada.Add(fechamento);
              }
 
@@ -135,6 +146,8 @@ namespace TimeSheet.Application
             }
             return totalAbono;
         }
+
+       
 
         public bool Eabono(Lancamento lancamento, Configuracao config)
         {

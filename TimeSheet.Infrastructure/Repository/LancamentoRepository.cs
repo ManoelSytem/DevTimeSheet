@@ -233,6 +233,60 @@ namespace TimeSheet.Infrastructure.Repository
             }
         }
 
+        public List<Lancamento> ObterListaLancamentoPorCodProjeto(string data, string matricula, string codProjeto)
+        {
+            try
+            {
+                List<Lancamento> listlancamento = new List<Lancamento>();
+                Lancamento lancamento;
+                using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+                {
+                    string sQuery = $@"Select DISTINCT 
+                               LTRIM(RTRIM(ZYY_CODIGO)) as Codigo,
+                               LTRIM(RTRIM(ZYY_SEQ)) as Seq,
+                               LTRIM(RTRIM(ZYY_FASE)) as Fase,
+                               LTRIM(RTRIM(ZYY_DATA)) as DateLancamento, 
+                               LTRIM(RTRIM(ZYY_PROJET)) as codEmpredimento,
+                               ZYY_HORINI as  HoraInicio,
+                               ZYY_HORFIN as HoraFim,
+                               ZYY_PROJET as codEmpredimento,
+                               ZYY_CODDIV as CodDivergencia,
+                               LTRIM(RTRIM(ZYY_OBSERV)) as Observacao,
+                               SZ.ZA_DESC as DescricaoEmp,
+                               ZB.ZYZ_STATUS AS Status
+                               FROM ZYY010 ZA
+                               INNER JOIN  ZYZ010  ZB ON (ZB.ZYZ_CODIGO =  '{codProjeto}') 
+                               INNER JOIN  SZA010 SZ ON (ZA.ZYY_PROJET =  SZ.ZA_COD) 
+                               WHERE ZB.ZYZ_MATUSU = '{matricula}' AND ZA.ZYY_DATA = '{data}' AND ZA.D_E_L_E_T_ <> '*'";
+                    dbConnection.Open();
+                    dbConnection.Execute(sQuery);
+
+                    var QueryResult = dbConnection.Query<LancamentoDb>(sQuery);
+                    foreach (LancamentoDb LacamentoResult in QueryResult)
+                    {
+                        lancamento = new Lancamento();
+                        lancamento.Codigo = LacamentoResult.Codigo;
+                        lancamento.HoraInicio = TimeSpan.Parse(LacamentoResult.HoraInicio);
+                        lancamento.HoraFim = TimeSpan.Parse(LacamentoResult.HoraFim);
+                        lancamento.codEmpredimento = LacamentoResult.codEmpredimento;
+                        lancamento.DescricaoEmp = LacamentoResult.DescricaoEmp;
+                        lancamento.CodDivergencia = LacamentoResult.CodDivergencia;
+                        lancamento.Seq = LacamentoResult.Seq;
+                        lancamento.DateLancamento = LacamentoResult.DateLancamento;
+                        lancamento.Observacao = LacamentoResult.Observacao;
+                        lancamento.Status = LacamentoResult.Status;
+                        lancamento.Fase = LacamentoResult.Fase;
+                        listlancamento.Add(lancamento);
+                    }
+                    return listlancamento;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 }

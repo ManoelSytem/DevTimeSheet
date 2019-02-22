@@ -13,6 +13,7 @@ namespace TimeSheet.Domain.Interface
         List<Lancamento> ObterLancamento(string data, string matricula);
         Lancamento ObterLancamentoEdit(string data, string matricula, string codigo);
         List<Lancamento> ObterListaLancamentoPorCodMarcacoEMatricula(string codMarcacao, string matricula);
+        List<Lancamento> ObterListaLancamentoPorCodProjeto(string codMarcacao, string matricula, string codProjeto);
 
     }
 

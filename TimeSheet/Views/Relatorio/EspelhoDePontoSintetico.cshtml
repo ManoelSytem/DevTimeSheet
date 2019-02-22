@@ -122,9 +122,8 @@
             <tr>
                 <th  style=" font-size:14px;"class="text-center">Data Lançamento</th>
                 <th  style=" font-size:14px;"class="text-center">Horas Execedentes</th>
-                <th  style=" font-size:14px;"class="text-center">Atrasos</th>
                 <th  style=" font-size:14px;"class="text-center">Abonos</th>
-                <th  style=" font-size:14px;"class="text-center">Total Falta</th>
+                <th  style=" font-size:14px;"class="text-center">Total Falta/Atraso</th>
                 <th  style=" font-size:14px;" class="text-center">Total horas trabalhadas</th>
                 <th  style=" font-size:14px;"class="text-center">Divergência</th>
             </tr>
@@ -138,9 +137,8 @@
             <tr>
                 <th scope="row">@item.DataLancamento.ToDateProtheusReverseformate()</th>
                 <td>@item.TotalHoraExedente</td>
-                <td>@item.TotalAtraso</td>
                 <td>@item.TotalAbono</td>
-                <td>@item.TotalFalta</td>
+                <td>@item.TotalFaltaAtraso</td>
                 <td>@item.TotalHora</td>
                 <td>@item.Divergencia</td>
             </tr>

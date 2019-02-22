@@ -41,6 +41,11 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             return _LancamentoRepository.ObterListaLancamentoPorCodMarcacao(codMarcacao, matricula);
         }
 
+        public List<Lancamento> ObterListaLancamentoPorCodProjeto(string codMarcacao, string matricula, string codProjeto)
+        {
+           return _LancamentoRepository.ObterListaLancamentoPorCodProjeto(codMarcacao, matricula, codProjeto);
+        }
+
         public void SalvarLancamento(Lancamento item, string filial, string dataProthues)
         {
             _LancamentoRepository.Add(item, filial, dataProthues);

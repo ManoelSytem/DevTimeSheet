@@ -38,8 +38,10 @@ namespace TimeSheet.Application
                 CardData = new string[][] {
                     new[] { "txtGrupoGerencia", "Getin" },
                     new[] { "hddFilial", filial },
-                    new[] { "hddCodProjeto", projeto },
-                    new[] { "TxtMatricula", matricula }
+                    new[] { "hddCodigo", "" }, // CODIGO DA ZYU_CODIGO
+                    new[] { "TxtMatricula", matricula },
+                    new[] { "hddMatFluig", userCodFluig},
+                    //ZY
                 }
             };
 

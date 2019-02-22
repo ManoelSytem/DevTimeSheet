@@ -20,6 +20,7 @@ namespace TimeSheet.ViewModel
         public double TotalFalta { get; set; }
         public double TotalAbono { get; set; }
         public double TotalHora { get; set; }
+        public double TotalFaltaAtraso{ get; set; }
 
         public ViewModelFechamento()
         {

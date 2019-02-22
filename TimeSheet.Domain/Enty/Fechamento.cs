@@ -23,6 +23,7 @@ namespace TimeSheet.Domain.Enty
         public string StatusFechamento { get; set; }
         public string CodigoProjeto { get; set; }
         public string Fase { get; set; }
+        public double TotalFaltaAtraso { get; set; }
 
         public Fechamento()
         {
