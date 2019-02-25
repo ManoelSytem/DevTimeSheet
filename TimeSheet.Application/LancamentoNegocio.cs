@@ -16,11 +16,13 @@ namespace TimeSheet.Application
         private readonly ILancamento _lancamentoerviceRepository;
         private readonly IProtheus _serviceProthues;
         private readonly IMarcacao _marcacao;
-        public LancamentoNegocio(ILancamento lancamentoerviceRepository, IProtheus serviceProthues, IMarcacao marcacao)
+        private readonly IFechamento _fechamentoServiceRepository;
+        public LancamentoNegocio(ILancamento lancamentoerviceRepository, IProtheus serviceProthues, IMarcacao marcacao, IFechamento fechamentoServiceRepositor)
         {
             _lancamentoerviceRepository = lancamentoerviceRepository;
             _serviceProthues = serviceProthues;
             _marcacao = marcacao;
+            _fechamentoServiceRepository = fechamentoServiceRepositor;
         }
 
         public List<Fechamento> CalcularLancamentoPorData(IEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura, string matricula, string filial, string codmarcacao)
@@ -34,83 +36,40 @@ namespace TimeSheet.Application
 
         public List<Fechamento> CalcularTotalHoraExedenteETrabalhadaEabonoeFalta(IEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada, Configuracao config, string matricula, string filial, string codmarcacao)
         {
-
             List<Fechamento> listFechamentoCalculada = new List<Fechamento>();
-            double totalLancamento = 0;
-            double totalHoraExedente = 0;
-            double totalAbono = 0;
-            var jrDiaria = jornada.JornadaDiaria;
 
-            foreach (Lancamento LancamentoResult in lancamentoList)
+            var listFechamento = _fechamentoServiceRepository.ObterListFechamentoMensalPorMarcacaoDataColoborador(matricula, codmarcacao);
+
+            foreach (Fechamento FechamentoResult in listFechamento)
             {
-
-                var listlancamentoDiario = _lancamentoerviceRepository.ObterLancamento(LancamentoResult.DateLancamento, matricula);
-
-                totalAbono += CalcularTotaAbono(LancamentoResult, config);
-                totalLancamento = CalcularTotalLancamentoPorDia(listlancamentoDiario);
                 Fechamento novo = new Fechamento();
-                if (totalLancamento > Math.Round(Convert.ToDouble(jrDiaria.TotalHours), 2))
-                {
-                    novo.TotalHora = totalLancamento;
-                    novo.DataLancamento = LancamentoResult.DateLancamento;
-                    novo.CodigoProjeto = LancamentoResult.codEmpredimento;
-                    novo.CodigoMarcacao = LancamentoResult.Codigo;
-                    novo.Fase = LancamentoResult.Fase;
-                    totalHoraExedente = totalLancamento - Math.Round(Convert.ToDouble(jrDiaria.TotalHours), 2);
-                    novo.TotalFalta = 0;
-                    if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
-                    if (ValidaEferiado(LancamentoResult.DateLancamento, filial) | ESabadoOuDomingo(Convert.ToDateTime(LancamentoResult.DateLancamento.ToDateProtheusReverseformate())))
-                    {
-                        novo.TotalHoraExedente = Math.Round(Convert.ToDouble(totalHoraExedente), 2);
-                    }
-                    else { novo.TotalHoraExedente = Math.Round(Convert.ToDouble(totalHoraExedente), 2); }
-                    listFechamentoCalculada.Add(novo);
-                    totalLancamento = 0;
-                    totalAbono = 0;
-                    totalHoraExedente = 0;
-                }
-                else
-                {
-                    if (ValidaEferiado(LancamentoResult.DateLancamento, filial) | ESabadoOuDomingo(Convert.ToDateTime(LancamentoResult.DateLancamento.ToDateProtheusReverseformate())))
-                    {
-                        novo.TotalHoraExedente = totalLancamento;
-                        novo.TotalAtraso = 0;
-                    }
-                    else { novo.TotalHoraExedente = 0;
-                        novo.TotalAtraso = Math.Round(Convert.ToDouble((jrDiaria).TotalHours), 2) - totalLancamento;
-                    }
-                    novo.DataLancamento = LancamentoResult.DateLancamento;
-                    novo.CodigoProjeto = LancamentoResult.codEmpredimento;
-                    novo.CodigoMarcacao = LancamentoResult.Codigo;
-                    novo.Fase = LancamentoResult.Fase;
-                    novo.TotalFaltaAtraso = 0 + novo.TotalAtraso;
-                    if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
-                    novo.TotalHora = totalLancamento;
-                    listFechamentoCalculada.Add(novo);
-                    totalAbono = 0;
-                    totalHoraExedente = 0;
-                    totalLancamento = 0;
-                }
-
+                novo.DataLancamento = FechamentoResult.DataLancamento;
+                novo.CodigoProjeto = FechamentoResult.CodigoProjeto;
+                novo.CodigoMarcacao = FechamentoResult.CodigoMarcacao;
+                novo.TotalHora = FechamentoResult.TotalHora;
+                novo.TotalFaltaAtraso = 0;
+                novo.TotalHoraExedente = 0;
+                novo.TotalAbono = FechamentoResult.TotalAbono;
+                listFechamentoCalculada.Add(novo);
             }
 
-           
-              var listlancamentosSemMarcaco = ObterDiasSemLancamento(lancamentoList.ToList(), _marcacao.ObterMarcacao(codmarcacao), filial, jornada);
-             foreach (Fechamento fechamento in listlancamentosSemMarcaco)
-             {
+
+            var listlancamentosSemMarcaco = ObterDiasSemLancamento(lancamentoList.ToList(), _marcacao.ObterMarcacao(codmarcacao), filial, jornada);
+            foreach (Fechamento fechamento in listlancamentosSemMarcaco)
+            {
                 fechamento.CodigoMarcacao = codmarcacao;
                 fechamento.Filial = filial;
                 fechamento.TotalAbono = 0;
                 fechamento.TotalAtraso = 0;
                 fechamento.TotalFalta = Math.Round(Convert.ToDouble(jornada.JornadaDiaria.Hours), 2);
-                fechamento.TotalFaltaAtraso = fechamento.TotalAtraso + fechamento.TotalFalta;
+                fechamento.TotalFaltaAtraso = 0;
                 fechamento.TotalHoraExedente = 0;
                 fechamento.CodigoProjeto = "0";
                 fechamento.Fase = "0";
                 fechamento.TotalHora = 0;
                 fechamento.Divergencia = "0";
                 listFechamentoCalculada.Add(fechamento);
-             }
+            }
 
             return listFechamentoCalculada;
         }

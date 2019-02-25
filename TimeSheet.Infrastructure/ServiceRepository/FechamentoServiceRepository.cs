@@ -21,6 +21,11 @@ namespace TimeSheet.Infrastructure.ServiceRepository
            return _FechamentoRepository.ObterListaFechamentoPorMatriculaEMarcacao(codigoMarcacao,matricula);
         }
 
+        public IEnumerable<Fechamento> ObterListFechamentoMensalPorMarcacaoDataColoborador(string matricula, string codmarcao )
+        {
+            return _FechamentoRepository.ObterListaFechamento(codmarcao, matricula);
+        }
+
         public void SalvarFechamento(Fechamento item, string filial, string dataProtheus, string matUser, string centroCusto, string projeto, string status, string fase)
         {
             _FechamentoRepository.Add(item, filial, dataProtheus, matUser, centroCusto, projeto, status, fase);

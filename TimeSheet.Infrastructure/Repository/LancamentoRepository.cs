@@ -241,23 +241,20 @@ namespace TimeSheet.Infrastructure.Repository
                 Lancamento lancamento;
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
-                    string sQuery = $@"Select DISTINCT 
-                               LTRIM(RTRIM(ZYY_CODIGO)) as Codigo,
+                    string sQuery = $@"     
+                             Select DISTINCT 
                                LTRIM(RTRIM(ZYY_SEQ)) as Seq,
-                               LTRIM(RTRIM(ZYY_FASE)) as Fase,
-                               LTRIM(RTRIM(ZYY_DATA)) as DateLancamento, 
+                               LTRIM(RTRIM(ZYY_DATA)) as DateLancamento,
                                LTRIM(RTRIM(ZYY_PROJET)) as codEmpredimento,
+                               LTRIM(RTRIM(ZYY_FASE)) as Fase,
+                               ZYY_CODIGO as Codigo,
+                               LTRIM(RTRIM(ZYY_OBSERV)) as Observacao,
                                ZYY_HORINI as  HoraInicio,
                                ZYY_HORFIN as HoraFim,
-                               ZYY_PROJET as codEmpredimento,
-                               ZYY_CODDIV as CodDivergencia,
-                               LTRIM(RTRIM(ZYY_OBSERV)) as Observacao,
-                               SZ.ZA_DESC as DescricaoEmp,
-                               ZB.ZYZ_STATUS AS Status
+                               ZYY_CODDIV AS CodDivergencia
                                FROM ZYY010 ZA
-                               INNER JOIN  ZYZ010  ZB ON (ZB.ZYZ_CODIGO =  '{codProjeto}') 
-                               INNER JOIN  SZA010 SZ ON (ZA.ZYY_PROJET =  SZ.ZA_COD) 
-                               WHERE ZB.ZYZ_MATUSU = '{matricula}' AND ZA.ZYY_DATA = '{data}' AND ZA.D_E_L_E_T_ <> '*'";
+                               INNER JOIN  ZYZ010  ZB ON ZB.ZYZ_CODIGO =  ZA.ZYY_CODIGO
+                               WHERE ZA.ZYY_PROJET  = '{codProjeto}' AND ZB.ZYZ_MATUSU = '{matricula}' AND ZA.ZYY_DATA = '{data}' AND ZA.D_E_L_E_T_ <> '*'";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
 

@@ -123,16 +123,15 @@
                 {
                     @if (datalancamentoFechamento != item.dataApontamento)
                     {
-
                         <tr>
                             <th colspan="7"><b>Fechamento</b></th>
                         </tr>
                         <tr>
                             <th style=" font-size:14px;" class="text-center">Data Lançamento</th>
-                            <th style=" font-size:14px;" class="text-center">Horas Execedentes</th>
-                            <th style=" font-size:14px;" class="text-center">Abonos</th>
-                            <th style=" font-size:14px;" class="text-center">Total Falta/Atraso</th>
-                            <th style=" font-size:14px;" class="text-center">Total horas trabalhadas</th>
+                            <th style=" font-size:14px;" class="text-center">Horas execedentes</th>
+                            <th style=" font-size:14px;" class="text-center">Horas abonos</th>
+                            <th style=" font-size:14px;" class="text-center">Atrasos/Faltas</th>
+                            <th style=" font-size:14px;" class="text-center">Horas trabalhadas</th>
                             <th style=" font-size:14px;" class="text-center">Divergência</th>
                             <th style=" font-size:14px;" class="text-center"></th>
                         </tr>
@@ -144,14 +143,28 @@
                     datalancamentoFechamento = itemF.DataLancamento.ToDateProtheusReverseformate();
                     if (item.dataApontamento == datalancamentoFechamento)
                     {
-                        <tr>
-                            <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
-                            <td>@itemF.TotalHoraExedente</td>
-                            <td>@itemF.TotalAbono</td>
-                            <td>@itemF.TotalFaltaAtraso</td>
-                            <td>@itemF.TotalHora</td>
-                            <td>@itemF.Divergencia</td>
-                        </tr>
+                        if (Model.status == "2")
+                        {
+                            <tr>
+                                <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
+                                <td>@itemF.TotalHoraExedente</td>
+                                <td>@itemF.TotalAbono</td>
+                                <td>@itemF.TotalFaltaAtraso</td>
+                                <td>@itemF.TotalHora</td>
+                                <td>@itemF.Divergencia</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                        }
                     }
                     else
                     {
@@ -170,13 +183,13 @@
                             <th colspan="7"><b>Relógio</b></th>
                         </tr>
                         <tr>
-                            <th style=" font-size:14px;"class="text-center">Hora</th>
-                            <th style=" font-size:14px;"class="text-center">Hora</th>
-                            <th style=" font-size:14px;"class="text-center">Hora</th>
-                            <th style=" font-size:14px;"class="text-center">Hora</th>
-                            <th style=" font-size:14px;"class="text-center">Hora</th>
-                            <th style=" font-size:14px;"class="text-center">Hora</th>
-                            <th style=" font-size:14px;"class="text-center">Hora</th>
+                            <th style=" font-size:14px;" class="text-center">Hora</th>
+                            <th style=" font-size:14px;" class="text-center">Hora</th>
+                            <th style=" font-size:14px;" class="text-center">Hora</th>
+                            <th style=" font-size:14px;" class="text-center">Hora</th>
+                            <th style=" font-size:14px;" class="text-center">Hora</th>
+                            <th style=" font-size:14px;" class="text-center">Hora</th>
+                            <th style=" font-size:14px;" class="text-center">Hora</th>
                         </tr>
                         datalancamento = item.dataApontamento;
                         @foreach (var itemA in Model.apontamento)
@@ -187,8 +200,14 @@
 
                                 if (count <= 7)
                                 {
-
-                                    <td>@itemA.apontamento</td>
+                                    if (itemA.apontamento == TimeSpan.Parse("00:00:00"))
+                                    {
+                                        <td> </td>
+                                    }
+                                    else
+                                    {
+                                        <td>@itemA.apontamento</td>
+                                    }
                                 }
                                 else
                                 {
@@ -220,13 +239,13 @@
                                     <th colspan="7"><b>Lançamentos</b></th>
                                 </tr>
                                 <tr>
-                                    <th style=" font-size:14px;"class="text-center">Hora Início</th>
-                                    <th style=" font-size:14px;"class="text-center">Hora Fim</th>
-                                    <th style=" font-size:14px;"class="text-center">Projeto</th>
-                                    <th style=" font-size:14px;"class="text-center">Código Divergência</th>
-                                    <th style=" font-size:14px;"class="text-center"></th>
-                                    <th style=" font-size:14px;"class="text-center"></th>
-                                    <th style=" font-size:14px;"class="text-center"></th>
+                                    <th style=" font-size:14px;" class="text-center">Hora Início</th>
+                                    <th style=" font-size:14px;" class="text-center">Hora Fim</th>
+                                    <th style=" font-size:14px;" class="text-center">Projeto</th>
+                                    <th style=" font-size:14px;" class="text-center">Código Divergência</th>
+                                    <th style=" font-size:14px;" class="text-center"></th>
+                                    <th style=" font-size:14px;" class="text-center"></th>
+                                    <th style=" font-size:14px;" class="text-center"></th>
                                 </tr>
                                 <tbody>
                                     @foreach (var itemLista in item.listLancamento.OrderBy(x => x.HoraInicio))

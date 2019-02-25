@@ -120,30 +120,47 @@
             </tr>
 
             <tr>
-                <th  style=" font-size:14px;"class="text-center">Data Lançamento</th>
-                <th  style=" font-size:14px;"class="text-center">Horas Execedentes</th>
-                <th  style=" font-size:14px;"class="text-center">Abonos</th>
-                <th  style=" font-size:14px;"class="text-center">Total Falta/Atraso</th>
-                <th  style=" font-size:14px;" class="text-center">Total horas trabalhadas</th>
-                <th  style=" font-size:14px;"class="text-center">Divergência</th>
+                <th style=" font-size:14px;" class="text-center">Data Lançamento</th>
+                <th style=" font-size:14px;" class="text-center">Horas execedentes</th>
+                <th style=" font-size:14px;" class="text-center">Horas abonos</th>
+                <th style=" font-size:14px;" class="text-center">Atrasos/Faltas</th>
+                <th style=" font-size:14px;" class="text-center">Horas trabalhadas</th>
+                <th style=" font-size:14px;" class="text-center">Divergência</th>
             </tr>
 
         </thead>
         <tbody>
-            @if (Model.FechamentoPorDatalancamento != null)
+       @if (Model.status == "2")
             {
-               foreach(var item in Model.FechamentoPorDatalancamento.OrderBy(x => x.DataLancamento))
-                {
-            <tr>
-                <th scope="row">@item.DataLancamento.ToDateProtheusReverseformate()</th>
-                <td>@item.TotalHoraExedente</td>
-                <td>@item.TotalAbono</td>
-                <td>@item.TotalFaltaAtraso</td>
-                <td>@item.TotalHora</td>
-                <td>@item.Divergencia</td>
-            </tr>
-                }
+        @if (Model.FechamentoPorDatalancamento != null)
+        {
+            foreach (var item in Model.FechamentoPorDatalancamento.OrderBy(x => x.DataLancamento))
+            {
+
+                <tr>
+                    <th scope="row">@item.DataLancamento.ToDateProtheusReverseformate()</th>
+                    <td>@item.TotalHoraExedente</td>
+                    <td>@item.TotalAbono</td>
+                    <td>@item.TotalFaltaAtraso</td>
+                    <td>@item.TotalHora</td>
+                    <td>@item.Divergencia</td>
+                </tr>
             }
+        
+    }
+    else
+    {
+
+        <tr>
+            <th scope="row"></th>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+    }
+           }
         </tbody>
     </table>
 </body>

@@ -2,8 +2,6 @@
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using TimeSheet.Domain.Enty;
 
 namespace TimeSheet.Infrastructure.Repository
@@ -99,6 +97,38 @@ namespace TimeSheet.Infrastructure.Repository
                 throw ex;
             }
         }
+
+        public IEnumerable<Fechamento> ObterListaFechamento(string codigoMarcacao, string matricula)
+        {
+            try
+            {
+               
+                using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+                {
+                    string sQuery = $@"Select 
+                                    LTRIM(RTRIM(ZYU_DTMARC)) as DataLancamento,
+                                     sum(LTRIM(RTRIM(ZYU_THOREX))) as  TotalHoraExedente,
+                                     sum(LTRIM(RTRIM(ZYU_THORAB))) as  TotalAbono,
+                                     sum(LTRIM(RTRIM(ZYU_THORAS))) as  TotalHora,
+                                     sum(LTRIM(RTRIM(ZYU_THORNT)))  as  TotalFaltaAtraso
+                                     from ZYU010 
+                                     where ZYU_CODIGO = '{codigoMarcacao}' AND ZYU_MATUSU = '{matricula}'  AND (ZYU_STATUS = '1' OR ZYU_STATUS = '2' OR ZYU_STATUS = '3') AND D_E_L_E_T_ <> '*' 
+                                     group by LTRIM(RTRIM(ZYU_DTMARC))";
+                    dbConnection.Open();
+                    dbConnection.Execute(sQuery);
+                    var result =  dbConnection.Query<Fechamento>(sQuery);
+
+                    return result;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
     }
 }

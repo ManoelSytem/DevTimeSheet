@@ -105,7 +105,7 @@ namespace TimeSheet.Controllers
                 {
                     foreach (Fechamento fechamentoResult in ResultFechamento)
                     {
-                        if (fechamentoResult.StatusFechamento == "B")
+                        if (fechamentoResult.Divergencia == "Divergência a justificar")
                         {
                             ViewBag.FechamentoBloqueado = "B";
                         }
@@ -615,4 +615,5 @@ namespace TimeSheet.Controllers
         public int GetHashCode(Lancamento obj) => obj.DateLancamento.GetHashCode();
     }
 
+   
 }
