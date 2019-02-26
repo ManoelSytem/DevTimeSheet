@@ -687,6 +687,18 @@ namespace TimeSheet.Application
             return Fechamento;
         }
 
+        public double CalcularTotalGeral(List<Fechamento> listFecahamento)
+        {
+            double totalHorasFechamento = 0;
+
+            foreach (Fechamento fechamento in listFecahamento)
+            {
+                totalHorasFechamento += fechamento.TotalHora;
+            }
+
+            return totalHorasFechamento;
+        }
+
         public bool Eabono(Lancamento lancamento, Configuracao config)
         {
             if (lancamento.HoraInicio != TimeSpan.Parse("00:00:00") && lancamento.CodDivergencia != 0)

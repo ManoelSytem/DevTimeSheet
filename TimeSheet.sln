@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeSheet.Domain", "TimeShe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeSheet.Infrastructure", "TimeSheet.Infrastructure\TimeSheet.Infrastructure.csproj", "{43E2A5C2-ABE1-4417-BEC5-FF5B9E90D6E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSheet.Application", "TimeSheet.Application\TimeSheet.Application.csproj", "{32526F07-E3AF-4561-9A9A-612B82D8D0C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeSheet.Application", "TimeSheet.Application\TimeSheet.Application.csproj", "{32526F07-E3AF-4561-9A9A-612B82D8D0C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

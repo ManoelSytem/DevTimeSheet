@@ -30,18 +30,19 @@ namespace TimeSheet.Controllers
         private readonly IMarcacao _marcacaoServiceRepository;
         private readonly IMapper _mapper;
         private readonly IJornadaTrabalho _jornadaTrbServiceRepository;
-        private readonly IFechamento _fechamentoServiceRepository;
+        private readonly IFechamento _fechamentoService;
         private readonly ILancamentoNegocio _lancamentoNegocio;
+        private readonly IFechamentoNegocio _fechamentoNegocio;
 
 
         public RelatorioController(IFechamento 
-            fechamentoServiceRepository, 
+            fechamentoService, 
             IProtheus prothuesService, 
             IMarcacao marcacaoServiceRepository,
             IMapper mapper,
             IConfiguracao configuracao, 
             IMarcacao marcacao, 
-            ILancamento lancamento, IJornadaTrabalho jornada, ILancamentoNegocio lancamentoNegocio)
+            ILancamento lancamento, IJornadaTrabalho jornada, ILancamentoNegocio lancamentoNegocio, IFechamentoNegocio fechamentoNegocio)
         {
             _protheusService = prothuesService;
             _marcacaoServiceRepository = marcacaoServiceRepository;
@@ -50,8 +51,9 @@ namespace TimeSheet.Controllers
             _marcacao = marcacao;
             _lancamentoerviceRepository = lancamento;
             _jornadaTrbServiceRepository = jornada;
-            _fechamentoServiceRepository = fechamentoServiceRepository;
+            _fechamentoService = fechamentoService;
             _lancamentoNegocio = lancamentoNegocio;
+            _fechamentoNegocio = fechamentoNegocio;
 
 
         }
@@ -77,7 +79,7 @@ namespace TimeSheet.Controllers
                 viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(viewModelMarcacao);
                 viewModelRelatorio.marcacao = viewModelMarcacao;
                 viewModelRelatorio.status = viewModelMarcacao.Status;
-                viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorData(id));
+                viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorData(id).Distinct(new FechamentoComparer()));
                 viewModelRelatorio.user = user;         
                 viewModelRelatorio.apontamento = ListaApontamentoPorLancamentoEfechamento(_mapper.Map<List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula"))),id);
                 return new ViewAsPdf("EspelhoDePonto", viewModelRelatorio);
@@ -112,9 +114,10 @@ namespace TimeSheet.Controllers
                 viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(viewModelMarcacao);
                 viewModelRelatorio.marcacao = viewModelMarcacao;
                 viewModelRelatorio.status = viewModelMarcacao.Status;
-                viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorData(id));
+                viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorData(id).Distinct(new FechamentoComparer()));
                 viewModelRelatorio.user = user;
-                
+                viewModelRelatorio.totalGeral = _fechamentoNegocio.CalcularTotalGeral(_mapper.Map<List<Fechamento>>(viewModelRelatorio.FechamentoPorDatalancamento));
+
                 return new ViewAsPdf("EspelhoDePontoSintetico", viewModelRelatorio);
             }
             catch (Exception e)
@@ -141,7 +144,7 @@ namespace TimeSheet.Controllers
                 viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(viewModelMarcacao);
                 viewModelRelatorio.marcacao = viewModelMarcacao;
                 viewModelRelatorio.status = viewModelMarcacao.Status;
-                viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorDataGerencia(id, viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial));
+                viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorDataGerencia(id, viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial).Distinct(new FechamentoComparer()));
                 viewModelRelatorio.user = user;
 
                 user = _protheusService.ObterUsuarioNome(viewModelRelatorio.marcacao.MatUsuario);
@@ -177,7 +180,7 @@ namespace TimeSheet.Controllers
                 viewModelMarcacao.AnoMesDescricao = ObterMesAnoDaMarcacao(viewModelMarcacao);
                 viewModelRelatorio.marcacao = viewModelMarcacao;
                 viewModelRelatorio.status = viewModelMarcacao.Status;
-                viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorDataGerencia(id, viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial));
+                viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorDataGerencia(id, viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial).Distinct(new FechamentoComparer()));
                 viewModelRelatorio.apontamento = ListaApontamentoPorLancamentoGerencia(_mapper.Map<List<ViewModelLancamento>>(_lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, viewModelRelatorio.marcacao.MatUsuario)), viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial,id);
 
                 user = _protheusService.ObterUsuarioNome(viewModelRelatorio.marcacao.MatUsuario);
@@ -427,6 +430,12 @@ namespace TimeSheet.Controllers
         {
             return 0;
         }
+    }
+
+    public class FechamentoComparer : IEqualityComparer<Fechamento>
+    {
+        public bool Equals(Fechamento x, Fechamento y) => x.DataLancamento== y.DataLancamento;
+        public int GetHashCode(Fechamento obj) => obj.DataLancamento.GetHashCode();
     }
 
 }

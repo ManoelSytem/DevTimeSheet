@@ -50,7 +50,8 @@ namespace TimeSheet.Application
                 novo.TotalFaltaAtraso = 0;
                 novo.TotalHoraExedente = 0;
                 novo.TotalAbono = FechamentoResult.TotalAbono;
-                listFechamentoCalculada.Add(novo);
+                if (listFechamentoCalculada.Any(x => x.DataLancamento != FechamentoResult.DataLancamento))
+                    listFechamentoCalculada.Add(novo);
             }
 
 
@@ -74,6 +75,7 @@ namespace TimeSheet.Application
             return listFechamentoCalculada;
         }
 
+        
 
         public double CalcularTotalLancamentoPorDia(List<Lancamento> listlancamentoDiario)
         {

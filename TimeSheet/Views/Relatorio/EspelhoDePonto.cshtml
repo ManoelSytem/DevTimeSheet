@@ -206,13 +206,13 @@
                                     }
                                     else
                                     {
-                                        <td>@itemA.apontamento</td>
+                                        <td>@(itemA.apontamento.Hours.ToString("00") + ":" + itemA.apontamento.Minutes.ToString("00"))</td>
                                     }
                                 }
                                 else
                                 {
                                     <tr>
-                                        <td>@itemA.apontamento</td>
+                                        <td>@(itemA.apontamento.Hours.ToString("00") + ":" + itemA.apontamento.Minutes.ToString("00"))</td>
                                     </tr>
                                 }
                             }
@@ -252,8 +252,8 @@
                                     {
                                         dataApontametoLista = itemLista.DateLancamento.ToDateProtheusReverseformate();
                                         <tr>
-                                            <td>@itemLista.HoraInicio</td>
-                                            <td>@itemLista.HoraFim</td>
+                                            <td>@(itemLista.HoraInicio.Hours.ToString("00") + ":" + itemLista.HoraInicio.Minutes.ToString("00"))</td>
+                                            <td>@(itemLista.HoraFim.Hours.ToString("00") + ":" + itemLista.HoraFim.Minutes.ToString("00"))</td>
                                             <td style=" font-size:12px;">@itemLista.DescricaoEmp</td>
                                             <td>@itemLista.CodDivergencia</td>
                                             <td></td>

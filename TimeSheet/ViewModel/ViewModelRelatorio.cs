@@ -14,5 +14,6 @@ namespace TimeSheet.ViewModel
         public ViewModelMacacao marcacao { get; set; }
         public Usuario user { get; set; }
         public string status { get; set; }
+        public double totalGeral { get; set; }
     }
 }

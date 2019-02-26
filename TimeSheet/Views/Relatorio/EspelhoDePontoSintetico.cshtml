@@ -77,7 +77,6 @@
     Data de emisão:  @DateTime.Now.ToString("dd/MM/yyyy")
     <table style="height:50px; text-align: center; font-size:20px;" class="table">
         <tr>
-        <tr>
             <td><b>ESPELHO DE PONTO</b></td>
             @if (Model.status == "1")
             {
@@ -90,9 +89,9 @@
                 <td style="width:40px;"><b>Status: Aprovado</b></td>}
             else if (Model.status == "4")
             {
-                <td style="width:40px;"><b>Status: Contabilizado</b></td>}
+                <td style="width:40px;"><b>Status: Contabilizado</b></td>
+            }
             <td style="width:30px;"><b>@Model.marcacao.AnoMesDescricao</b></td>
-        </tr>
         </tr>
     </table>
 
@@ -130,37 +129,64 @@
 
         </thead>
         <tbody>
-       @if (Model.status == "2")
+            @if (Model.status == "2")
             {
-        @if (Model.FechamentoPorDatalancamento != null)
-        {
-            foreach (var item in Model.FechamentoPorDatalancamento.OrderBy(x => x.DataLancamento))
-            {
+                @if (Model.FechamentoPorDatalancamento != null)
+                {
+                    foreach (var item in Model.FechamentoPorDatalancamento.OrderBy(x => x.DataLancamento))
+                    {
 
+                        <tr>
+                            <th scope="row">@item.DataLancamento.ToDateProtheusReverseformate()</th>
+                            <td>@item.TotalHoraExedente</td>
+                            <td>@item.TotalAbono</td>
+                            <td>@item.TotalFaltaAtraso</td>
+                            <td>@item.TotalHora</td>
+                            <td>@item.Divergencia</td>
+                        </tr>
+                    }
+
+                }
+                else
+                {
+
+                    <tr>
+                        <th scope="row"></th>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <table class="table">
+        <tbody>
+            @if (Model.status == "2")
+            {
                 <tr>
-                    <th scope="row">@item.DataLancamento.ToDateProtheusReverseformate()</th>
-                    <td>@item.TotalHoraExedente</td>
-                    <td>@item.TotalAbono</td>
-                    <td>@item.TotalFaltaAtraso</td>
-                    <td>@item.TotalHora</td>
-                    <td>@item.Divergencia</td>
+                    <td class="text-right" style="font-size:14px;">
+                        <b>Total Geral:</b>
+                    </td>
+                    <td style="width:40px;font-size:14px;" class="text-right">
+                        <b>@Model.totalGeral</b>
+                    </td>
+                </tr>
+
+            }
+            else
+            {
+                <tr>
+                    <td class="text-right" style="font-size:14px;">
+                        <b>Total Geral:</b>
+                    </td>
+                    <td style="width:40px;font-size:14px;" class="text-right">
+                        <b>@Model.totalGeral</b>
+                    </td>
                 </tr>
             }
-        
-    }
-    else
-    {
-
-        <tr>
-            <th scope="row"></th>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-        </tr>
-    }
-           }
         </tbody>
     </table>
 </body>
