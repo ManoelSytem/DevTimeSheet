@@ -13,7 +13,7 @@ using TimeSheet.Domain.Interface;
 using TimeSheet.Domain.Util;
 using TimeSheet.Util;
 using TimeSheet.ViewModel;
-
+using System.Security.Claims;
 
 namespace TimeSheet.Controllers
 {
@@ -94,6 +94,7 @@ namespace TimeSheet.Controllers
                 matricula = User.GetDados("Matricula");
                 filial = User.GetDados("Filial");
                 centrocusto = User.GetDados("Centro de Custo");
+                var email = User.GetClaim(ClaimTypes.Email);
 
                 TempData["Createfalse"] = null;
                 Marcacao marcacao = new Marcacao();
@@ -195,7 +196,8 @@ namespace TimeSheet.Controllers
         {
             try
             {
-                List<Fechamento> listaFechamentoPorData = new List<Fechamento>();
+                List<Fechamento> listaCalculadaFechamentoPorProjeto = new List<Fechamento>();
+                List<Fechamento> listaCalculadaFechamentoPorDia = new List<Fechamento>();
                 List<Fechamento> listaDeDiasSemLancamento = new List<Fechamento>();
                 Marcacao marcacao = new Marcacao();
 
@@ -211,11 +213,14 @@ namespace TimeSheet.Controllers
 
                 var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
                 var configuracao = _configuracao.ObterConfiguracao();
-
-                listaFechamentoPorData = _fechamentoNegocio.CalcularLancamentoPorProjeto(marcacao.Lancamentolist, jornadaTrabalho, configuracao, matricula, filial, viewModelfechamento.CodigoMarcacao);
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
 
-                _fechamentoServiceRepository.SalvarFechamentoPorDiaLancamento(listaFechamentoPorData, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
+                listaCalculadaFechamentoPorProjeto = _fechamentoNegocio.CalcularLancamentoPorProjeto(marcacao.Lancamentolist, jornadaTrabalho, configuracao, matricula, filial, viewModelfechamento.CodigoMarcacao);
+                _fechamentoServiceRepository.SalvarFechamentoPorProjeto(listaCalculadaFechamentoPorProjeto, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
+
+                listaCalculadaFechamentoPorDia = _fechamentoNegocio.CalcularTotalHoraExedenteETrabalhadaEabonoeFaltaPorDia(jornadaTrabalho, matricula, filial, viewModelfechamento.CodigoMarcacao);
+                _fechamentoServiceRepository.SalvarFechamentoPorDia(listaCalculadaFechamentoPorDia, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
+
                 _marcacaoServiceRepository.UpdateStatusFechamento(viewModelfechamento.CodigoMarcacao);
                 NotificarFechamento(viewModelfechamento);
                 return Json(new { sucesso = "Fechamento realizado com sucesso!" });

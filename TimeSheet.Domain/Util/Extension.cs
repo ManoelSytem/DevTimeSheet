@@ -17,6 +17,8 @@ namespace TimeSheet.Domain.Util
             return null;
         }
 
+        public static string GetClaim(this ClaimsPrincipal user, string key) => user.Claims.FirstOrDefault(c => c.Type == key).Value;
+
         public static string GetSubjectId(this ClaimsPrincipal user) => user.Claims.FirstOrDefault(c => c.Type == "sub")?.Value.ToUpper();
         public static string[] GetPerfil(this ClaimsPrincipal user) => user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value.ToUpper()).ToArray();
         public static bool CointainsPerfil(this ClaimsPrincipal user, string perfil) => user.GetPerfil().Any(x => x == perfil);

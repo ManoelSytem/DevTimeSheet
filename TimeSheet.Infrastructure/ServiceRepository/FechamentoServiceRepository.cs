@@ -26,14 +26,23 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             return _FechamentoRepository.ObterListaFechamento(codmarcao, matricula);
         }
 
+        public IEnumerable<Fechamento> ObterListFechamentoMensalPorDia(string matricula, string codmarcao)
+        {
+            return _FechamentoRepository.ObterListaFechamentoPorDia(codmarcao, matricula);
+        }
         public void SalvarFechamento(Fechamento item, string filial, string dataProtheus, string matUser, string centroCusto, string projeto, string status, string fase)
         {
             _FechamentoRepository.Add(item, filial, dataProtheus, matUser, centroCusto, projeto, status, fase);
         }
 
-        public void SalvarFechamentoPorDiaLancamento(List<Fechamento> itens, string filial, string dataProtheus, string matUser, string centroCusto, string status)
+        public void SalvarFechamentoPorDia(List<Fechamento> itens, string filial, string dataProtheus, string matUser, string centroCusto, string status)
         {
-            _FechamentoRepository.SalvarFechamentoPordia(itens, filial, dataProtheus, matUser, centroCusto, status);
+            _FechamentoRepository.SalvarFechamento(itens, filial, dataProtheus, matUser, centroCusto, status);
+        }
+
+        public void SalvarFechamentoPorProjeto(List<Fechamento> itens, string filial, string dataProtheus, string matUser, string centroCusto, string status)
+        {
+            _FechamentoRepository.SalvarFechamento(itens, filial, dataProtheus, matUser, centroCusto, status);
         }
     }
 }

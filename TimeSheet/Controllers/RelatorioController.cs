@@ -146,6 +146,7 @@ namespace TimeSheet.Controllers
                 viewModelRelatorio.status = viewModelMarcacao.Status;
                 viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorDataGerencia(id, viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial).Distinct(new FechamentoComparer()));
                 viewModelRelatorio.user = user;
+                viewModelRelatorio.totalGeral = _fechamentoNegocio.CalcularTotalGeral(_mapper.Map<List<Fechamento>>(viewModelRelatorio.FechamentoPorDatalancamento));
 
                 user = _protheusService.ObterUsuarioNome(viewModelRelatorio.marcacao.MatUsuario);
                 user.Nome = user.Nome;
