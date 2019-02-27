@@ -34,50 +34,52 @@ namespace TimeSheet.Application
             return listaFechamentoPorData;
         }
 
-        public Fechamento CalcularFechamento(IOrderedEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura)
-        {
-            Fechamento Fechamento = new Fechamento();
-            Fechamento.TotalHoraExedente = Math.Round(CalcularTotalHoraExedente(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
-            Fechamento.TotalAtraso = Math.Round(CalcularAtraso(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
-            Fechamento.TotalFalta = CalcularQuantidadeDeDiaSemApontamento(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho);
-            Fechamento.TotalAbono = CalcularTotalDeAbono(orderedlistalancamento.OrderBy(c => c.DateLancamento), configura);
-            Fechamento.TotalHora = Math.Round(CalcularTotalHoras(orderedlistalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho), 2);
-            return Fechamento;
-        }
 
-
-        public double CalcularTotalHoraExedente(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada)
+        public Fechamento CalcularTotalGeralMensalPorDia(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada, Configuracao config, string matricula, string filial, string codmarcacao)
         {
-            TimeSpan totalHoraDiaLancamento = TimeSpan.Parse("00:00:00");
-            TimeSpan totalLancamento;
-            TimeSpan totalHoraExedenteTimeSpan;
-            string datalancamento = "0";
-            double totalHoraExedente;
+            double totalLancamento = 0;
+            double totalgeral = 0;
+            double totalHoraExedente = 0;
+            double totalAbono = 0;
+            double totalFaltaAtraso = 0;
             var jrDiaria = jornada.JornadaDiaria;
+            List<Fechamento> Fechamento = new List<Fechamento>();
+            string codEmprendimento = "0";
+            string data = "";
+            double totalHorasLancamento = 0;
 
+            Fechamento fechamento = new Fechamento();
             foreach (Lancamento LancamentoResult in lancamentoList)
             {
 
-                if (datalancamento != LancamentoResult.DateLancamento && datalancamento != "0")
+                var listaLancamentoPorDia = _lancamentoerviceRepository.ObterLancamento(LancamentoResult.DateLancamento, matricula);
+                if (listaLancamentoPorDia.Count > 0)
                 {
-                    totalHoraDiaLancamento -= jrDiaria;
+                    totalAbono += CalcularTotalHorasAbono(listaLancamentoPorDia, config);
+                    totalLancamento = CalcularTotalHoraLancamentoPorDia(listaLancamentoPorDia);
+                    if (ValidaEferiado(LancamentoResult.DateLancamento, filial) | ESabadoOuDomingo(Convert.ToDateTime(LancamentoResult.DateLancamento.ToDateProtheusReverseformate())))
+                    {
+                        totalHoraExedente += totalLancamento;
+                    }
+                    else if(totalLancamento > Math.Round(Convert.ToDouble(jrDiaria.TotalHours), 2)) totalHoraExedente += Math.Round(totalLancamento - Math.Round(Convert.ToDouble(jrDiaria.TotalHours), 2), 2);
+                    else {
+                        totalFaltaAtraso += Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) - totalLancamento;
+                    }
+                    totalgeral += totalLancamento;
                 }
-                datalancamento = LancamentoResult.DateLancamento;
-                totalLancamento = LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
-                totalHoraDiaLancamento += totalLancamento;
-
             }
 
-            totalHoraExedenteTimeSpan = jrDiaria - totalHoraDiaLancamento;
-            totalHoraExedente = totalHoraExedenteTimeSpan.TotalHours;
-            if (totalHoraExedenteTimeSpan > jrDiaria)
+            var listlancamentosSemMarcaco = ObterDiasSemLancamento(lancamentoList.ToList(), _marcacao.ObterMarcacao(codmarcacao), filial, jornada);
+            foreach (Fechamento fechamentos in listlancamentosSemMarcaco)
             {
-                return totalHoraExedente;
+                totalFaltaAtraso += Math.Round(Convert.ToDouble(jrDiaria.TotalHours), 2);
             }
-            else
-            {
-                return totalHoraExedente = 0;
-            }
+
+            fechamento.TotalAbono = totalAbono;
+            fechamento.TotalFaltaAtraso = totalFaltaAtraso;
+            fechamento.TotalHoraExedente = totalHoraExedente;
+            fechamento.TotalHora = totalgeral;
+            return fechamento;
         }
 
 
@@ -329,21 +331,16 @@ namespace TimeSheet.Application
             return Math.Abs(Math.Round(Convert.ToDecimal(totalhoraApontamemto.TotalHours), 2));
         }
 
-        public decimal CalcularTotalHoraLancamentoPorDia(List<Lancamento> lancamento)
+        public double CalcularTotalHoraLancamentoPorDia(List<Lancamento> lancamento)
         {
             TimeSpan totalhoraLancamentoDia = TimeSpan.Parse("00:00:00");
             foreach (Lancamento LancamentoResult in lancamento)
             {
-                if (LancamentoResult.CodDivergencia != 0)
-                {
-                    totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
-                }
-                else
-                {
-                    totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
-                }
+                
+                 totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+                
             }
-            return Math.Round(Convert.ToDecimal(totalhoraLancamentoDia.TotalHours), 2);
+            return Math.Round(Convert.ToDouble(totalhoraLancamentoDia.TotalHours), 2);
         }
 
         public List<Fechamento> ValidaSeExisteMarcacaoAntesEdepoisDoApontamento(List<Lancamento> listlancamento, List<Apontamento> apontamentolist)
@@ -475,19 +472,32 @@ namespace TimeSheet.Application
 
         }
 
-        public Fechamento ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(Lancamento lancamento, decimal totalLancamento, JornadaTrabalho jornada)
+        public Fechamento ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(List<Lancamento> lancamento, decimal totalLancamento, JornadaTrabalho jornada)
         {
+            string datalancamento = "0";
+            TimeSpan totalhoraLancamentoDiaComCodigoDivergencia = TimeSpan.Parse("00:00:00");
             Fechamento novo = new Fechamento();
-            if (totalLancamento < Math.Round(Convert.ToDecimal(jornada.JornadaDiaria.TotalHours), 2) )
+            foreach (Lancamento LancamentoResult in lancamento)
             {
-                novo.Divergencia = "Divergência justificada";
-                novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
+                datalancamento = LancamentoResult.DateLancamento.ToDateProtheusReverseformate();
+                if(LancamentoResult.CodDivergencia != 0)
+                {
+                    totalhoraLancamentoDiaComCodigoDivergencia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+                }
+            }
+
+               double total = Convert.ToDouble(totalLancamento) - Math.Round(Convert.ToDouble(totalhoraLancamentoDiaComCodigoDivergencia.TotalHours), 2);
+
+            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2))
+            {
+                novo.Divergencia = "Divergência a justificar";
+                novo.DataLancamento = datalancamento;
                 novo.Descricao = "Dia com diferença entre o total apontado e a jornada diária";
             }
-            else if (totalLancamento > Math.Round(Convert.ToDecimal(jornada.JornadaDiaria.TotalHours), 2))
+            if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2))
             {
-                novo.Divergencia = "Divergência justificada";
-                novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
+                novo.Divergencia = "Divergência a justificar";
+                novo.DataLancamento = datalancamento;
                 novo.Descricao = "Dia com diferença entre o total apontado e a jornada diária";
             }
 

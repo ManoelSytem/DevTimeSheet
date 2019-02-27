@@ -171,11 +171,11 @@ namespace TimeSheet.Controllers
 
 
                 marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
-                marcacao.Lancamentolist = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula);
+                var listalancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, User.GetDados("Matricula")).Distinct(new LancamentoComparer());
                 var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
 
                 var configuracao = _configuracao.ObterConfiguracao();
-                var viewModelFechamento = _mapper.Map<ViewModelFechamento>(_fechamentoNegocio.CalcularFechamento(marcacao.Lancamentolist.OrderBy(c => c.DateLancamento), jornadaTrabalho, configuracao));
+                var viewModelFechamento = _mapper.Map<ViewModelFechamento>(_fechamentoNegocio.CalcularTotalGeralMensalPorDia(listalancamento.OrderBy(c => c.DateLancamento), jornadaTrabalho, configuracao, marcacao.MatUsuario, marcacao.Filial, id));
                 viewModelFechamento.CodigoMarcacao = id;
                 return View("Fechamento", viewModelFechamento);
             }
@@ -509,7 +509,7 @@ namespace TimeSheet.Controllers
                 var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, lancamento.DateLancamento);
                 var lancamentolist = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, matricula);
                 var totalHoraDecimalLancamanetoPorDia = _fechamentoNegocio.CalcularTotalHoraLancamentoPorDia(lancamentolist);
-                var FechamentoResultValidacao = _fechamentoNegocio.ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(lancamento, totalHoraDecimalLancamanetoPorDia, jornadaTrabalho);
+                var FechamentoResultValidacao = _fechamentoNegocio.ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(lancamentolist, Convert.ToDecimal(totalHoraDecimalLancamanetoPorDia), jornadaTrabalho);
 
                 if (FechamentoResultValidacao.Descricao != null)
                 {

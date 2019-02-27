@@ -11,8 +11,7 @@ namespace TimeSheet.Application.Interface
     {
         List<Fechamento> CalcularLancamentoPorProjeto(IEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura, string matricula, string filial, string codmarcacao);
         List<Fechamento> CalcularTotalHoraExedenteETrabalhadaEabonoeFaltaPorDia(JornadaTrabalho jornada,string matricula, string filial, string codmarcacao);
-        Fechamento CalcularFechamento(IOrderedEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura);
-        double CalcularTotalHoraExedente(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada);
+        Fechamento CalcularTotalGeralMensalPorDia(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada, Configuracao config, string matricula, string filial,string codmarcacao);
         int CalcularQuantidadeDeDiaSemApontamento(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada);
         int CalcularTotalDeAbono(IOrderedEnumerable<Lancamento> lancamentoList, Configuracao config);
         double CalcularTotalHoras(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada);
@@ -24,11 +23,11 @@ namespace TimeSheet.Application.Interface
         Fechamento ValidarApontamentoImpar(Fechamento fechamento, List<Apontamento> apontamento);
         bool VerificaImpar(List<Apontamento> apontamento);
         decimal CalcularTotalApontamentoPorDiaLancamento(List<Apontamento> apontamentolist, List<Lancamento> listlancamento);
-        decimal CalcularTotalHoraLancamentoPorDia(List<Lancamento> lancamento);
+        double CalcularTotalHoraLancamentoPorDia(List<Lancamento> lancamento);
         List<Fechamento> ValidaSeExisteMarcacaoAntesEdepoisDoApontamento(List<Lancamento> listlancamento, List<Apontamento> apontamentolist);
         Fechamento ValidaPrimeiroLancamento(Lancamento lancamento, List<Apontamento> apontamentolist);
         Fechamento ValidaUltimoLancamento(Lancamento lancamento, List<Apontamento> apontamentolist);
-        Fechamento ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(Lancamento lancamento, decimal totalLancamento, JornadaTrabalho jornada);
+        Fechamento ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(List<Lancamento> lancamento, decimal totalLancamento, JornadaTrabalho jornada);
         Fechamento ValidaSabadoDomingoFeriadoComApontamento(Lancamento lancamento, Feriado feriado);
         Fechamento ValidarLancamentoForaDeJornadaInicio(Lancamento lancamento, JornadaTrabalho jornada);
         Fechamento ValidarUltimoLancamentoForaDeJornada(Lancamento lancamento, JornadaTrabalho jornada);
