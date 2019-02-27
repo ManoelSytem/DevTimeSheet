@@ -84,9 +84,11 @@
             else if (Model.status == "2")
             {
                 <td style="width:40px;"><b>Status: Fechado</b></td>}
-            else if (Model.status == "3") { 
+            else if (Model.status == "3")
+            {
                 <td style="width:40px;"><b>Status: Aprovado</b></td>}
-             else if (Model.status == "4") { 
+            else if (Model.status == "4")
+            {
                 <td style="width:40px;"><b>Status: Contabilizado</b></td>}
             <td style="width:30px;"><b>@Model.marcacao.AnoMesDescricao</b></td>
         </tr>
@@ -135,44 +137,45 @@
                             <th style=" font-size:14px;" class="text-center">Divergência</th>
                             <th style=" font-size:14px;" class="text-center"></th>
                         </tr>
-        <tbody>
-            @if (Model.FechamentoPorDatalancamento != null)
-            {
-                foreach (var itemF in Model.FechamentoPorDatalancamento.OrderBy(x => x.DataLancamento))
-                {
-                    datalancamentoFechamento = itemF.DataLancamento.ToDateProtheusReverseformate();
-                    if (item.dataApontamento == datalancamentoFechamento)
-                    {
-                        if (Model.status == "2")
+                    <tbody>
+                        @if (Model.FechamentoPorDatalancamento != null)
                         {
-                            <tr>
-                                <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
-                                <td>@itemF.TotalHoraExedente</td>
-                                <td>@itemF.TotalAbono</td>
-                                <td>@itemF.TotalFaltaAtraso</td>
-                                <td>@itemF.TotalHora</td>
-                                <td>@itemF.Divergencia</td>
-                            </tr>
+                            foreach (var itemF in Model.FechamentoPorDatalancamento.OrderBy(x => x.DataLancamento))
+                            {
+                                datalancamentoFechamento = itemF.DataLancamento.ToDateProtheusReverseformate();
+                                if (item.dataApontamento == datalancamentoFechamento)
+                                {
+                                    if (Model.status == "2")
+                                    {
+                                        <tr>
+                                            <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
+                                            <td>@itemF.TotalHoraExedente</td>
+                                            <td>@itemF.TotalAbono</td>
+                                            <td>@itemF.TotalFaltaAtraso</td>
+                                            <td>@itemF.TotalHora</td>
+                                            <td>@itemF.Divergencia</td>
+                                            <td></td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    datalancamentoFechamento = item.dataApontamento;
+                                }
+                            }
                         }
-                        else
-                        {
-                            <tr>
-                                <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        datalancamentoFechamento = item.dataApontamento;
-                    }
-                }
-            }
-        </tbody>
+                    </tbody>
                 }
                     var count = 0;
                     <tr>
@@ -202,17 +205,23 @@
                                 {
                                     if (itemA.apontamento == TimeSpan.Parse("00:00:00"))
                                     {
-                                        <td> </td>
+                                        <td>Relógio sem apontamento </td>
+                                        <td>Relógio sem apontamento </td>
+                                        <td>Relógio sem apontamento </td>
+                                        <td>Relógio sem apontamento </td>
+                                        <td>Relógio sem apontamento </td>
+                                        <td>Relógio sem apontamento </td>
+                                        <td>Relógio sem apontamento </td>
                                     }
                                     else
                                     {
-                                        <td>@(itemA.apontamento.Hours.ToString("00") + ":" + itemA.apontamento.Minutes.ToString("00"))</td>
+                                        <td>@itemA.apontamento.ToString(@"hh\:mm")</td>
                                     }
                                 }
                                 else
                                 {
                                     <tr>
-                                        <td>@(itemA.apontamento.Hours.ToString("00") + ":" + itemA.apontamento.Minutes.ToString("00"))</td>
+                                        <td>@itemA.apontamento.ToString(@"hh\:mm")</td>
                                     </tr>
                                 }
                             }
@@ -252,8 +261,8 @@
                                     {
                                         dataApontametoLista = itemLista.DateLancamento.ToDateProtheusReverseformate();
                                         <tr>
-                                            <td>@(itemLista.HoraInicio.Hours.ToString("00") + ":" + itemLista.HoraInicio.Minutes.ToString("00"))</td>
-                                            <td>@(itemLista.HoraFim.Hours.ToString("00") + ":" + itemLista.HoraFim.Minutes.ToString("00"))</td>
+                                            <td>@itemLista.HoraInicio.ToString(@"hh\:mm")</td>
+                                            <td>@itemLista.HoraFim.ToString(@"hh\:mm")</td>
                                             <td style=" font-size:12px;">@itemLista.DescricaoEmp</td>
                                             <td>@itemLista.CodDivergencia</td>
                                             <td></td>

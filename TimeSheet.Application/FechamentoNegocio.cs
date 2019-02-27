@@ -563,8 +563,6 @@ namespace TimeSheet.Application
             return novoFechamento;
         }
 
-
-
         public Fechamento ValidarLancamentoForaDeIntervaloInicio(Lancamento lancamento, JornadaTrabalho jornada)
         {
             Fechamento novoFechamento = new Fechamento();

@@ -99,7 +99,7 @@ namespace TimeSheet.Infrastructure.Repository
                     string sQuery = $@"UPDATE ZYV010  
                             SET ZYV_DESCR = '{item.DescJornada}' , ZYV_DTINI = '{Convert.ToString(item.DataInicio).ToDateProtheusConvert()}', ZYV_DTFIN = '{Convert.ToString(item.DataFim).ToDateProtheusConvert()}',
                             ZYV_JORNAD = '{item.JornadaDiaria}', ZYV_HRINI = '{item.HoraInicioDe}', ZYV_HRIFIN =  '{item.HoraInicioAte}', ZYV_HFINAL =  '{item.HoraFinal}',
-                            ZYV_INTINI= '{item.InterInicio}', ZYV_INTFIN = '{item.InterFim}',  ZYV_INTMIN = '{item.InterFim}', ZYV_INTMAX = '{item.InterMax}', ZYV_FILIAL = '{item.Filial}'
+                            ZYV_INTINI= '{item.InterInicio}', ZYV_INTFIN = '{item.InterFim}',  ZYV_INTMIN = '{item.InterMin}', ZYV_INTMAX = '{item.InterMax}', ZYV_FILIAL = '{item.Filial}'
                             WHERE ZYV_CODIGO ='{item.Codigo}'";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);

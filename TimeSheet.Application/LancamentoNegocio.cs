@@ -39,6 +39,10 @@ namespace TimeSheet.Application
             List<Fechamento> listFechamentoCalculada = new List<Fechamento>();
 
             var listFechamento = _fechamentoServiceRepository.ObterListFechamentoMensalPorMarcacaoDataColoborador(matricula, codmarcacao);
+            var marcacao = _marcacao.ObterMarcacao(codmarcacao);
+
+            if(marcacao.Status == Constantes.FECHADO | marcacao.Status == Constantes.APROVADO | marcacao.Status == Constantes.CONTABILIZADO)
+            { 
 
             foreach (Fechamento FechamentoResult in listFechamento)
             {
@@ -50,32 +54,45 @@ namespace TimeSheet.Application
                 novo.TotalFaltaAtraso = 0;
                 novo.TotalHoraExedente = 0;
                 novo.TotalAbono = FechamentoResult.TotalAbono;
-                if (listFechamentoCalculada.Any(x => x.DataLancamento != FechamentoResult.DataLancamento))
-                    listFechamentoCalculada.Add(novo);
+                listFechamentoCalculada.Add(novo);
             }
 
-
-            var listlancamentosSemMarcaco = ObterDiasSemLancamento(lancamentoList.ToList(), _marcacao.ObterMarcacao(codmarcacao), filial, jornada);
-            foreach (Fechamento fechamento in listlancamentosSemMarcaco)
+            }
+            else
             {
-                fechamento.CodigoMarcacao = codmarcacao;
-                fechamento.Filial = filial;
-                fechamento.TotalAbono = 0;
-                fechamento.TotalAtraso = 0;
-                fechamento.TotalFalta = Math.Round(Convert.ToDouble(jornada.JornadaDiaria.Hours), 2);
-                fechamento.TotalFaltaAtraso = 0;
-                fechamento.TotalHoraExedente = 0;
-                fechamento.CodigoProjeto = "0";
-                fechamento.Fase = "0";
-                fechamento.TotalHora = 0;
-                fechamento.Divergencia = "0";
-                listFechamentoCalculada.Add(fechamento);
+                foreach (Lancamento LancamentoAberto in lancamentoList.ToList())
+                {
+                    Fechamento novo = new Fechamento();
+                    novo.DataLancamento = LancamentoAberto.DateLancamento;
+                    novo.TotalHora = 0;
+                    novo.TotalFaltaAtraso = 0;
+                    novo.TotalHoraExedente = 0;
+                    novo.TotalAbono = 0;
+                        listFechamentoCalculada.Add(novo);
+                }
+
+                var listlancamentosSemMarcaco = ObterDiasSemLancamento(lancamentoList.ToList(), _marcacao.ObterMarcacao(codmarcacao), filial, jornada);
+                foreach (Fechamento fechamento in listlancamentosSemMarcaco)
+                {
+                    fechamento.CodigoMarcacao = codmarcacao;
+                    fechamento.Filial = filial;
+                    fechamento.TotalAbono = 0;
+                    fechamento.TotalAtraso = 0;
+                    fechamento.TotalFalta = Math.Round(Convert.ToDouble(jornada.JornadaDiaria.Hours), 2);
+                    fechamento.TotalFaltaAtraso = 0;
+                    fechamento.TotalHoraExedente = 0;
+                    fechamento.CodigoProjeto = "0";
+                    fechamento.Fase = "0";
+                    fechamento.TotalHora = 0;
+                    fechamento.Divergencia = "0";
+                    listFechamentoCalculada.Add(fechamento);
+                }
             }
 
             return listFechamentoCalculada;
         }
 
-        
+
 
         public double CalcularTotalLancamentoPorDia(List<Lancamento> listlancamentoDiario)
         {
@@ -108,7 +125,7 @@ namespace TimeSheet.Application
             return totalAbono;
         }
 
-       
+
 
         public bool Eabono(Lancamento lancamento, Configuracao config)
         {
@@ -151,7 +168,7 @@ namespace TimeSheet.Application
                     {
                         if (!ValidaEferiado(initialDate.ToString("dd/MM/yyyy").ToDateProtheusConvert(), filial))
                         {
-                            
+
                             dataSemLancamento.DataLancamento = initialDate.ToString("dd/MM/yyyy").ToDateProtheusConvert();
                             dataSemLancamento.TotalAbono = 0;
                             dataSemLancamento.TotalHoraExedente = 0;
@@ -208,5 +225,95 @@ namespace TimeSheet.Application
             return valor;
         }
 
+        public List<Fechamento> ValidaIntervaloMinimoEMaximo(List<Lancamento> lancamentoDiario, JornadaTrabalho jornada)
+        {
+            List<Fechamento> listFechamento = new List<Fechamento>();
+            double jornadaDiaria = Math.Round(jornada.JornadaDiaria.TotalHours, 2);
+            double minimo = Math.Round(jornada.InterMin.TotalHours, 2);
+            double maximo = Math.Round(jornada.InterMax.TotalHours, 2);
+            TimeSpan totalHorasIntervalo;
+            string datalancamento = "0";
+            int count = 0;
+            bool existe = false;
+
+            if (lancamentoDiario.Count > 0)
+            {
+                for (int i = 0; i < lancamentoDiario.Count; i++)
+                {
+                    datalancamento = lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate();
+                    if (!ValidaEferiado(lancamentoDiario[i].DateLancamento, jornada.Filial) & !ESabadoOuDomingo(Convert.ToDateTime(lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate())))
+                    {
+                        if (lancamentoDiario[i].HoraFim >= jornada.InterInicio && lancamentoDiario[i].HoraFim <= jornada.InterFim)
+                        {
+                            count++;
+                            if (count < lancamentoDiario.Count)
+                            {
+                                totalHorasIntervalo = lancamentoDiario[i + 1].HoraInicio - lancamentoDiario[i].HoraFim;
+                                if (Math.Round(totalHorasIntervalo.TotalHours, 2) >= minimo && Math.Round(totalHorasIntervalo.TotalHours, 2) <= maximo)
+                                {
+                                    if (lancamentoDiario[i].HoraFim >= jornada.InterInicio && lancamentoDiario[i + 1].HoraInicio <= jornada.InterFim)
+                                    {
+                                        Fechamento novo = new Fechamento();
+                                        listFechamento.Add(novo);
+                                        break;
+                                    }
+                                    if (lancamentoDiario[i].CodDivergencia != 0)
+                                    {
+                                        Fechamento novo = new Fechamento();
+                                        novo.Divergencia = "Divergência justificada";
+                                        novo.DataLancamento = lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate();
+                                        novo.Descricao = "Dia onde intervalo mínimo e máximo se encontra diferente do lançamento diário.";
+                                        listFechamento.Add(novo);
+                                        break;
+                                    }
+                                    else if (lancamentoDiario[i].CodDivergencia == 0)
+                                    {
+                                        Fechamento novo = new Fechamento();
+                                        novo.Divergencia = "Divergência a justificar";
+                                        novo.DataLancamento = lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate();
+                                        novo.Descricao = "Dia onde intervalo mínimo e máximo se encontra diferente  do lançamento diário.";
+                                        listFechamento.Add(novo);
+                                        break;
+                                    }
+
+                                }
+                                else if (lancamentoDiario[i].CodDivergencia == 0)
+                                {
+                                    Fechamento novo = new Fechamento();
+                                    novo.Divergencia = "Divergência a justificar";
+                                    novo.DataLancamento = lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate();
+                                    novo.Descricao = "Dia onde intervalo mínimo e máximo se encontra diferente do lançamento diário.";
+                                    listFechamento.Add(novo);
+                                    break;
+                                }
+                                else if (lancamentoDiario[i].CodDivergencia != 0)
+                                {
+                                    Fechamento novo = new Fechamento();
+                                    novo.Divergencia = "Divergência justificada";
+                                    novo.DataLancamento = lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate();
+                                    novo.Descricao = "Dia onde intervalo mínimo e máximo se encontra diferente do lançamento diário.";
+                                    listFechamento.Add(novo);
+                                    break;
+                                }
+
+                            }
+
+                        }
+
+                    }
+                }
+
+                if(listFechamento.Count == 0) {
+                    Fechamento novo = new Fechamento();
+                    novo.Divergencia = "Divergência a justificar";
+                    novo.DataLancamento = datalancamento;
+                    novo.Descricao = "Dia onde intervalo mínimo e máximo se encontra diferente do lançamento diário.";
+                    listFechamento.Add(novo);
+                }
+            }
+
+
+            return listFechamento;
+        }
     }
 }

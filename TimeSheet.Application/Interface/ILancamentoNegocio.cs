@@ -17,6 +17,6 @@ namespace TimeSheet.Application.Interface
        bool ValidaEferiado(string data, string filial);
        bool DatanaoExiste(DateTime data, List<Lancamento> lancamentolist);
        bool DataLancamentoExiste(DateTime data, List<Lancamento> lancamentolist);
-
+       List<Fechamento> ValidaIntervaloMinimoEMaximo(List<Lancamento> lancamentoDiario, JornadaTrabalho jornada);
     }
 }

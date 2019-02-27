@@ -349,7 +349,48 @@ namespace TimeSheet.Controllers
 
             }
 
+            var listG = ValidaLancamentoForaDeIntervaloMinMax(id);
+            if (listG.Count > 0)
+            {
+                foreach (Fechamento fechamentoResult in listG.ToList())
+                {
+                        listFechamento.Add(fechamentoResult);
+                }
+
+            }
+
+
             return listFechamento;
+        }
+
+        private List<Fechamento> ValidaLancamentoForaDeIntervaloMinMax(string id)
+        {
+            Fechamento fechamento = new Fechamento();
+            List<Fechamento> listaFechamentoFinal = new List<Fechamento>();
+            Marcacao marcacao = new Marcacao();
+
+            marcacao = _marcacaoServiceRepository.ObterMarcacao(id);
+            var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
+
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula).Distinct(new LancamentoComparer());
+
+            if (listLancamento != null)
+            {
+
+                foreach (Lancamento lancamento in listLancamento)
+                {
+                
+                    var LancamentoDiario = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, matricula);
+                    var ListFechamento = _lancamentoNegocio.ValidaIntervaloMinimoEMaximo(LancamentoDiario.OrderBy(x=> x.HoraInicio).ToList(), jornadaTrabalho);
+
+                    foreach(Fechamento fechamentoresult in ListFechamento)
+                    {
+                        if (fechamentoresult.Descricao != null)
+                            listaFechamentoFinal.Add(fechamentoresult);
+                    }
+                }
+            }
+            return listaFechamentoFinal;
         }
 
         private bool VerificaSeDataEsabadoDomingoOUferiado(List<Fechamento> listafechamento, Fechamento fechamentoCompara)
@@ -614,6 +655,4 @@ namespace TimeSheet.Controllers
         public bool Equals(Lancamento x, Lancamento y) => x.DateLancamento == y.DateLancamento;
         public int GetHashCode(Lancamento obj) => obj.DateLancamento.GetHashCode();
     }
-
-   
 }

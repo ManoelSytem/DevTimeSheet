@@ -11,5 +11,7 @@ namespace TimeSheet.Domain.Util
         public const string COLABORADOR = "TSCOLABORADOR";
         public const string ABERTO = "1";
         public const string FECHADO = "2";
+        public const string APROVADO = "3";
+        public const string CONTABILIZADO = "4";
     }
 }
