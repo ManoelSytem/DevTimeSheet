@@ -157,5 +157,29 @@ namespace TimeSheet.Infrastructure.Repository
                 dbConnection.Execute(sQuery);
             }
         }
+
+
+        public void SalvarCodigoFluig(string codigoMarcacao, string CodFluig)
+        {
+            using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+            {
+                dbConnection.Open();
+                string sQuery = $@"UPDATE ZYZ010 
+                                   SET ZYZ_CFLUIG = '{CodFluig}'
+                                   WHERE ZYZ_CODIGO = '{codigoMarcacao}'";
+                dbConnection.Execute(sQuery);
+            }
+        }
+
+        public Marcacao ObterCodigoFluigstring (string codigoMarcacao, string CodFluig)
+        {
+            using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+            {
+                dbConnection.Open();
+                string sQuery = $@"Select LTRIM(RTRIM(ZYZ_CFLUIG)) as CodigoFluig, LTRIM(RTRIM(ZYZ_MATUSU)) as MatUsuario, LTRIM(RTRIM(ZYZ_FILIAL)) as Filial, LTRIM(RTRIM(ZYZ_DTINIC)) as DataInicio,  LTRIM(RTRIM(ZYZ_DTFINA)) as DataFim,  ZYZ_ANOMES as AnoMes, LTRIM(RTRIM(ZYZ_CODINT)) AS codigojornada, ZYZ_STATUS as Status from ZYZ010
+                                        Where ZYZ_CODIGO = '{codigoMarcacao}' AND  D_E_L_E_T_ <> '*''";
+                return dbConnection.QueryFirst<Marcacao>(sQuery);
+            }
+        }
     }
 }

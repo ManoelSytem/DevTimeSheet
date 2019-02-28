@@ -11,11 +11,14 @@ namespace TimeSheet.Domain.Service
         private readonly WorkflowEngineServiceClient WSFluig;
         private readonly IMarcacao _marcacaoServiceRepository;
         private readonly IFluig _fluigAppServiceRepository;
+        private readonly IProtheus _prothuesSevicoRepository;
 
-        public FluigService(IMarcacao marcacaoServiceRepository, IFluig fluigAppServiceRepository) {
+
+        public FluigService(IMarcacao marcacaoServiceRepository, IFluig fluigAppServiceRepository, IProtheus prothuesSevicoRepository) {
             WSFluig = new WorkflowEngineServiceClient();
             _marcacaoServiceRepository = marcacaoServiceRepository;
             _fluigAppServiceRepository = fluigAppServiceRepository;
+            _prothuesSevicoRepository = prothuesSevicoRepository;
         }
 
         // 
@@ -49,9 +52,19 @@ namespace TimeSheet.Domain.Service
             return _fluigAppServiceRepository.ObterUsuarioFluig(email);
         }
 
-        public Fechamento SalvarIdProcessoFluig(string processId)
+        public  void SalvarIdProcessoFluig(string CodMarcacao, string processId)
         {
-            throw new System.NotImplementedException();
+             _marcacaoServiceRepository.SalvarCodigoFluig(CodMarcacao, processId);
+        }
+
+        public Marcacao ObterCodFluig(string codMarcacao, string codFluig)
+        {
+            return _marcacaoServiceRepository.ObterCodigoFluig(codMarcacao, codFluig);
+        }
+
+        public Usuario ObterUserGerencia(string centroCusto)
+        {
+           return  _prothuesSevicoRepository.ObterCoordenadorPorCentroDeCusto(centroCusto);
         }
     }
 }

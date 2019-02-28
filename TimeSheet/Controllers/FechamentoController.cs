@@ -94,7 +94,7 @@ namespace TimeSheet.Controllers
                 matricula = User.GetDados("Matricula");
                 filial = User.GetDados("Filial");
                 centrocusto = User.GetDados("Centro de Custo");
-                var email = User.GetClaim(ClaimTypes.Email);
+              
 
                 TempData["Createfalse"] = null;
                 Marcacao marcacao = new Marcacao();
@@ -215,15 +215,17 @@ namespace TimeSheet.Controllers
                 var configuracao = _configuracao.ObterConfiguracao();
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
 
-                listaCalculadaFechamentoPorProjeto = _fechamentoNegocio.CalcularLancamentoPorProjeto(marcacao.Lancamentolist, jornadaTrabalho, configuracao, matricula, filial, viewModelfechamento.CodigoMarcacao);
-                _fechamentoServiceRepository.SalvarFechamentoPorProjeto(listaCalculadaFechamentoPorProjeto, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
+                //listaCalculadaFechamentoPorProjeto = _fechamentoNegocio.CalcularLancamentoPorProjeto(marcacao.Lancamentolist, jornadaTrabalho, configuracao, matricula, filial, viewModelfechamento.CodigoMarcacao);
+                //_fechamentoServiceRepository.SalvarFechamentoPorProjeto(listaCalculadaFechamentoPorProjeto, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
 
-                listaCalculadaFechamentoPorDia = _fechamentoNegocio.CalcularTotalHoraExedenteETrabalhadaEabonoeFaltaPorDia(jornadaTrabalho, matricula, filial, viewModelfechamento.CodigoMarcacao);
-                _fechamentoServiceRepository.SalvarFechamentoPorDia(listaCalculadaFechamentoPorDia, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
+                //var listmacarcao = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(viewModelfechamento.CodigoMarcacao, matricula).Distinct(new LancamentoComparer());
+                //listaCalculadaFechamentoPorDia = _fechamentoNegocio.CalcularTotalHoraExedenteETrabalhadaEabonoeFaltaPorDia(listmacarcao.ToList(), configuracao,jornadaTrabalho, matricula, filial, viewModelfechamento.CodigoMarcacao);
+                //_fechamentoServiceRepository.SalvarFechamentoPorDia(listaCalculadaFechamentoPorDia, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
 
-                _marcacaoServiceRepository.UpdateStatusFechamento(viewModelfechamento.CodigoMarcacao);
-                NotificarFechamento(viewModelfechamento);
-                return Json(new { sucesso = "Fechamento realizado com sucesso!" });
+                //_marcacaoServiceRepository.UpdateStatusFechamento(viewModelfechamento.CodigoMarcacao);
+                //NotificarFechamento(viewModelfechamento);
+                StartProcessoFluig(matricula, filial, viewModelfechamento.CodigoMarcacao);
+                return Json(new { sucesso = "Fechamento realizado com sucesso! Processo do fluig foi aberto com sucesso!" });
             }
             catch (Exception e)
             {
@@ -647,11 +649,14 @@ namespace TimeSheet.Controllers
 
         }
 
-        private void StartProcessoFluig(string userCodFluig, string matricula, string filial, string projeto, string GrupoGerencia, string PoolGrupo)
+        private void StartProcessoFluig(string matricula, string filial, string codMarcacao)
         {
-            _fluigAppService.IniciarProcesso(userCodFluig, matricula, filial, projeto, GrupoGerencia, PoolGrupo);
+            string[][] result;
+            var Usuario = _fluigAppService.ObterUserCodFluig(User.GetClaim(ClaimTypes.Email));
+             _fluigAppService.ValidarUserFluig(Usuario);
+            var UsuarioGerencia = _fluigAppService.ObterUserGerencia(User.GetDados("Centro de Custo"));
+            result = _fluigAppService.IniciarProcesso(Usuario.CodigoFluig, matricula, filial, UsuarioGerencia.Gerencia, codMarcacao);
         }
-
 
     }
 

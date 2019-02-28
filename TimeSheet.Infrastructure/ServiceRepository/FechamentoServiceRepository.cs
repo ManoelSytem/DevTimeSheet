@@ -44,5 +44,6 @@ namespace TimeSheet.Infrastructure.ServiceRepository
         {
             _FechamentoRepository.SalvarFechamento(itens, filial, dataProtheus, matUser, centroCusto, status);
         }
+
     }
 }

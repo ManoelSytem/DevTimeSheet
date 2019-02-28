@@ -9,6 +9,5 @@ namespace TimeSheet.Domain.Interface
     public interface IFluig 
     {
          Usuario ObterUsuarioFluig(string email);
-        
     }
 }

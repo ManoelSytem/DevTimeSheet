@@ -15,7 +15,7 @@ namespace TimeSheet.Infrastructure.Repository
 
         public RepositoryFluig()
         {
-
+            Conexao = new OracleConnection(ConnectionString);
         }
 
         public Usuario ObterUsuarioFluigPorEmail(string email)

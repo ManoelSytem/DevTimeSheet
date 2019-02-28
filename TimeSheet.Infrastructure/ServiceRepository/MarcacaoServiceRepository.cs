@@ -50,5 +50,15 @@ namespace TimeSheet.Infrastructure.ServiceRepository
         {
             __marcacaoRepository.UpdateStatusMarcacao(codigo);
         }
+
+        public void SalvarCodigoFluig(string codigoMarcacao, string CodFluig)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Marcacao ObterCodigoFluig(string codigoMarcacao,  string CodFluig)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

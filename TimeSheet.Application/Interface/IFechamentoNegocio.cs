@@ -10,7 +10,7 @@ namespace TimeSheet.Application.Interface
     public interface IFechamentoNegocio
     {
         List<Fechamento> CalcularLancamentoPorProjeto(IEnumerable<Lancamento> orderedlistalancamento, JornadaTrabalho jornadaTrabalho, Configuracao configura, string matricula, string filial, string codmarcacao);
-        List<Fechamento> CalcularTotalHoraExedenteETrabalhadaEabonoeFaltaPorDia(JornadaTrabalho jornada,string matricula, string filial, string codmarcacao);
+        List<Fechamento> CalcularTotalHoraExedenteETrabalhadaEabonoeFaltaPorDia(List<Lancamento> listlancamentoDiario, Configuracao config, JornadaTrabalho jornada, string matricula, string filial, string codmarcacao);
         Fechamento CalcularTotalGeralMensalPorDia(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada, Configuracao config, string matricula, string filial,string codmarcacao);
         int CalcularQuantidadeDeDiaSemApontamento(IOrderedEnumerable<Lancamento> lancamentoList, JornadaTrabalho jornada);
         int CalcularTotalDeAbono(IOrderedEnumerable<Lancamento> lancamentoList, Configuracao config);

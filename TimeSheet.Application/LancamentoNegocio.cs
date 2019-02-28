@@ -152,11 +152,11 @@ namespace TimeSheet.Application
 
             var days = 0;
             days = initialDate.Subtract(finalDate).Days;
-
+         
             if (days < 0)
                 days = days * -1;
-
-            for (int i = 1; i <= days; i++)
+          
+            for (int i = 0; i <= days; i++)
             {
                 initialDate = initialDate.AddDays(1);
                 dataSemLancamento = new Fechamento();

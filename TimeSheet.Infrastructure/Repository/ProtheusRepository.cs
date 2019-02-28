@@ -215,7 +215,7 @@ namespace TimeSheet.Infrastructure.Repository
             {
 
                 Usuario usuario = new Usuario(); ;
-                var sqlUser = $@"Select LTRIM(RTRIM(CTT_DESC03)) AS Nome, LTRIM(RTRIM(CTT_EMLGER))  AS Email from CTT010 
+                var sqlUser = $@"Select LTRIM(RTRIM(CTT_DESC03)) AS Nome, LTRIM(RTRIM(CTT_EMLGER))  AS Email,  LTRIM(RTRIM(CTT_DESC01)) as Gerencia  from CTT010 
                                where CTT_CUSTO = '{centroCusto}'";
                 var QueryResult = Conexao.Query<Usuario>(sqlUser);
 
@@ -223,6 +223,7 @@ namespace TimeSheet.Infrastructure.Repository
                 {
                     usuario.Nome = UserGerenciaResult.Nome;
                     usuario.Email = UserGerenciaResult.Email;
+                    usuario.Gerencia = UserGerenciaResult.Gerencia;
                 }
 
                 return usuario;
