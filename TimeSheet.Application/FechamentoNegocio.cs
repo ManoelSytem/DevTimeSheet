@@ -639,7 +639,7 @@ namespace TimeSheet.Application
                             novo.CodigoProjeto = LancamentoResult.codEmpredimento;
                             novo.CodigoMarcacao = codmarcacao;
                             novo.Fase = LancamentoResult.Fase;
-                            if (Eabono(LancamentoResult, config)) novo.TotalAbono = totalAbono;
+                            novo.TotalAbono = totalAbono;
                             if (ValidaEferiado(LancamentoResult.DateLancamento, filial) | ESabadoOuDomingo(Convert.ToDateTime(LancamentoResult.DateLancamento.ToDateProtheusReverseformate())))
                             {
                                 novo.TotalHoraExedente = totalLancamento;

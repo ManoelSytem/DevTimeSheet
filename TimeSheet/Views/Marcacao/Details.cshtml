@@ -5,8 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@using (Html.BeginForm())
-{
+
             <div class="card azulc-azule">
                 <div class="card-header">
                     @ViewBag.Title
@@ -65,7 +64,7 @@
                         {
                             <tr>
                                 <td>@item.DateLancamento.ToDateProtheusReverseformate()</td>
-                                <td><button id="detalhe" type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="Detalhe('@item.DateLancamento')"><i class="fas fa-eye"></i></button> </td>
+                                <td><button id="detalhe" type="button" class="btn btn-sm btn-visualizar" name="visualizar" onclick="Detalhe(@item.DateLancamento)"><i class="fas fa-eye"></i></button> </td>
                             </tr>
                         }
                     }
@@ -105,12 +104,9 @@
         <button style="display:none" type="button" id="salvarEdicao" class="btn-ft-item" tooltip="Salvar Edição"><i class="fas fa-save"></i></button>
         <a href="@Url.Action("Index", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
     </div>
-}
 <script type="text/javascript">
 
-
     function Detalhe(datalancamento) {
-        alert("oi");
         $.ajax({
             url: '@Url.Action("GetMarcacoesProthues", "Marcacao")',
             changeMonth: true,
@@ -137,30 +133,5 @@
         });
     }
 
-    $('#tbLancamento').DataTable({
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
-        "columnDefs": [
-            { className: "text-left", "targets": [0, 1] },
-            { "orderable": false, "targets": [2] }
-        ],
-        "language": {
-            "decimal": "",
-            "emptyTable": "Nenhum registro disponível na tabela",
-            "info": "Visualizando _START_ de _END_ de _TOTAL_ registros",
-            "infoEmpty": "Visualizando 0 de 0 de 0 registros",
-            "infoFiltered": "(filtered from _MAX_ total entries)",
-            "infoPostFix": "",
-            "thousands": ",",
-            "lengthMenu": "Mostrar _MENU_ registros",
-            "loadingRecords": "Carregando...",
-            "processing": "Processando...",
-            "search": "Pesquisar:",
-            "zeroRecords": "Nenhum registro correspondente encontrado",
-            "paginate": {
-                "first": "Primeira",
-                "last": "Última",
-                "next": "Próxima",
-                "previous": "Anterior"
-            }
-        },
+ 
 </script>

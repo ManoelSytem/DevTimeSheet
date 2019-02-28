@@ -108,7 +108,7 @@ namespace TimeSheet.Infrastructure.Repository
                 {
                     List<Apontamento> listApontamento = new List<Apontamento>();
                     Apontamento apontamento;
-                    var sql = $@"Select  P8_HORA AS hora from SP8010
+                    var sql = $@"Select  LTRIM(RTRIM(P8_HORA)) AS hora from SP8010
                          where P8_MAT = LTRIM(RTRIM('{mat}'))  AND P8_FILIAL = LTRIM(RTRIM('{filial}')) 
                           AND D_E_L_E_T_ <> '*' AND P8_APONTA = 'S' AND P8_DATA = LTRIM(RTRIM('{Data}'))";
                     Conexao.Open();
@@ -116,8 +116,12 @@ namespace TimeSheet.Infrastructure.Repository
                     foreach (Apontamento ApResult in QueryResult)
                     {
                         apontamento = new Apontamento();
-                        apontamento.apontamento = TimeSpan.Parse(ApResult.hora.Replace(',', ':'));
-                        apontamento.horaFim = TimeSpan.Parse(ApResult.hora.Replace(',', ':'));
+                        if (ApResult.hora.Length == 1 | ApResult.hora.Length == 2) { apontamento.apontamento = TimeSpan.Parse("0"+ApResult.hora+":00"); } else
+                        {
+                            apontamento.apontamento = TimeSpan.Parse(ApResult.hora.Replace(',', ':'));
+                            apontamento.horaFim = TimeSpan.Parse(ApResult.hora.Replace(',', ':'));
+                        }
+
                         listApontamento.Add(apontamento);
                     }
 
