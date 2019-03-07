@@ -122,8 +122,8 @@
                     } else {
                         data[i].observacao = ' ';
                     }
-                    $('#tbLancamentoDetalhe tbody').append('<tr><td>' + data[i].horaInicio + '</td>' +
-                        '<td>' + data[i].horaFim + '</td>' +
+                    $('#tbLancamentoDetalhe tbody').append('<tr><td>' + data[i].horaInicio.substring(0, 5) + '</td>' +
+                        '<td>' + data[i].horaFim.substring(0, 5) + '</td>' +
                         '<td>' + data[i].descricaoEmp + ' - Fase - ' + data[i].fase + '</td>' +
                         '<td>' + data[i].observacao + '...' + '</td>' +
                         '<td>' + data[i].codDivergencia + '</td>' +
