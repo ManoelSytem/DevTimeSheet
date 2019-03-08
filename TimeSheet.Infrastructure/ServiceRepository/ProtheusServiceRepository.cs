@@ -57,5 +57,10 @@ namespace TimeSheet.Infrastructure.ServiceRepository
         }
 
         public List<Apontamento> ObterApontamentos(string matricula, string filial, string Data) => _prothuesRepository.ObterApontamentos(matricula, filial, Data);
+
+        public CodDivergencia ObterTipoCodigoDivergencia(string codigoDivegencia)
+        {
+            return _prothuesRepository.ObterTipoCodigoDivergencia(codigoDivegencia);
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace TimeSheet.Domain.Util
         public const string CONTABILIZADO = "4";
         public const string HRSEXCEDENTES = "01";
         public const string ABONOS = "02";
-        public const string NAOTABALHADA = "03";
+        public const string NAOTRABALHADA = "03";
         
     }
 }

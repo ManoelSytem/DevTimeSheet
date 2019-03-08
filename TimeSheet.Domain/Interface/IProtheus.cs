@@ -15,5 +15,6 @@ namespace TimeSheet.Domain.Enty.Interface
         Usuario ObterCoordenadorPorCentroDeCusto(string centroCusto);
         List<Usuario> ObterListColaboradorPorCentroDeCusto(string descricao, string centroCusto);
         List<Apontamento> ObterApontamentos(string matricula, string filial, string Data);
+        CodDivergencia ObterTipoCodigoDivergencia(string codigoDivegencia);
     }
 }
