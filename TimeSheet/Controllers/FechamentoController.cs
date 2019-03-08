@@ -215,15 +215,15 @@ namespace TimeSheet.Controllers
                 var configuracao = _configuracao.ObterConfiguracao();
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
 
-                //listaCalculadaFechamentoPorProjeto = _fechamentoNegocio.CalcularLancamentoPorProjeto(marcacao.Lancamentolist, jornadaTrabalho, configuracao, matricula, filial, viewModelfechamento.CodigoMarcacao);
-                //_fechamentoServiceRepository.SalvarFechamentoPorProjeto(listaCalculadaFechamentoPorProjeto, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
+                listaCalculadaFechamentoPorProjeto = _fechamentoNegocio.CalcularLancamentoPorProjeto(marcacao.Lancamentolist, jornadaTrabalho, configuracao, matricula, filial, viewModelfechamento.CodigoMarcacao);
+                _fechamentoServiceRepository.SalvarFechamentoPorProjeto(listaCalculadaFechamentoPorProjeto, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
 
-                //var listmacarcao = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(viewModelfechamento.CodigoMarcacao, matricula).Distinct(new LancamentoComparer());
-                //listaCalculadaFechamentoPorDia = _fechamentoNegocio.CalcularTotalHoraExedenteETrabalhadaEabonoeFaltaPorDia(listmacarcao.ToList(), configuracao,jornadaTrabalho, matricula, filial, viewModelfechamento.CodigoMarcacao);
-                //_fechamentoServiceRepository.SalvarFechamentoPorDia(listaCalculadaFechamentoPorDia, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
+                var listmacarcao = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(viewModelfechamento.CodigoMarcacao, matricula).Distinct(new LancamentoComparer());
+                listaCalculadaFechamentoPorDia = _fechamentoNegocio.CalcularTotalHoraExedenteETrabalhadaEabonoeFaltaPorDia(listmacarcao.ToList(), configuracao, jornadaTrabalho, matricula, filial, viewModelfechamento.CodigoMarcacao);
+                _fechamentoServiceRepository.SalvarFechamentoPorDia(listaCalculadaFechamentoPorDia, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
 
-                //_marcacaoServiceRepository.UpdateStatusFechamento(viewModelfechamento.CodigoMarcacao);
-                //NotificarFechamento(viewModelfechamento);
+                _marcacaoServiceRepository.UpdateStatusFechamento(viewModelfechamento.CodigoMarcacao);
+                NotificarFechamento(viewModelfechamento);
                 StartProcessoFluig(matricula, filial, viewModelfechamento.CodigoMarcacao);
                 return Json(new { sucesso = "Fechamento realizado com sucesso! Processo do fluig foi aberto com sucesso!" });
             }
@@ -366,7 +366,53 @@ namespace TimeSheet.Controllers
 
             }
 
+            var DiasUteisSemLancamento = ValidaDiasSemLancameto(id);
+            var listH = ValidaDiasSemApontamentoRelogio(id, DiasUteisSemLancamento);
+            if (listH.Count > 0)
+            {
+                foreach (Fechamento fechamentoResult in listH.ToList())
+                {
+                    listFechamento.Add(fechamentoResult);
+                }
 
+            }
+
+            return listFechamento;
+        }
+
+        private List<Fechamento> ValidaDiasSemApontamentoRelogio(string id, List<Fechamento> DiasUteisSemLancamento)
+        {
+            List<Fechamento> listFechamento = new List<Fechamento>();
+
+            Marcacao marcacao = new Marcacao();
+            marcacao = _marcacao.ObterMarcacao(id);
+            var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
+
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula).Distinct(new LancamentoComparer());
+
+            foreach (Lancamento lancamento in listLancamento)
+            {
+                var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, lancamento.DateLancamento);
+                var FechamentoResultValidacao = _fechamentoNegocio.ValidaSemApontamentoRelogioExiste(listApontamento, lancamento.DateLancamento);
+
+                if (FechamentoResultValidacao.Descricao != null)
+                {
+                    listFechamento.Add(FechamentoResultValidacao);
+                }
+
+            }
+
+            foreach (Fechamento fechamento in DiasUteisSemLancamento)
+            {
+                var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, fechamento.DataLancamento.ToDateProtheusConvert());
+                var FechamentoResultValidacao = _fechamentoNegocio.ValidaSemApontamentoRelogioExiste(listApontamento, fechamento.DataLancamento.ToDateProtheusConvert());
+
+                if (FechamentoResultValidacao.Descricao != null)
+                {
+                    listFechamento.Add(FechamentoResultValidacao);
+                }
+
+            }
             return listFechamento;
         }
 
@@ -653,7 +699,12 @@ namespace TimeSheet.Controllers
         {
             string[][] result;
             var Usuario = _fluigAppService.ObterUserCodFluig(User.GetClaim(ClaimTypes.Email));
-             _fluigAppService.ValidarUserFluig(Usuario);
+            // _fluigAppService.ValidarUserFluig(Usuario);
+            var marcacao = _fluigAppService.ObterCodFluig(codMarcacao);
+            //if (_fluigAppService.ValidaNovoProcesso(marcacao))
+            //{
+
+            //}
             var UsuarioGerencia = _fluigAppService.ObterUserGerencia(User.GetDados("Centro de Custo"));
             result = _fluigAppService.IniciarProcesso(Usuario.CodigoFluig, matricula, filial, UsuarioGerencia.Gerencia, codMarcacao);
         }

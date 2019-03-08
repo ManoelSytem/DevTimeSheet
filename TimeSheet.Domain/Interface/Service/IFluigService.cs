@@ -6,10 +6,11 @@ namespace TimeSheet.Domain.Interface.Service
     {
         string[][] IniciarProcesso(FluigProcess fluigProcess);
         Usuario ObterUserCodPorEmailFluig(string email);
-        Marcacao ObterCodFluig(string codMarcacao, string codFluig);
+        Marcacao ObterCodFluig(string codMarcacao);
         Marcacao ObterMarcacaoFechamentoFluig(string processId, string matricula, string codMarcacao);
         void SalvarIdProcessoFluig(string CodMarcacao, string processId);
         Usuario ObterUserGerencia(string centroCusto);
+        string[][] RestartProcessoFluig(FluigProcess fluigProcess);
 
     }
 }

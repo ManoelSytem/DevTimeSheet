@@ -15,7 +15,9 @@ namespace TimeSheet.Domain.Enty
         public string codigojornada { get; set; }
         public string DataInicio { get; set; }
         public string DataFim { get; set; }
+        public string CodigoFluig { get; set; }
         public virtual List<Lancamento> Lancamentolist { get; set; }
+       
 
         public void ValidarAbeturaMarcacaoExiste(List<Marcacao> listmarcacao, string ano, string mes)
         {

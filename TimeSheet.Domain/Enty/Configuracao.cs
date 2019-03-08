@@ -32,5 +32,6 @@ namespace TimeSheet.Domain
     {
         public int? codigo { get; set; }
         public string Descricao { get; set; }
+        public string Constant { get; set; }
     }
 }

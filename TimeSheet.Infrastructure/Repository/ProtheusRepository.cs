@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using TimeSheet.Domain;
 using TimeSheet.Domain.Enty;
+using TimeSheet.Domain.Util;
 using TimeSheet.Infrastructure.Interface;
 
 namespace TimeSheet.Infrastructure.Repository
@@ -47,10 +48,26 @@ namespace TimeSheet.Infrastructure.Repository
         {
             try
             {
+                List<CodDivergencia> listCodivegencia = new List<CodDivergencia>();
                 Conexao.Open();
-                var sql = $@"SELECT P6_CODIGO as Codigo, P6_DESC as Descricao  FROM SP6010
-                                WHERE (P6_DESC LIKE LTRIM(RTRIM('%{descId}%')) OR P6_CODIGO LIKE LTRIM(RTRIM('%{descId}%'))) AND D_E_L_E_T_ <> '*'";
-                return Conexao.Query<CodDivergencia>(sql);
+                var sql = $@"SELECT LTRIM(RTRIM(P6_FSTPTS))  as Constant, P6_CODIGO as Codigo, P6_DESC as Descricao  FROM SP6010
+                                WHERE (P6_DESC LIKE LTRIM(RTRIM('%{descId}%')) OR P6_CODIGO LIKE LTRIM(RTRIM('%{descId}%'))) AND P6_FSTPTS IN('01','02','03') AND D_E_L_E_T_ <> '*'";
+                Conexao.Query<CodDivergencia>(sql);
+                var QueryResult = Conexao.Query<CodDivergencia>(sql);
+
+                foreach (CodDivergencia codigoResult in QueryResult)
+                {
+                    CodDivergencia novo = new CodDivergencia();
+                    novo.codigo = codigoResult.codigo;
+                    novo.Descricao = codigoResult.Descricao;
+                    if(Constantes.HRSEXCEDENTES == codigoResult.Constant){ novo.Constant = "Hrs Excedentes";}
+                    else if (Constantes.ABONOS == codigoResult.Constant) { novo.Constant = "Abonos";}
+                    else if (Constantes.NAOTABALHADA == codigoResult.Constant) { novo.Constant = "Não trabalhadas"; }
+                    
+                    listCodivegencia.Add(novo);
+                }
+
+                return listCodivegencia;
             }
             catch (Exception ex)
             {

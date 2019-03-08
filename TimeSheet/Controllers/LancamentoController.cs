@@ -90,7 +90,9 @@ namespace TimeSheet.Controllers
             List<CodDivergenciaViewModel> allsearch = _prothuesService.ObterListCodDivergenciaPordescricao(search.ToUpper()).ToList().Select(x => new CodDivergenciaViewModel
             {
                 Descricao = x.Descricao,
-                codigo = x.codigo
+                codigo = x.codigo,
+                Constant = x.Constant
+                
 
             }).ToList();
 

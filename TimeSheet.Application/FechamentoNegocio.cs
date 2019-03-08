@@ -836,6 +836,20 @@ namespace TimeSheet.Application
             }
             return fechamentoSemLancamento;
         }
+
+        public Fechamento ValidaSemApontamentoRelogioExiste(List<Apontamento> listApontamento, string dataDia)
+        {
+            Fechamento novo = new Fechamento();
+            if (listApontamento.Count == 0 & !ESabadoOuDomingo(Convert.ToDateTime(dataDia.ToDateProtheusReverseformate())))
+            {
+                  novo.Divergencia = "Divergência";
+                  novo.DataLancamento = dataDia.ToDateProtheusReverseformate();
+                  novo.Descricao = "Dia sem apontamento no relogio.";
+                  return novo;
+
+            }
+            return novo;
+        }
     }
 
     public class FechamentoCompareCodProjetoExiste : IEqualityComparer<Fechamento>

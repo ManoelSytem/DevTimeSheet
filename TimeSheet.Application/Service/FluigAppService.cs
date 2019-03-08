@@ -6,6 +6,7 @@ using TimeSheet.Application.Interface;
 using TimeSheet.Domain;
 using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Interface.Service;
+using TimeSheet.Domain.Util;
 
 namespace TimeSheet.Application
 {
@@ -52,9 +53,40 @@ namespace TimeSheet.Application
             return Service.IniciarProcesso(fluigProcess);
         }
 
-        public Marcacao ObterCodFluig(string codMarcacao, string codFluig)
+        public string[][] RestartProcesso(string userCodFluig, string matricula, string filial, string GrupoGerencia, string codmarcacao)
         {
-            return Service.ObterCodFluig(codMarcacao, codFluig);
+            var fluigProcess = new FluigProcess()
+            {
+                Username = Configuration.GetSection("Fluig")["UserName"],
+                Password = Configuration.GetSection("Fluig")["Password"],
+                UserCordFluig = Configuration.GetSection("Fluig")["UserName"],
+                CompanyId = Convert.ToInt32(Configuration.GetSection("Fluig")["CompanyId"]),
+                IdProcesso = Configuration.GetSection("Fluig")["IdProcesso"],
+                Atividade = 0,
+                Completatarefa = true,
+                Gestor = false,
+                ColleagueId = new string[] { },
+                Comment = "",
+                CardData = new string[][] {
+                    new[] { "txtGrupoGerencia", "GETIN"},
+                    new[] { "hddFilial", filial },
+                    new[] { "hddCodigo",  codmarcacao }, // CODIGO DA ZYU_CODIGO
+                    new[] { "hddDivergencia", ""},
+                    new[] { "hddAprovCoord",  "" },
+                    new[] { "hddAprovGerencia",  "" },
+                    new[] { "txtMatricula", matricula },
+                    new[] { "txtNomeColaborador", ""},
+                    new[] { "hddMatFluig", Configuration.GetSection("Fluig")["UserName"]},
+                    //ZY
+                }
+            };
+
+            return Service.IniciarProcesso(fluigProcess);
+        }
+
+        public Marcacao ObterCodFluig(string codMarcacao)
+        {
+            return Service.ObterCodFluig(codMarcacao);
         }
 
         public Usuario ObterUserCodFluig(string email)
@@ -93,6 +125,18 @@ namespace TimeSheet.Application
         public Marcacao VerificaExisteFechamentoFluig(string processId, string matricula, string codMarcacao)
         {
             return Service.ObterMarcacaoFechamentoFluig(processId, matricula, codMarcacao);
+        }
+
+        public bool ValidaNovoProcesso(Marcacao marcacao)
+        {
+            if (marcacao.Status == Constantes.ABERTO && marcacao.CodigoFluig == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

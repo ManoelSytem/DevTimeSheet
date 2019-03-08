@@ -56,9 +56,9 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             throw new NotImplementedException();
         }
 
-        public Marcacao ObterCodigoFluig(string codigoMarcacao,  string CodFluig)
+        public Marcacao ObterCodigoFluig(string codigoMarcacao)
         {
-            throw new NotImplementedException();
+           return __marcacaoRepository.ObterCodigoFluig(codigoMarcacao);
         }
     }
 }

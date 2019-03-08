@@ -171,7 +171,7 @@ namespace TimeSheet.Infrastructure.Repository
             }
         }
 
-        public Marcacao ObterCodigoFluigstring (string codigoMarcacao, string CodFluig)
+        public Marcacao ObterCodigoFluig(string codigoMarcacao)
         {
             using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
             {

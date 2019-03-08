@@ -1,4 +1,5 @@
-﻿using TimeSheet.Domain.Enty;
+﻿using System;
+using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
 using TimeSheet.Domain.Interface;
 using TimeSheet.Domain.Interface.Service;
@@ -42,6 +43,23 @@ namespace TimeSheet.Domain.Service
                 fluigProcess.Gestor).GetAwaiter().GetResult().result;
         }
 
+        public string[][] RestartProcessoFluig(FluigProcess fluigProcess)
+        {
+
+            return WSFluig.startProcessAsync(fluigProcess.Username,
+                  fluigProcess.Password,
+                  fluigProcess.CompanyId,
+                  fluigProcess.IdProcesso,
+                  fluigProcess.Atividade,
+                  fluigProcess.ColleagueId,
+                  fluigProcess.Comment,
+                  fluigProcess.UserCordFluig,// o codigo do retorno da consulta do email.
+                  fluigProcess.Completatarefa,
+                  fluigProcess.AttachmentsFluig,
+                  fluigProcess.CardData,
+                  fluigProcess.AppointmentFluig,
+                  fluigProcess.Gestor).GetAwaiter().GetResult().result;
+        }
         public Marcacao ObterMarcacaoFechamentoFluig(string processId, string matricula, string codMarcacao)
         {
             return _marcacaoServiceRepository.ObterMarcacao(codMarcacao);
@@ -57,9 +75,9 @@ namespace TimeSheet.Domain.Service
              _marcacaoServiceRepository.SalvarCodigoFluig(CodMarcacao, processId);
         }
 
-        public Marcacao ObterCodFluig(string codMarcacao, string codFluig)
+        public Marcacao ObterCodFluig(string codMarcacao)
         {
-            return _marcacaoServiceRepository.ObterCodigoFluig(codMarcacao, codFluig);
+            return _marcacaoServiceRepository.ObterCodigoFluig(codMarcacao);
         }
 
         public Usuario ObterUserGerencia(string centroCusto)

@@ -64,11 +64,13 @@ namespace TimeSheet.ViewModel
     {
         public int? codigo { get; set; }
         public string Descricao { get; set; }
+        public string Constant { get; set; }
 
-        public CodDivergenciaViewModel(int _codigo, string _desc)
+        public CodDivergenciaViewModel(int _codigo, string _desc, string _constant)
         {
             this.codigo = _codigo;
             this.Descricao = _desc;
+            this.Constant = _constant;
         }
 
         public CodDivergenciaViewModel()

@@ -68,7 +68,7 @@
                 data: { search: $("#searchInput").val() },
                 success: function (data) {
                     response($.map(data, function (item) {
-                        return { label: item.codigo + "-" + item.descricao, value: item.codigo};
+                        return { label: item.codigo + "-" + item.descricao + " - " + item.constant, value: item.codigo };
                     }));
                 },
                 error: function (xhr, status, error) {
