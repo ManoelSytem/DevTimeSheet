@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Espelho de Ponto</title>
+    <title>Time Sheet</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <style type="text/css">
         * {
@@ -77,7 +77,7 @@
     Data de emisão:  @DateTime.Now.ToString("dd/MM/yyyy")
     <table style="height:50px; text-align: center; font-size:20px;" class="table">
         <tr>
-            <td><b>ESPELHO DE PONTO</b></td>
+            <td><b>Time Sheet</b></td>
             @if (Model.status == "1")
             {
                 <td style="width:40px;"><b>Status: Aberto</b></td> }
@@ -131,9 +131,9 @@
                         <tr>
                             <th style=" font-size:14px;" class="text-center">Data Lançamento</th>
                             <th style=" font-size:14px;" class="text-center">Horas execedentes</th>
-                            <th style=" font-size:14px;" class="text-center">Horas abonos</th>
-                            <th style=" font-size:14px;" class="text-center">Atrasos/Faltas</th>
-                            <th style=" font-size:14px;" class="text-center">Horas trabalhadas</th>
+                            <th style=" font-size:14px;" class="text-center">Horas não trabalhada</th>
+                            <th style=" font-size:14px;" class="text-center">Horas abonadas</th>
+                            <th style=" font-size:14px;" class="text-center">Total de horas trabalhadas</th>
                             <th style=" font-size:14px;" class="text-center">Divergência</th>
                             <th style=" font-size:14px;" class="text-center"></th>
                         </tr>
@@ -147,15 +147,15 @@
                                 {
                                     if (Model.status == "2")
                                     {
-                                        <tr>
-                                            <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
-                                            <td>@itemF.TotalHoraExedente</td>
-                                            <td>@itemF.TotalAbono</td>
-                                            <td>@itemF.TotalFaltaAtraso</td>
-                                            <td>@itemF.TotalHora</td>
-                                            <td>@itemF.Divergencia</td>
-                                            <td></td>
-                                        </tr>
+                        <tr>
+                            <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>
+                            <td>@itemF.TotalHoraExedente</td>
+                            <td>@itemF.TotalFaltaAtraso</td>
+                            <td>@itemF.TotalAbono</td>
+                            <td>@itemF.TotalHora</td>
+                            <td>@itemF.Divergencia</td>
+                            <td></td>
+                        </tr>
                                     }
                                     else
                                     {
