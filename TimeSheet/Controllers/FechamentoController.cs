@@ -377,6 +377,44 @@ namespace TimeSheet.Controllers
 
             }
 
+
+            var listEx = ValidarHorasExecedentesSemCodigoDivergencia(id);
+            if (listEx.Count > 0)
+            {
+                foreach (Fechamento fechamentoResult in listEx.ToList())
+                {
+                    listFechamento.Add(fechamentoResult);
+                }
+
+            }
+
+            return listFechamento;
+        }
+
+        private List<Fechamento> ValidarHorasExecedentesSemCodigoDivergencia(string id)
+        {
+
+            List<Fechamento> listFechamento = new List<Fechamento>();
+
+            Marcacao marcacao = new Marcacao();
+            marcacao = _marcacao.ObterMarcacao(id);
+            var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
+
+            var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula).Distinct(new LancamentoComparer());
+
+            foreach (Lancamento lancamento in listLancamento)
+            {
+                var lancamentolist = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, matricula);
+                var totalHoraExedenteComCodigo = _fechamentoNegocio.CalcularTotalHoraExedentes(lancamentolist);
+                var totalHoraExedenteSemCodigo = _fechamentoNegocio.CalcularTotalHoraExedentesSemCodigo(lancamentolist, jornadaTrabalho);
+                var FechamentoResultValidacao = _fechamentoNegocio.ValidarDiferencaHorasExcedentes(totalHoraExedenteComCodigo, totalHoraExedenteSemCodigo, lancamento.DateLancamento, jornadaTrabalho);
+
+                if (FechamentoResultValidacao.Descricao != null)
+                {
+                    listFechamento.Add(FechamentoResultValidacao);
+                }
+
+            }
             return listFechamento;
         }
 

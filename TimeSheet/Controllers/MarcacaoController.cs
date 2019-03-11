@@ -123,6 +123,7 @@ namespace TimeSheet.Controllers
                         marcacao.Lancamento.Observacao = marcacao.Lancamento.Observacao.ReplaceSaveObservacaoProthues();
                         var codiviergencia = _prothuesService.ObterCodigoDivergenciaPorCodigo(Convert.ToString(marcacao.Lancamento.CodDivergencia));
                         codiv.ValidaCodigoDivergencia(codiviergencia);
+                        codiv.ValidaCodigoDivergenciaConstante();
                         lancamento = marcacao.Lancamento;
                         lancamento.ValidaHorasLancamentoOutraMarcacao(_lancamentoerviceRepository.ObterLancamento(marcacao.DataDia.ToDateProtheus(), User.GetDados("Matricula")));
                         marcacao.Lancamento.Codigo = aberturaMarcacao.AbeturaExiste(_marcacao.ObterListMarcacaoPorMatUser(User.GetDados("Matricula")), marcacao.DataDia.ToDia(), marcacao.DataDia.ToAno());
@@ -192,6 +193,7 @@ namespace TimeSheet.Controllers
                         marcacao.Lancamento.Observacao = marcacao.Lancamento.Observacao.ReplaceSaveObservacaoProthues();
                         var codiviergencia = _prothuesService.ObterCodigoDivergenciaPorCodigo(Convert.ToString(marcacao.Lancamento.CodDivergencia));
                         codiv.ValidaCodigoDivergencia(codiviergencia);
+                        codiv.ValidaCodigoDivergenciaConstante();
                         lancamentoAliplication = marcacao.Lancamento;
                         lancamentoAliplication.ValidaHorasLancamentoOutraMarcacao(_lancamentoerviceRepository.ObterLancamento(marcacao.DataDia.ToDateProtheus(), User.GetDados("Matricula")));
                         marcacao.Lancamento.codEmpredimento = marcacao.Lancamento.EmpreendimentoIds[0].Substring(0, marcacao.Lancamento.EmpreendimentoIds[0].IndexOf('-'));

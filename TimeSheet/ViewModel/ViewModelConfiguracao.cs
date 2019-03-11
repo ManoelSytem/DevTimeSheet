@@ -83,6 +83,14 @@ namespace TimeSheet.ViewModel
                 throw new Exception("Código de divergência não encontrado");
         }
 
+        public void ValidaCodigoDivergenciaConstante(string constat)
+        {
+
+            if (this.Constant != "01" | this.Constant != "02" | this.Constant != "03") { }
+            else
+                throw new Exception("Código de divergência não autorizado");
+        }
+
         public string ValidaConfiguracaoExiste(string erro)
         {
             if (erro.Substring(0, 9) == "ORA-00001") {

@@ -34,5 +34,8 @@ namespace TimeSheet.Application.Interface
         Fechamento ValidarLancamentoForaDeIntervaloInicio(Lancamento lancamento, JornadaTrabalho jornada);
         double CalcularTotalGeral(List<Fechamento> listFecahamento);
         Fechamento ValidaSemApontamentoRelogioExiste(List<Apontamento> listApontamento, string dataDia);
+        double CalcularTotalHoraExedentes(List<Lancamento> lancamento);
+        double CalcularTotalHoraExedentesSemCodigo(List<Lancamento> lancamento, JornadaTrabalho jornada);
+        Fechamento ValidarDiferencaHorasExcedentes(double TotalhorasExedentesComCodigo, double TotalhorasExedentesSemCodigo, string datalancamento, JornadaTrabalho jornada);
     }
 }
