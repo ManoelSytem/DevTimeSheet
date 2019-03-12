@@ -361,7 +361,10 @@ namespace TimeSheet.Controllers
             {
                 foreach (Fechamento fechamentoResult in listG.ToList())
                 {
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
+                    {
                         listFechamento.Add(fechamentoResult);
+                    }
                 }
 
             }
@@ -372,7 +375,10 @@ namespace TimeSheet.Controllers
             {
                 foreach (Fechamento fechamentoResult in listH.ToList())
                 {
-                    listFechamento.Add(fechamentoResult);
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
+                    {
+                        listFechamento.Add(fechamentoResult);
+                    }
                 }
 
             }
@@ -383,7 +389,10 @@ namespace TimeSheet.Controllers
             {
                 foreach (Fechamento fechamentoResult in listEx.ToList())
                 {
-                    listFechamento.Add(fechamentoResult);
+                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
+                    {
+                        listFechamento.Add(fechamentoResult);
+                    }
                 }
 
             }

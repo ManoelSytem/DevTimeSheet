@@ -37,5 +37,8 @@ namespace TimeSheet.Application.Interface
         double CalcularTotalHoraExedentes(List<Lancamento> lancamento);
         double CalcularTotalHoraExedentesSemCodigo(List<Lancamento> lancamento, JornadaTrabalho jornada);
         Fechamento ValidarDiferencaHorasExcedentes(double TotalhorasExedentesComCodigo, double TotalhorasExedentesSemCodigo, string datalancamento, JornadaTrabalho jornada);
+        double CalcularTotalAbonoGeral(List<Fechamento> listFecahamento);
+        double CalcularTotalNaoTrabalhadaGeral(List<Fechamento> listFecahamento);
+        double CalcularTotalExedenteGeral(List<Fechamento> listFecahamento);
     }
 }

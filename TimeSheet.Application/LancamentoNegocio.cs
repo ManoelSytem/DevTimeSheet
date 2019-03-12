@@ -244,10 +244,10 @@ namespace TimeSheet.Application
                     datalancamento = lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate();
                     if (!ValidaEferiado(lancamentoDiario[i].DateLancamento, jornada.Filial) & !ESabadoOuDomingo(Convert.ToDateTime(lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate())))
                     {
-                       
+                        count++;
                         if (lancamentoDiario[i].HoraFim >= jornada.InterInicio && lancamentoDiario[i].HoraFim <= jornada.InterFim)
                         {
-                            count++;
+                            
                             if (count < lancamentoDiario.Count)
                             {
                                 totalHorasIntervalo = lancamentoDiario[i + 1].HoraInicio - lancamentoDiario[i].HoraFim;

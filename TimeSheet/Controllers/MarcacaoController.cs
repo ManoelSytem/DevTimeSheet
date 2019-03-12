@@ -122,8 +122,10 @@ namespace TimeSheet.Controllers
                         marcacao.Lancamento.ValidaHoraLancamento();
                         marcacao.Lancamento.Observacao = marcacao.Lancamento.Observacao.ReplaceSaveObservacaoProthues();
                         var codiviergencia = _prothuesService.ObterCodigoDivergenciaPorCodigo(Convert.ToString(marcacao.Lancamento.CodDivergencia));
-                        codiv.ValidaCodigoDivergencia(codiviergencia);
-                        codiv.ValidaCodigoDivergenciaConstante();
+                        if (marcacao.Lancamento.CodDivergencia != null && marcacao.Lancamento.CodDivergencia != 0) {
+                         codiv.ValidaCodigoDivergencia(codiviergencia);
+                        codiv.ValidaCodigoDivergenciaConstante(codiviergencia.Constant, marcacao.Lancamento.CodDivergencia);
+                        }
                         lancamento = marcacao.Lancamento;
                         lancamento.ValidaHorasLancamentoOutraMarcacao(_lancamentoerviceRepository.ObterLancamento(marcacao.DataDia.ToDateProtheus(), User.GetDados("Matricula")));
                         marcacao.Lancamento.Codigo = aberturaMarcacao.AbeturaExiste(_marcacao.ObterListMarcacaoPorMatUser(User.GetDados("Matricula")), marcacao.DataDia.ToDia(), marcacao.DataDia.ToAno());
@@ -192,8 +194,11 @@ namespace TimeSheet.Controllers
                         marcacao.Lancamento.ValidaHoraLancamento();
                         marcacao.Lancamento.Observacao = marcacao.Lancamento.Observacao.ReplaceSaveObservacaoProthues();
                         var codiviergencia = _prothuesService.ObterCodigoDivergenciaPorCodigo(Convert.ToString(marcacao.Lancamento.CodDivergencia));
-                        codiv.ValidaCodigoDivergencia(codiviergencia);
-                        codiv.ValidaCodigoDivergenciaConstante();
+                        if (marcacao.Lancamento.CodDivergencia != null && marcacao.Lancamento.CodDivergencia !=0)
+                        {
+                            codiv.ValidaCodigoDivergencia(codiviergencia);
+                            codiv.ValidaCodigoDivergenciaConstante(codiviergencia.Constant, marcacao.Lancamento.CodDivergencia);
+                        }
                         lancamentoAliplication = marcacao.Lancamento;
                         lancamentoAliplication.ValidaHorasLancamentoOutraMarcacao(_lancamentoerviceRepository.ObterLancamento(marcacao.DataDia.ToDateProtheus(), User.GetDados("Matricula")));
                         marcacao.Lancamento.codEmpredimento = marcacao.Lancamento.EmpreendimentoIds[0].Substring(0, marcacao.Lancamento.EmpreendimentoIds[0].IndexOf('-'));

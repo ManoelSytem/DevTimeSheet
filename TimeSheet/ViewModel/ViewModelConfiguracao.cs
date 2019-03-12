@@ -78,17 +78,15 @@ namespace TimeSheet.ViewModel
         }
         public void ValidaCodigoDivergencia(Object codDivergencia) {
 
-            if (codDivergencia != null);
-            else
-                throw new Exception("Código de divergência não encontrado");
+            if (codDivergencia == null) throw new Exception("Código de divergência não encontrado");
+                
         }
 
-        public void ValidaCodigoDivergenciaConstante(string constat)
+        public void ValidaCodigoDivergenciaConstante(string constat, int? codigo)
         {
-
-            if (this.Constant != "01" | this.Constant != "02" | this.Constant != "03") { }
-            else
-                throw new Exception("Código de divergência não autorizado");
+            if (codigo == null) { }
+                else  if(constat == null)
+                throw new Exception("Código de divergência não autorizado.");
         }
 
         public string ValidaConfiguracaoExiste(string erro)

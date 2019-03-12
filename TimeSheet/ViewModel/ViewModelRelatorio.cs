@@ -15,5 +15,8 @@ namespace TimeSheet.ViewModel
         public Usuario user { get; set; }
         public string status { get; set; }
         public double totalGeral { get; set; }
+        public double totalExcedente { get; set; }
+        public double totalAbono { get; set; }
+        public double totalNaoTrabalhada{ get; set; }
     }
 }

@@ -117,7 +117,9 @@ namespace TimeSheet.Controllers
                 viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorData(id).Distinct(new FechamentoComparer()));
                 viewModelRelatorio.user = user;
                 viewModelRelatorio.totalGeral = _fechamentoNegocio.CalcularTotalGeral(_mapper.Map<List<Fechamento>>(viewModelRelatorio.FechamentoPorDatalancamento));
-
+                viewModelRelatorio.totalAbono = _fechamentoNegocio.CalcularTotalAbonoGeral(_mapper.Map<List<Fechamento>>(viewModelRelatorio.FechamentoPorDatalancamento));
+                viewModelRelatorio.totalExcedente = _fechamentoNegocio.CalcularTotalExedenteGeral(_mapper.Map<List<Fechamento>>(viewModelRelatorio.FechamentoPorDatalancamento));
+                viewModelRelatorio.totalNaoTrabalhada = _fechamentoNegocio.CalcularTotalNaoTrabalhadaGeral(_mapper.Map<List<Fechamento>>(viewModelRelatorio.FechamentoPorDatalancamento));
                 return new ViewAsPdf("EspelhoDePontoSintetico", viewModelRelatorio);
             }
             catch (Exception e)
@@ -146,7 +148,11 @@ namespace TimeSheet.Controllers
                 viewModelRelatorio.status = viewModelMarcacao.Status;
                 viewModelRelatorio.FechamentoPorDatalancamento = _mapper.Map<List<ViewModelFechamento>>(CalcularFechamentoPorDataGerencia(id, viewModelRelatorio.marcacao.MatUsuario, viewModelRelatorio.marcacao.Filial).Distinct(new FechamentoComparer()));
                 viewModelRelatorio.user = user;
+
                 viewModelRelatorio.totalGeral = _fechamentoNegocio.CalcularTotalGeral(_mapper.Map<List<Fechamento>>(viewModelRelatorio.FechamentoPorDatalancamento));
+                viewModelRelatorio.totalAbono = _fechamentoNegocio.CalcularTotalAbonoGeral(_mapper.Map<List<Fechamento>>(viewModelRelatorio.FechamentoPorDatalancamento));
+                viewModelRelatorio.totalExcedente = _fechamentoNegocio.CalcularTotalExedenteGeral(_mapper.Map<List<Fechamento>>(viewModelRelatorio.FechamentoPorDatalancamento));
+                viewModelRelatorio.totalNaoTrabalhada = _fechamentoNegocio.CalcularTotalNaoTrabalhadaGeral(_mapper.Map<List<Fechamento>>(viewModelRelatorio.FechamentoPorDatalancamento));
 
                 user = _protheusService.ObterUsuarioNome(viewModelRelatorio.marcacao.MatUsuario);
                 user.Nome = user.Nome;
