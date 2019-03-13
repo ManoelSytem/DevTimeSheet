@@ -145,7 +145,7 @@ namespace TimeSheet.Infrastructure.Repository
                                      sum(LTRIM(RTRIM(ZYU_THORAS))) as  TotalHora,
                                      sum(LTRIM(RTRIM(ZYU_THORNT)))  as  TotalFaltaAtraso
                                      from ZYU010 
-                                     where ZYU_CODIGO = '{codigoMarcacao}' AND ZYU_MATUSU = '{matricula}'  AND (ZYU_STATUS = '2' OR ZYU_STATUS = '3' OR ZYU_STATUS = '4') AND ZYU_PROJET = '00000' AND D_E_L_E_T_ <> '*' 
+                                     where ZYU_CODIGO = '{codigoMarcacao}' AND ZYU_MATUSU = '{matricula}'  AND (ZYU_STATUS = '2') AND ZYU_PROJET = '00000' AND D_E_L_E_T_ <> '*' 
                                     group by LTRIM(RTRIM(ZYU_DTMARC))";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);

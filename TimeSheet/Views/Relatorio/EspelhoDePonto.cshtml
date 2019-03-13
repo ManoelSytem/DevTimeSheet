@@ -131,7 +131,7 @@
                         <tr>
                             <th style=" font-size:14px;" class="text-center">Data Lançamento</th>
                             <th style=" font-size:14px;" class="text-center">Horas execedentes</th>
-                            <th style=" font-size:14px;" class="text-center">Horas não trabalhada</th>
+                            <th style=" font-size:14px;" class="text-center">Horas não trabalhadas</th>
                             <th style=" font-size:14px;" class="text-center">Horas abonadas</th>
                             <th style=" font-size:14px;" class="text-center">Total de horas trabalhadas</th>
                             <th style=" font-size:14px;" class="text-center">Divergência</th>
@@ -145,7 +145,7 @@
                                 datalancamentoFechamento = itemF.DataLancamento.ToDateProtheusReverseformate();
                                 if (item.dataApontamento == datalancamentoFechamento)
                                 {
-                                    if (Model.status == "2")
+                                    if (Model.status == "2" | Model.status == "3" | Model.status == "4")
                                     {
                         <tr>
                             <th scope="row">@itemF.DataLancamento.ToDateProtheusReverseformate()</th>

@@ -12,6 +12,6 @@ namespace TimeSheet.Application.Interface
         void ValidarUserFluig(Usuario user);
         bool ValidaNovoProcesso(Marcacao marcacao);
         Marcacao ObterCodFluig(string codMarcacao);
-        string[][] RestartProcesso(string userCodFluig, string matricula, string filial, string GrupoGerencia, string codmarcacao);
+        string[][] RestartProcesso(string userCodFluig, string codigoProcessoFluig, string matricula, string filial, string GrupoGerencia, string codmarcacao);
     }
 }

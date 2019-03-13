@@ -127,7 +127,7 @@
             </tr>
         </thead>
         <tbody>
-            @if (Model.status == "2")
+            @if (Model.status == "2" | Model.status == "3" | Model.status == "4")
             {
                 @if (Model.FechamentoPorDatalancamento != null)
                 {

@@ -25,9 +25,8 @@ namespace TimeSheet.Domain.Service
         // 
         public string[][] IniciarProcesso(FluigProcess fluigProcess)
         {
-
-            // WSFluig.saveAndSendTaskAsync processd id restartar um novo processo.
-            // se existe um id gravado table ingual chama  WSFluig.saveAndSendTaskAsync. caso 
+            //WSFluig.saveAndSendTaskAsync processd id restartar um novo processo.
+            // se existe um id gravado table ingual chama  WSFluig.saveAndSendTaskAsync.caso
             return WSFluig.startProcessAsync(fluigProcess.Username,
                 fluigProcess.Password,
                 fluigProcess.CompanyId,
@@ -45,11 +44,12 @@ namespace TimeSheet.Domain.Service
 
         public string[][] RestartProcessoFluig(FluigProcess fluigProcess)
         {
+            int idProcess = Convert.ToInt32(fluigProcess.IdProcesso);
 
-            return WSFluig.startProcessAsync(fluigProcess.Username,
+            return WSFluig.saveAndSendTaskAsync(fluigProcess.Username,
                   fluigProcess.Password,
                   fluigProcess.CompanyId,
-                  fluigProcess.IdProcesso,
+                  idProcess,
                   fluigProcess.Atividade,
                   fluigProcess.ColleagueId,
                   fluigProcess.Comment,
@@ -58,7 +58,7 @@ namespace TimeSheet.Domain.Service
                   fluigProcess.AttachmentsFluig,
                   fluigProcess.CardData,
                   fluigProcess.AppointmentFluig,
-                  fluigProcess.Gestor).GetAwaiter().GetResult().result;
+                  fluigProcess.Gestor,0).GetAwaiter().GetResult().result;
         }
         public Marcacao ObterMarcacaoFechamentoFluig(string processId, string matricula, string codMarcacao)
         {

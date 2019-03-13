@@ -53,7 +53,7 @@ namespace TimeSheet.Application
             return Service.IniciarProcesso(fluigProcess);
         }
 
-        public string[][] RestartProcesso(string userCodFluig, string matricula, string filial, string GrupoGerencia, string codmarcacao)
+        public string[][] RestartProcesso(string userCodFluig, string codigoProcessoFluig, string matricula, string filial, string GrupoGerencia, string codmarcacao)
         {
             var fluigProcess = new FluigProcess()
             {
@@ -61,27 +61,16 @@ namespace TimeSheet.Application
                 Password = Configuration.GetSection("Fluig")["Password"],
                 UserCordFluig = Configuration.GetSection("Fluig")["UserName"],
                 CompanyId = Convert.ToInt32(Configuration.GetSection("Fluig")["CompanyId"]),
-                IdProcesso = Configuration.GetSection("Fluig")["IdProcesso"],
-                Atividade = 0,
+                IdProcesso = codigoProcessoFluig,
+                Atividade = 12,
                 Completatarefa = true,
                 Gestor = false,
                 ColleagueId = new string[] { },
                 Comment = "",
-                CardData = new string[][] {
-                    new[] { "txtGrupoGerencia", "GETIN"},
-                    new[] { "hddFilial", filial },
-                    new[] { "hddCodigo",  codmarcacao }, // CODIGO DA ZYU_CODIGO
-                    new[] { "hddDivergencia", ""},
-                    new[] { "hddAprovCoord",  "" },
-                    new[] { "hddAprovGerencia",  "" },
-                    new[] { "txtMatricula", matricula },
-                    new[] { "txtNomeColaborador", ""},
-                    new[] { "hddMatFluig", Configuration.GetSection("Fluig")["UserName"]},
-                    //ZY
-                }
+                CardData = new string[][] { }
             };
 
-            return Service.IniciarProcesso(fluigProcess);
+            return Service.RestartProcessoFluig(fluigProcess);
         }
 
         public Marcacao ObterCodFluig(string codMarcacao)
@@ -129,7 +118,7 @@ namespace TimeSheet.Application
 
         public bool ValidaNovoProcesso(Marcacao marcacao)
         {
-            if (marcacao.Status == Constantes.ABERTO && marcacao.CodigoFluig == null)
+            if (marcacao.CodigoFluig == null)
             {
                 return true;
             }
