@@ -41,6 +41,9 @@
                         <label for="DiaFim">Código de divergência</label>
                         <div class="input-group mb-3">
                             @Html.EditorFor(model => model.Lancamento.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "searchInput", @class = "form-control  col-md-8", @placeholder = "Código divergência..." } })
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" onclick="BuscarCodigoDivergencia();"><i class="fas fa-search"></i></button>
+                            </div>
                         </div>
                         @Html.ValidationMessageFor(model => model.Lancamento.CodDivergencia, "", new { @class = "text-danger" })
                     </div>
@@ -126,4 +129,21 @@
         texto.html(calcCar + ' restante(s)');
 
     });
+
+    function BuscarCodigoDivergencia() {
+            $.ajax({
+                url: '@Url.Action("GetSearchValue", "Lancamento")',
+                dataType: "json",
+                data: { search: $("#searchInput").val() },
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return { label: item.codigo + "-" + item.descricao + " - " + item.constant, value: item.codigo};
+                    }));
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+    }
+ 
 </script>

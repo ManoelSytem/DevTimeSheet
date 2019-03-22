@@ -100,7 +100,10 @@ namespace TimeSheet.Controllers
                     ViewModelLancamento lancamento = new ViewModelLancamento();
                     JornadaTrabalho jornada = new JornadaTrabalho();
                     CodDivergenciaViewModel codiv = new CodDivergenciaViewModel();
-
+                    if (marcacao.DataDialancamento != null)
+                    {
+                        marcacao.DataDia = marcacao.DataDialancamento?.ToString("yyyy-MM-dd");
+                    }
                     string codigoAbertura = aberturaMarcacao.AbeturaExiste(_marcacao.ObterListMarcacaoPorMatUser(User.GetDados("Matricula")), marcacao.DataDia.ToDia(), marcacao.DataDia.ToAno());
                     string codJornadaTrabalho = jornada.ValidarJornadaTrabalhoExisteParaLancamento(_jornadaTrbServiceRepository.ObterListJornada(), marcacao.DataDia.ToDateProtheusReverse());
                    
@@ -165,7 +168,9 @@ namespace TimeSheet.Controllers
                 marcacao.Coordenacao = User.GetDados("Coordenacao");
                 user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
                 marcacao.NomeUsuario = user.Nome;
-                marcacao.DataDialancamento = Convert.ToDateTime(id.ToDateProtheusReverseformate());
+                var objectmarcacao =  _marcacaoServiceRepository.ObterMarcacao(id);
+                var jornada =  _jornadaTrbServiceRepository.ObterJornadaPorCodigo(objectmarcacao.codigojornada);
+                marcacao.jornadDiaria =Convert.ToString(Math.Round(jornada.JornadaDiaria.TotalHours, 2));
                 return View(marcacao);
 
             }
@@ -176,6 +181,33 @@ namespace TimeSheet.Controllers
             }
 
         }
+
+        public ActionResult EditFechamento(string id, string codmarcacao)
+        {
+            try
+            {
+
+                ViewModelMacacao marcacao = new ViewModelMacacao();
+
+
+                var infoUser = new ViewModelMacacao();
+                var user = new Usuario();
+                marcacao.MatUsuario = User.GetDados("Matricula");
+                marcacao.Coordenacao = User.GetDados("Coordenacao");
+                user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
+                marcacao.NomeUsuario = user.Nome;
+                marcacao.DataDialancamento = Convert.ToDateTime(id.ToDateProtheusReverseformate());
+                return View(marcacao);
+
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View("Edit",marcacao);
+            }
+
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -201,6 +233,9 @@ namespace TimeSheet.Controllers
                             codiv.ValidaCodigoDivergenciaConstante(codiviergencia.Constant, marcacao.Lancamento.CodDivergencia);
                         }
                         lancamentoAliplication = marcacao.Lancamento;
+                        if (marcacao.DataDialancamento != null){ 
+                        marcacao.DataDia = marcacao.DataDialancamento?.ToString("yyyy-MM-dd");
+                        }
                         lancamentoAliplication.ValidaHorasLancamentoOutraMarcacao(_lancamentoerviceRepository.ObterLancamento(marcacao.DataDia.ToDateProtheus(), User.GetDados("Matricula")));
                         marcacao.Lancamento.codEmpredimento = marcacao.Lancamento.EmpreendimentoIds[0].Substring(0, marcacao.Lancamento.EmpreendimentoIds[0].IndexOf('-'));
                         marcacao.Lancamento.Fase = marcacao.Lancamento.EmpreendimentoIds[0].Substring(marcacao.Lancamento.EmpreendimentoIds[0].IndexOf('-')+1);
@@ -225,6 +260,7 @@ namespace TimeSheet.Controllers
             }
 
         }
+
 
 
         [HttpPost]
@@ -321,6 +357,7 @@ namespace TimeSheet.Controllers
                 var mes = data.Substring(5, 2);
                 var dia = data.Substring(8, 2);
                 data = ano + mes + dia;
+
             }
             return Json(_lancamentoerviceRepository.ObterLancamento(data, User.GetDados("Matricula")).OrderBy(c => c.HoraInicio).ToList());
         }

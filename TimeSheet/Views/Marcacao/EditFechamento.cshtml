@@ -1,0 +1,544 @@
+﻿@model TimeSheet.ViewModel.ViewModelMacacao
+
+@{
+    ViewData["Title"] = "Marcações Diárias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+
+    <div class="card azulc-azule">
+        <div class="card-header">
+            @ViewBag.Title
+        </div>
+        <div class="card-body">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-xs-6 col-sm-2">
+                    <label for="Matricula">Mátrícula</label>
+                    @Html.EditorFor(model => model.MatUsuario, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Matrícula" } })
+                    <span asp-validation-for="MatUsuario" class="text-danger"></span>
+                </div>
+                <div class="col-xs-6 col-sm-4">
+                    <label for="NomeUser">Nome</label>
+                    @Html.EditorFor(model => model.NomeUsuario, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control col-md-18", @placeholder = "Nome" } })
+                    <span asp-validation-for="NomeUsuario" class="text-danger"></span>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-6 col-sm-2">
+                    <label for="NomeGerencia">
+                        Coordenação
+                    </label>
+                    @Html.EditorFor(model => model.Coordenacao, new { htmlAttributes = new { @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Coordenacao" } })
+                    <span asp-validation-for="Coordenacao" class="text-danger"></span>
+                </div>
+                <div class="col-xs-6 col-sm-2">
+                    <label for="DataDia">
+                        Data da marcação
+                    </label>
+                    <input type="date" value="@Model.DataDialancamento?.ToString("yyyy-MM-dd")" disabled="disabled" id="DateSelect" class="form-control" name="DataDia" />
+                    @Html.HiddenFor(model => model.DataDialancamento)
+                    <span asp-validation-for="DataDia" class="text-danger"></span>
+                </div>
+                <div class="col-xs-6 col-sm-2">
+                    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                        <div class="card-header">Jornada diária: @Model.jornadDiaria</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <br />
+    <div class="card azulc-azule">
+        <div class="card-header">
+            Batidas do Relógio de Ponto
+        </div>
+        <div class="card-body">
+            <table id="tbCabecalhoMarcacao" class="table table-striped table-bordered table-hover responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="col-xs-6 col-sm-2"> <button type="button" onclick="ImportarHoras()" class="btn btn-primary">Importar Horas</button></div><br />
+    </div>
+    <br />
+    <div class="card azulc-azule">
+        <div class="card-header">
+            Lançamento de Marcações
+        </div>
+        <div class="card-body">
+            <table id="tbLancamento" class="table table-striped table-bordered table-hover responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Hora Início</th>
+                        <th>Hora Fim</th>
+                        <th>Projeto</th>
+                        <th>Observação</th>
+                        <th>Código Divergência</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <div id="myModal" class="modal fade" role="dialog">
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="btn-ft">
+        <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
+        <label class="btn-ft-item-open" for="btn-ft-open">
+            <span><i class="fas fa-plus"></i></span>
+        </label>
+        <button type="button" style="display:none" id="salvar" class="btn-ft-item" tooltip="Salvar"><i class="fas fa-save"></i></button>
+        <button type="button" style="display:none" id="salvarEdicao" class="btn-ft-item" tooltip="Salvar Edição"><i class="fas fa-save"></i></button>
+        <a href="@Url.Action("Index", "Marcacao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
+        <a onclick="Create()" class="btn-ft-item" tooltip="Novo Lançamento"><i class="fas fa-plus"></i></a>
+    </div>
+}
+
+<script type="text/javascript">
+    $.fn.scrollView = function () {
+        return this.each(function () {
+            $('html, body').animate({
+                scrollTop: $(this).offset().top
+            }, 1000);
+        });
+    }
+
+    window.onload = function () {
+           $.ajax({
+                url: '@Url.Action("ListApontamento", "Marcacao")',
+                changeMonth: true,
+                changeYear: true,
+                dataType: 'json',
+                type: 'get',
+                data: { data: $("#DateSelect").val() },
+                success: function (data) {
+                    if (data.erro != undefined) {
+                        Information(data.msg);
+                    } else {
+                        $('#tbCabecalhoMarcacao tbody td').remove();
+                        $('#tbCabecalhoMarcacao thead tr th').remove();
+                        for (var i = 0; data.length > i; i++) {
+                            if (i%2 == 0) {
+                                $('#tbCabecalhoMarcacao thead tr').append('<th>Entrada</th>');
+                            } else {
+                                $('#tbCabecalhoMarcacao thead tr').append('<th>Saída</th>');
+                            }
+                            $('#tbCabecalhoMarcacao tbody').append('<td>' + data[i].apontamento.substring(0,5) + '</td>' +
+                                '</td>');
+                        }
+                        ObterListaLancamento();
+                    }
+                }
+            });
+    }
+
+    function Create() {
+        $("#salvar").show();
+        $("#salvarEdicao").hide();
+        var inputText = $('#DateSelect').val();
+        if (inputText !== undefined) {
+            if (inputText != '') {
+
+                $("#novaMarcacao").removeClass("is-invalid");
+                $.ajax({
+                    url: "/Lancamento/Index",
+                    type: 'get'
+                }).done(function (data) {
+                    $("#modal-body").html(data);
+                    $('#modal-body').scrollView();
+                });
+
+            } else {
+                Information('A data da marcação não informada!');
+            }
+        } else {
+            Information('Não foi carregado!');
+        }
+    }
+
+    function edit(id, datalancamento) {
+        document.getElementById("salvar").style.display = 'none';
+        document.getElementById("salvarEdicao").style.display = 'block';
+        var inputText = $('#DateSelect').val();
+        if (inputText !== undefined) {
+            if (inputText != '') {
+
+                $("#novaMarcacao").removeClass("is-invalid");
+                $.ajax({
+                    url: "/Lancamento/Edit",
+                    data: { data: datalancamento, seq: id },
+                    type: 'get'
+                }).done(function (data) {
+                    $("#modal-body").html(data);
+                    $('#modal-body').scrollView();
+                    CarregarEmpreendimentos();
+                });
+
+            } else {
+                Information('A data da marcação não informada!');
+            }
+        } else {
+            Information('Não foi carregado!');
+        }
+    }
+
+    function Detalhe(id, datalancamento) {
+        document.getElementById("salvar").style.display = 'none';
+        document.getElementById("salvarEdicao").style.display = 'none';
+        var inputText = $('#DateSelect').val();
+        if (inputText !== undefined) {
+            if (inputText != '') {
+
+                $("#novaMarcacao").removeClass("is-invalid");
+                $.ajax({
+                    url: "/Lancamento/Details",
+                    data: { data: datalancamento, seq: id },
+                    type: 'get'
+                }).done(function (data) {
+                    $("#modal-body").html(data);
+                    $('#modal-body').scrollView();
+                    CarregarEmpreendimentos();
+                });
+
+            } else {
+                Information('Data da marcação não informada!');
+            }
+        } else {
+            Information('Não foi carregado!');
+        }
+    }
+
+    function Delete(id) {
+        document.getElementById("salvar").style.display = 'none';
+        $("#myModal").dialog({
+            resizable: false,
+            height: 140,
+            title: "Exclusão de Lancamento",
+            modal: true,
+            buttons: {
+                "Excluir": function () {
+                    ExcluirRegistroLancamento(id);
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+    }
+
+
+    var onSelect = function (dateText) {
+        if ($("#DateSelect").val().length == 10) {
+            $.ajax({
+                url: '@Url.Action("ListApontamento", "Marcacao")',
+                changeMonth: true,
+                changeYear: true,
+                dataType: 'json',
+                type: 'get',
+                data: { data: $("#DateSelect").val() },
+                success: function (data) {
+                    if (data.erro != undefined) {
+                        Information(data.msg);
+                    } else {
+                        $('#tbCabecalhoMarcacao tbody td').remove();
+                        $('#tbCabecalhoMarcacao thead tr th').remove();
+                        for (var i = 0; data.length > i; i++) {
+                            if (i%2 == 0) {
+                                $('#tbCabecalhoMarcacao thead tr').append('<th>Entrada</th>');
+                            } else {
+                                $('#tbCabecalhoMarcacao thead tr').append('<th>Saída</th>');
+                            }
+                            $('#tbCabecalhoMarcacao tbody').append('<td>' + data[i].apontamento.substring(0,5) + '</td>' +
+                                '</td>');
+                        }
+                        ObterListaLancamento();
+                    }
+                }
+            });
+        }
+    }
+
+
+    $("#salvar").on("click", function (event) {
+
+        $.ajax({
+            type: "post",
+            dataType: 'json',
+            url: '/Marcacao/Create',
+            data: $('form').serialize()
+        })
+            .done(function (data) {
+                if (data.erro === true) {
+                    Danger(data.msg);
+
+                } else {
+                    Success(data.sucesso)
+                    ObterListaLancamento();
+                    limparCampos();
+              }
+
+            })
+            .fail(function (data) {
+                Danger(data.msg)
+            });
+        event.preventDefault();
+    });
+
+    $("#salvarEdicao").on("click", function (event) {
+        $.ajax({
+            type: "post",
+            dataType: 'json',
+            url: '/Marcacao/Edit',
+            data: $('form').serialize()
+        })
+            .done(function (data) {
+                if (data.erro === true) {
+                    Danger(data.msg);
+                } else {
+                    Success(data.sucesso);
+                    ObterListaLancamento();
+                    limparCampos();
+                    $("#modal-body").html("");
+                }
+            })
+            .fail(function (data) {
+                Danger(data.msg)
+            });
+        event.preventDefault();
+    });
+
+
+    $("#DateSelect").on('change', onSelect);
+
+
+    function ObterListaLancamento() {
+           $("#modal-body").html("");
+          $.ajax({
+                url: '@Url.Action("GetMarcacoes", "Marcacao")',
+                changeMonth: true,
+                changeYear: true,
+                dataType: 'json',
+                type: 'get',
+                data: { data: $("#DateSelect").val() },
+              success: function (data) {
+                    $('#tbLancamento tbody tr').remove();
+                    for (var i = 0; data.length > i; i++) {
+                        if (!(data[i].observacao === null)) {
+                            data[i].observacao = data[i].observacao.substring(0, 20);
+                        } else {
+                            data[i].observacao = ' ';
+                        }
+                        if (!(data[i].status === '2')) {
+                            var buttons = '<button type="button" class="btn btn-sm btn-editar" name="editar" onclick="edit(' + data[i].seq + ',' + data[i].dateLancamento + ')"><i class="fas fa-pen"></i></button>' +
+                                '<button type="button" class="btn btn-sm btn-excluir create"  onclick="Delete(' + data[i].seq + ')"><i class="fas fa-trash"></i></button>';
+                        } else {
+                            buttons = '';
+                        }
+                        $('#tbLancamento tbody').append('<tr><td>' + data[i].horaInicio.substring(0, 5) + '</td>' +
+                            '<td>' + data[i].horaFim.substring(0, 5) + '</td>' +
+                            '<td>' + data[i].descricaoEmp + ' - Fase - ' + data[i].fase+'</td>' +
+                            '<td>' + data[i].observacao +'...'+ '</td>' +
+                            '<td>' + data[i].codDivergencia + '</td>' +
+                            '<td>' +
+                            '<button type = "button" class="btn btn-sm btn-visualizar" name = "visualizar"  onclick = "Detalhe(' + data[i].seq + ',' + data[i].dateLancamento + ')" > <i class="fas fa-eye"></i></button > ' +
+                            buttons+
+                            '</td></tr>');
+                    }
+                }
+            });
+    }
+
+    function limparCampos() {
+        $('#Lancamento_HoraInicio').val("");
+        $('#Lancamento_HoraFim').val("");
+        $('#Lancamento_HoraFim').val("");
+        $('#nomeEmpreendimento').val("");
+        $('#Lancamento_EmpreendimentoIds').empty();
+        $('#comentario').val("");
+        $('#searchInput').val("");
+        document.getElementById("salvar").style.display = 'block';
+        document.getElementById("salvarEdicao").style.display = 'none';
+
+    }
+
+    function ExcluirRegistroLancamento(seq) {
+        $.ajax({
+            type: "post",
+            dataType: 'json',
+            url: '/Lancamento/Excluir',
+            data: { seq: seq }
+        })
+            .done(function (data) {
+                if (data.erro === true) {
+                    Danger(data.msg)
+                } else {
+                    Success(data.sucesso);
+                    ObterListaLancamento();
+                    limparCampos();
+                }
+            })
+            .fail(function (data) {
+                Danger(data.msg)
+            });
+        event.preventDefault();
+    }
+
+
+    function ImportarHoras() {
+        $("#modal-body").html("");
+           if ($("#DateSelect").val().length == 10) {
+            $.ajax({
+                url: '@Url.Action("ImportarApontamento", "Marcacao")',
+                changeMonth: true,
+                changeYear: true,
+                dataType: 'json',
+                type: 'get',
+                data: { data: $("#DateSelect").val() },
+                success: function (data) {
+                    $('#tbLancamento tbody tr').remove();
+                    ObterListaLancamentoAoImportar();
+                    if (data.length % 2 === 0) {
+                    for (var i = 0; data.length > i; i++) {
+                        $('#tbLancamento tbody').append('<tr><td >' + data[i].apontamento.substring(0, 5) + '</td>' +
+                                '<td >' + data[i + 1].apontamento.substring(0,5) + '</td>' +
+                                '<td></td>' +
+                                '<td></td>' +
+                                '<td></td>' +
+                                '<td>' +
+                                '<button type="button" class="btn btn-sm btn-editar" name="editar" onclick="CreateImportacao(\'' + data[i].apontamento + '\',\'' + data[i + 1].apontamento+'\');"><i class="fas fa-pen"></i></button>' +
+                                '</td></tr>');
+                            i++;
+
+                        }
+                    } else {
+
+                        Information('Não é possivel importar batidas ímpar!');
+                    }
+                }
+            });
+        }
+    }
+
+      function ObterListaLancamentoAoImportar() {
+           $("#modal-body").html("");
+          $.ajax({
+                url: '@Url.Action("GetMarcacoes", "Marcacao")',
+                changeMonth: true,
+                changeYear: true,
+                dataType: 'json',
+                type: 'get',
+                data: { data: $("#DateSelect").val() },
+              success: function (data) {
+                    for (var i = 0; data.length > i; i++) {
+                        if (!(data[i].observacao === null)) {
+                            data[i].observacao = data[i].observacao.substring(0, 20);
+                        } else {
+                            data[i].observacao = ' ';
+                        }
+                        if (!(data[i].status === '2')) {
+                            var buttons = '<button type="button" class="btn btn-sm btn-editar" name="editar" onclick="edit(' + data[i].seq + ',' + data[i].dateLancamento + ')"><i class="fas fa-pen"></i></button>' +
+                                '<button type="button" class="btn btn-sm btn-excluir create"  onclick="Delete(' + data[i].seq + ')"><i class="fas fa-trash"></i></button>';
+                        } else {
+                            buttons = '';
+                        }
+                        $('#tbLancamento tbody').append('<tr><td>' + data[i].horaInicio.substring(0, 5) + '</td>' +
+                            '<td>' + data[i].horaFim.substring(0, 5) + '</td>' +
+                            '<td>' + data[i].descricaoEmp + ' - Fase - ' + data[i].fase+'</td>' +
+                            '<td>' + data[i].observacao +'...'+ '</td>' +
+                            '<td>' + data[i].codDivergencia + '</td>' +
+                            '<td>' +
+                            '<button type = "button" class="btn btn-sm btn-visualizar" name = "visualizar"  onclick = "Detalhe(' + data[i].seq + ',' + data[i].dateLancamento + ')" > <i class="fas fa-eye"></i></button > ' +
+                            buttons+
+                            '</td></tr>');
+                    }
+                }
+            });
+        }''
+
+    function CreateImportacao(horaini, horaf) {
+        $("#modal-body").html("");
+        document.getElementById("salvar").style.display = 'block';
+        document.getElementById("salvarEdicao").style.display = 'none';
+        var inputText = $("#DateSelect").val();
+        if (inputText !== undefined) {
+            if (inputText != '') {
+                $("#novaMarcacao").removeClass("is-invalid");
+                $.ajax({
+                    url: "/Lancamento/Index",
+                    type: 'get',
+                    data: { horainicio: horaini, horafim: horaf }
+                }).done(function (data) {
+                    $("#modal-body").html(data);
+                    $('#modal-body').scrollView();
+
+                });
+
+            } else {
+                Information('A data da marcação não informada!');
+            }
+        } else {
+            Information('Não foi carregado!');
+        }
+    }
+
+
+       function CarregarEmpreendimentos() {
+                            if ($("#nomeEmpreendimento").val().length >= 3) {
+                                $('.loader-overlay').show();
+                                $.ajax({
+                                    url:'@Url.Action("GetEmpreendimentos", "Lancamento")',
+                                    data: { nome: $("#nomeEmpreendimento").val() },
+                                    type: 'get'
+                                }).done(function (data) {
+                                    CarregarDadosEmpreendimento(data);
+                                    $('.loader-overlay').hide();
+                                });
+                            } else {
+                                Information("Não é possível realizar pesquisa com menos de 3 caracteres.");
+                            }
+    }
+
+
+
+    $('#tbLancamento').DataTable({
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+        "columnDefs": [
+            { className: "text-left", "targets": [0, 1] },
+            { "orderable": false, "targets": [2] }
+        ],
+        "language": {
+            "decimal": "",
+            "emptyTable": "Nenhum registro disponível na tabela",
+            "info": "Visualizando _START_ de _END_ de _TOTAL_ registros",
+            "infoEmpty": "Visualizando 0 de 0 de 0 registros",
+            "infoFiltered": "(filtered from _MAX_ total entries)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ registros",
+            "loadingRecords": "Carregando...",
+            "processing": "Processando...",
+            "search": "Pesquisar:",
+            "zeroRecords": "Nenhum registro correspondente encontrado",
+            "paginate": {
+                "first": "Primeira",
+                "last": "Última",
+                "next": "Próxima",
+                "previous": "Anterior"
+            }
+        },
+    });
+
+</script>

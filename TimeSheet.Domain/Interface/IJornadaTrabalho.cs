@@ -10,5 +10,6 @@ namespace TimeSheet.Domain.Interface
         void DeleteJornada(string codigo);
         List<JornadaTrabalho> ObterListJornada();
         JornadaTrabalho ObterJornadaPorCodigo(string codigo);
+        JornadaTrabalho ObterJornadaPorData(string data);
     }
 }

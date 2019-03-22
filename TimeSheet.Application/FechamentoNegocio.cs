@@ -205,7 +205,7 @@ namespace TimeSheet.Application
                         {
                             dataSemLancamento.DataLancamento = initialDate.ToShortDateString();
                             dataSemLancamento.Divergencia = "Divergência a justificar";
-                            dataSemLancamento.Descricao = "Dia útil sem marcação";
+                            dataSemLancamento.Descricao = "Dia útil sem marcação.";
                             fechamentoSemLancamento.Add(dataSemLancamento);
                         }
                     }
@@ -304,7 +304,7 @@ namespace TimeSheet.Application
             {
                 novoFechamento.Divergencia = "Divergência justificada";
                 novoFechamento.DataLancamento = fechamento.DataLancamento;
-                novoFechamento.Descricao = "Dia com quantidade de batidas do relógio impar";
+                novoFechamento.Descricao = "Dia com quantidade de batidas do relógio impar.";
             }
             return novoFechamento;
         }
@@ -397,7 +397,7 @@ namespace TimeSheet.Application
                 {
                     novo.Divergencia = "Divergência a justificar";
                     novo.DataLancamento = datalancamento.ToDateProtheusReverseformate();
-                    novo.Descricao = "Dia onde o total de horas excedentes é diferente do total de horas com código de divergência";
+                    novo.Descricao = "Dia onde o total de horas excedentes é diferente do total de horas com código de divergência.";
                 }
 
             }
@@ -405,6 +405,7 @@ namespace TimeSheet.Application
         }
         public List<Fechamento> ValidaSeExisteMarcacaoAntesEdepoisDoApontamento(List<Lancamento> listlancamento, List<Apontamento> apontamentolist)
         {
+            string mensagem = "Dia com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema.";
             List<Fechamento> listFechamento = new List<Fechamento>();
 
             if (listlancamento.Count > 0)
@@ -421,14 +422,14 @@ namespace TimeSheet.Application
 
                             novo.Divergencia = "Divergência a justificar";
                             novo.DataLancamento = listlancamento.FirstOrDefault().DateLancamento.ToDateProtheusReverseformate();
-                            novo.Descricao = "Dia com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema";
+                            novo.Descricao = mensagem;
 
                         }
                         else if ((listlancamento.FirstOrDefault().HoraInicio < apontamentolist.FirstOrDefault().apontamento | listlancamento.FirstOrDefault().HoraFim > apontamentolist.LastOrDefault().apontamento) && listlancamento.FirstOrDefault().CodDivergencia != 0)
                         {
                             novo.Divergencia = "Divergência justificada";
                             novo.DataLancamento = listlancamento.FirstOrDefault().DateLancamento.ToDateProtheusReverseformate();
-                            novo.Descricao = "Dia com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema";
+                            novo.Descricao = mensagem;
 
                         }
 
@@ -436,7 +437,7 @@ namespace TimeSheet.Application
                         {
                             novo.Divergencia = "Divergência a justificar";
                             novo.DataLancamento = listlancamento.LastOrDefault().DateLancamento.ToDateProtheusReverseformate();
-                            novo.Descricao = "Dia com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema";
+                            novo.Descricao = mensagem;
 
 
                         }
@@ -445,7 +446,7 @@ namespace TimeSheet.Application
 
                             novo.Divergencia = "Divergência justificada";
                             novo.DataLancamento = listlancamento.LastOrDefault().DateLancamento.ToDateProtheusReverseformate();
-                            novo.Descricao = "Dia com diferença entre o total de horas apontado pelas batidas do relógio e pela marcações no sistema";
+                            novo.Descricao = mensagem;
 
                         }
 
@@ -534,6 +535,7 @@ namespace TimeSheet.Application
 
         public Fechamento ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(List<Lancamento> lancamento, decimal totalLancamento, JornadaTrabalho jornada)
         {
+            string mensagem = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada Diária: {Math.Round(jornada.JornadaDiaria.TotalHours, 2)} e total apontado : {totalLancamento}.";
             string datalancamento = "0";
             TimeSpan totalhoraLancamentoDiaComCodigoDivergencia = TimeSpan.Parse("00:00:00");
             Fechamento novo = new Fechamento();
@@ -574,19 +576,19 @@ namespace TimeSheet.Application
             {
                 novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = "Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária.";
+                novo.Descricao = mensagem;
             }
             if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false)
             {
                 novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = "Dia com diferença entre o total apontado e a jornada diária. O total apontado é maior que a jornada diária.";
+                novo.Descricao = mensagem;
             }
             else if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == true)
             {
                 novo.Divergencia = "Divergência justificada";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = "Dia com diferença entre o total apontado e a jornada diária. O total apontado é maior que a jornada diária.";
+                novo.Descricao = mensagem;
             }
 
             return novo;
@@ -601,7 +603,7 @@ namespace TimeSheet.Application
             {
                 novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                novo.Descricao = "Sábados, domingos e feriados com lançamento e sem código de divergência";
+                novo.Descricao = "Sábados, domingos e feriados com lançamento e sem código de divergência.";
 
             }
             if ((Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Sunday |
@@ -609,7 +611,7 @@ namespace TimeSheet.Application
             {
                 novo.Divergencia = "Divergência justificada";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                novo.Descricao = "Sábados, domingos e feriados com lançamentos";
+                novo.Descricao = "Sábados, domingos e feriados com lançamentos.";
 
             }
             return novo;

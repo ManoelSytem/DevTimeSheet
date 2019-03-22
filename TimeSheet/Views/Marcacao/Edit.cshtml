@@ -41,8 +41,13 @@
                     <label for="DataDia">
                         Data da marcação
                     </label>
-                    <input type="date" value="@Model.DataDialancamento?.ToString("yyyy-MM-dd")" disabled="disabled" id="DateSelect" class="form-control" name="Datadia" />
+                    @Html.EditorFor(model => model.DataDia, new { htmlAttributes = new { @id = "DateSelect", @class = "form-control", @type = "date" } })
                     <span asp-validation-for="DataDia" class="text-danger"></span>
+                </div>
+                <div class="col-xs-6 col-sm-2">
+                    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                        <div class="card-header">Jornada diária: @Model.jornadDiaria</div>
+                    </div>
                 </div>
             </div>
 

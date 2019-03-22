@@ -42,6 +42,9 @@ namespace TimeSheet.Infrastructure.ServiceRepository
             return _jornadaTrbRepository.FindAll();
         }
 
-
+        public JornadaTrabalho ObterJornadaPorData(string data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

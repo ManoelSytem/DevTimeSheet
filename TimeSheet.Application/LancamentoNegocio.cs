@@ -264,7 +264,7 @@ namespace TimeSheet.Application
                                         Fechamento novo = new Fechamento();
                                         novo.Divergencia = "Divergência justificada";
                                         novo.DataLancamento = lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate();
-                                        novo.Descricao = "Dia onde intervalo mínimo e máximo se encontra diferente do lançamento diário.";
+                                        novo.Descricao = "Dia onde intervalo de almoço se encontra diferente do lançamento diário.";
                                         listFechamento.Add(novo);
                                         break;
                                     }
@@ -273,7 +273,7 @@ namespace TimeSheet.Application
                                         Fechamento novo = new Fechamento();
                                         novo.Divergencia = "Divergência a justificar";
                                         novo.DataLancamento = lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate();
-                                        novo.Descricao = "Dia onde intervalo mínimo e máximo se encontra diferente  do lançamento diário.";
+                                        novo.Descricao = "Dia onde intervalo de almoço se encontra diferente do lançamento diário.";
                                         listFechamento.Add(novo);
                                         break;
                                     }
@@ -286,7 +286,7 @@ namespace TimeSheet.Application
                                         Fechamento novo = new Fechamento();
                                         novo.Divergencia = "Divergência a justificar";
                                         novo.DataLancamento = lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate();
-                                        novo.Descricao = "Dia onde intervalo mínimo e máximo se encontra diferente do lançamento diário.";
+                                        novo.Descricao = "Dia onde intervalo de almoço se encontra diferente do lançamento diário.";
                                         listFechamento.Add(novo);
                                         break;
                                     }
@@ -308,7 +308,7 @@ namespace TimeSheet.Application
                                         Fechamento novo = new Fechamento();
                                         novo.Divergencia = "Divergência a justificar";
                                         novo.DataLancamento = lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate();
-                                        novo.Descricao = "Dia onde intervalo mínimo e máximo se encontra diferente do lançamento diário.";
+                                        novo.Descricao = "Dia onde intervalo de almoço se encontra diferente do lançamento diário.";
                                         listFechamento.Add(novo);
                                         break;
                                     }
@@ -317,7 +317,7 @@ namespace TimeSheet.Application
                                         Fechamento novo = new Fechamento();
                                         novo.Divergencia = "Divergência justificada";
                                         novo.DataLancamento = lancamentoDiario[i].DateLancamento.ToDateProtheusReverseformate();
-                                        novo.Descricao = "Dia onde intervalo mínimo e máximo se encontra diferente do lançamento diário.";
+                                        novo.Descricao = "Dia onde intervalo de almoço se encontra diferente do lançamento diário.";
                                         listFechamento.Add(novo);
                                         break;
                                     }
