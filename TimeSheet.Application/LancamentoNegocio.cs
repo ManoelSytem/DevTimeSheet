@@ -333,13 +333,6 @@ namespace TimeSheet.Application
                     else { eFeriadoSabadoEdomingo = true; }
                 }
 
-                if(listFechamento.Count == 0 && !eFeriadoSabadoEdomingo) {
-                    Fechamento novo = new Fechamento();
-                    novo.Divergencia = "Divergência a justificar";
-                    novo.DataLancamento = datalancamento;
-                    novo.Descricao = "Dia onde intervalo mínimo e máximo se encontra diferente do lançamento diário.";
-                    listFechamento.Add(novo);
-                }
             }
 
 
