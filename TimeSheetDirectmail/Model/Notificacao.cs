@@ -21,10 +21,12 @@ namespace TimeSheetDirectmail.Model
                     Host = "smtp2.intranet.bahiagas.com.br",
                     Port = 25,
                     EnableSsl = false,
-                    DeliveryMethod = SmtpDeliveryMethod.Network
-                };
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                   
+            };
                 using (var message = new MailMessage("microsiga_getin@bahiagas.com.br", email) { Subject = assunto, Body = mensagem })
                 {
+                    message.IsBodyHtml = true;
                     smtp.Send(message);
                 }
             }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TimeSheet.Util;
 
 namespace TimeSheet.ViewModel
@@ -10,6 +11,7 @@ namespace TimeSheet.ViewModel
         public string Filial { get; set; }
         public string DataInicio { get; set; }
         public string DataFim { get; set; }
+        public DateTime? DataDialancamento { get; set; }
         public string Codigo { get; set; }
         public string DataDia { get; set; }
         public string NomeUsuario { get; set; }

@@ -333,9 +333,9 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 Conexao.Open();
                 var sql = $@"SELECT LTRIM(RTRIM(P6_FSTPTS))  as Constant, P6_CODIGO as Codigo, P6_DESC as Descricao  FROM SP6010
-                                WHERE  P6_CODIGO LIKE LTRIM(RTRIM('%{codigo}%')) AND D_E_L_E_T_ <> '*'";
+                                WHERE  P6_CODIGO = '{codigo}' AND D_E_L_E_T_ <> '*'";
                 Conexao.Query<CodDivergencia>(sql);
-                return Conexao.QueryFirst<CodDivergencia>(sql);
+                return Conexao.QueryFirstOrDefault<CodDivergencia>(sql);
             }
             catch (Exception ex)
             {

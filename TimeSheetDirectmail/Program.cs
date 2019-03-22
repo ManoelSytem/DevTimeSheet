@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TimeSheetDirectmail.Controller;
+using TimeSheetDirectmail.Model;
 using TimeSheetDirectmail.Repository;
 
 namespace TimeSheetDirectmail
@@ -13,10 +14,19 @@ namespace TimeSheetDirectmail
         static void Main(string[] args)
         {
             ProtheusRepository repository = new ProtheusRepository();
-            Controlle novo = new Controlle(repository);
-            novo.EnviarEmail();
-            Console.WriteLine("TimeSheet Envindo em de fechamento pendentes aguarde...");
-            Console.ReadKey();
+            Controlle controlle = new Controlle(repository);
+            var usuarios  =  controlle.ObterTecnicos(controlle.Login("tsadministrador", "123456"), "");
+            Console.WriteLine("TimeSheet Envindo email de fechamento pendentes aguarde...");
+            string mensagem = "";
+            foreach (string mesg in controlle.Leitura())
+            {
+               mensagem += mesg;
+            }
+            foreach (Usuario usuario in usuarios)
+            {
+                controlle.EnviarEmail(usuario.Email, usuario.Nome, mensagem);
+            }
+            
         }
     }
 }

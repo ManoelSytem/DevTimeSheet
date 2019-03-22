@@ -165,6 +165,7 @@ namespace TimeSheet.Controllers
                 marcacao.Coordenacao = User.GetDados("Coordenacao");
                 user = _prothuesService.ObterUsuarioNome(User.GetDados("Matricula"));
                 marcacao.NomeUsuario = user.Nome;
+                marcacao.DataDialancamento = Convert.ToDateTime(id.ToDateProtheusReverseformate());
                 return View(marcacao);
 
             }
@@ -260,8 +261,49 @@ namespace TimeSheet.Controllers
                     matricula = User.GetDados("Matricula");
                     filial = User.GetDados("Filial");
 
+
                 }
                 return Json(_prothuesService.ObterBatidasDePonto(matricula, filial, data));
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { msg = e.Message, erro = true });
+            }
+        }
+
+        [HttpGet]
+        public ActionResult ImportarApontamento(string matricula, string filial, string data)
+        {
+            try
+            {
+                
+                    config = new Configuracao();
+                    marcacao = new Marcacao();
+
+                    var ano = data.Substring(0, 4);
+                    var mes = data.Substring(5, 2);
+                    var dia = data.Substring(8, 2);
+                    data = ano + mes + dia;
+                    matricula = User.GetDados("Matricula");
+                    filial = User.GetDados("Filial");
+
+                    var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, data);
+                    var listMarcacoes = _lancamentoerviceRepository.ObterLancamento(data, User.GetDados("Matricula")).OrderBy(c => c.HoraInicio).ToList();
+                    for(int i=0; i < listApontamento.Count; i++)
+                    {
+                        foreach(Lancamento lancamento in listMarcacoes)
+                        {
+                            if (listApontamento[i].horaFim == lancamento.HoraInicio)
+                            {
+                              
+                                listApontamento.Remove(listApontamento[i+1]);
+                                listApontamento.Remove(listApontamento[i]);
+                             }
+                        }
+                    }
+
+                return Json(listApontamento);
 
             }
             catch (Exception e)
@@ -431,4 +473,6 @@ namespace TimeSheet.Controllers
 
         
     }
+
+
 }

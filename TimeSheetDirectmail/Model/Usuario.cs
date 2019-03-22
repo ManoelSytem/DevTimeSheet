@@ -14,5 +14,6 @@ namespace TimeSheetDirectmail.Model
         public string Gerencia { get; set; }
         public string Email { get; set; }
         public string CodigoFluig { get; set; }
+        public Guid Id { get; internal set; }
     }
 }

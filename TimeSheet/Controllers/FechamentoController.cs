@@ -520,7 +520,7 @@ namespace TimeSheet.Controllers
             {
                 var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, lancamento.DateLancamento);
                 var lancamentolist = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, matricula);
-                var FechamentoResultValidacao = _fechamentoNegocio.ValidaSeExisteMarcacaoAntesEdepoisDoApontamento(lancamentolist.OrderBy(x=> x.Seq).ToList(), listApontamento);
+                var FechamentoResultValidacao = _fechamentoNegocio.ValidaSeExisteMarcacaoAntesEdepoisDoApontamento(lancamentolist.OrderBy(x=> x.HoraInicio).ToList(), listApontamento);
                 foreach (Fechamento LancamentoResult in FechamentoResultValidacao)
                 {
                     if (LancamentoResult.Descricao != null)

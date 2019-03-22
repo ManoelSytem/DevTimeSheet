@@ -79,5 +79,8 @@ namespace TimeSheet.Controllers
             ClaimTypes.Name,
             ClaimTypes.Email,
         };
+
+
+
     }
 }

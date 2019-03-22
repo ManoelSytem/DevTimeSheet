@@ -340,11 +340,7 @@ namespace TimeSheet.Application
             TimeSpan totalhoraLancamentoDia = TimeSpan.Parse("00:00:00");
             foreach (Lancamento LancamentoResult in lancamento)
             {
-                var CodDivergencia = _serviceProthues.ObterTipoCodigoDivergencia(Convert.ToString(LancamentoResult.CodDivergencia));
-                if (CodDivergencia.Constant != Constantes.NAOTRABALHADA)
-                {
-                    totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
-                }
+                totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
 
             }
             return Math.Round(Convert.ToDouble(totalhoraLancamentoDia.TotalHours), 2);
@@ -357,9 +353,12 @@ namespace TimeSheet.Application
             foreach (Lancamento LancamentoResult in lancamento)
             {
                 var CodDivergencia = _serviceProthues.ObterTipoCodigoDivergencia(Convert.ToString(LancamentoResult.CodDivergencia));
-                if (CodDivergencia.Constant == Constantes.HRSEXCEDENTES)
+                if (CodDivergencia != null)
                 {
-                    totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+                    if (CodDivergencia.Constant == Constantes.HRSEXCEDENTES)
+                    {
+                        totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+                    }
                 }
 
             }
@@ -372,8 +371,8 @@ namespace TimeSheet.Application
             double totalGeral = 0;
             foreach (Lancamento LancamentoResult in lancamento)
             {
-               
-               totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+
+                totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
 
             }
 
@@ -543,10 +542,14 @@ namespace TimeSheet.Application
             {
                 datalancamento = LancamentoResult.DateLancamento.ToDateProtheusReverseformate();
                 var CodDivergencia = _serviceProthues.ObterTipoCodigoDivergencia(Convert.ToString(LancamentoResult.CodDivergencia));
-                if (CodDivergencia.Constant == Constantes.HRSEXCEDENTES)
+                if (CodDivergencia != null)
                 {
-                    totalhoraLancamentoDiaComCodigoDivergencia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
-                    existeCodigoDivergencia = true;
+                    if (CodDivergencia.Constant == Constantes.HRSEXCEDENTES)
+                    {
+                        totalhoraLancamentoDiaComCodigoDivergencia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+                        existeCodigoDivergencia = true;
+                    }
+
                 }
             }
 
@@ -554,16 +557,20 @@ namespace TimeSheet.Application
             {
                 datalancamento = LancamentoResult.DateLancamento.ToDateProtheusReverseformate();
                 var CodDivergencia = _serviceProthues.ObterTipoCodigoDivergencia(Convert.ToString(LancamentoResult.CodDivergencia));
-                if (CodDivergencia.Constant == Constantes.HRSEXCEDENTES)
+                if (CodDivergencia != null)
+                { 
+                    if (CodDivergencia.Constant == Constantes.HRSEXCEDENTES)
                 {
                     existeCodigoDivergencia = true;
                     break;
+                }
+
                 }
             }
 
             double total = Convert.ToDouble(totalLancamento);
 
-            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) )
+            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2))
             {
                 novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = datalancamento;
@@ -796,7 +803,7 @@ namespace TimeSheet.Application
         public double CalcularTotalExedenteGeral(List<Fechamento> listFecahamento)
         {
             double totalHorasExedente = 0;
-           
+
             foreach (Fechamento fechamento in listFecahamento)
             {
                 totalHorasExedente += fechamento.TotalHoraExedente;
@@ -857,8 +864,10 @@ namespace TimeSheet.Application
                 if (lancamento.CodDivergencia != 0)
                 {
                     var CodDivergencia = _serviceProthues.ObterTipoCodigoDivergencia(Convert.ToString(lancamento.CodDivergencia));
+                    if(CodDivergencia != null) { 
                     if (CodDivergencia.Constant == Constantes.ABONOS)
                         totalAbono += Math.Round((lancamento.HoraFim - lancamento.HoraInicio).TotalHours, 2);
+                    }
                 }
 
             }
@@ -874,8 +883,11 @@ namespace TimeSheet.Application
                 if (lancamento.CodDivergencia != 0)
                 {
                     var CodDivergencia = _serviceProthues.ObterTipoCodigoDivergencia(Convert.ToString(lancamento.CodDivergencia));
-                    if (CodDivergencia.Constant == Constantes.NAOTRABALHADA)
-                        totalNaoTrabalhada += Math.Round((lancamento.HoraFim - lancamento.HoraInicio).TotalHours, 2);
+                    if (CodDivergencia != null)
+                    {
+                        if (CodDivergencia.Constant == Constantes.NAOTRABALHADA)
+                            totalNaoTrabalhada += Math.Round((lancamento.HoraFim - lancamento.HoraInicio).TotalHours, 2);
+                    }
                 }
 
             }
@@ -891,8 +903,11 @@ namespace TimeSheet.Application
             foreach (Lancamento lancamento in listlancamentoPorProjeto)
             {
                 var CodDivergencia = _serviceProthues.ObterTipoCodigoDivergencia(Convert.ToString(lancamento.CodDivergencia));
-                if (CodDivergencia.Constant != Constantes.NAOTRABALHADA)
-                    totallancamento += Math.Round((lancamento.HoraFim - lancamento.HoraInicio).TotalHours, 2);
+                if (CodDivergencia != null)
+                {
+                    if (CodDivergencia.Constant != Constantes.NAOTRABALHADA)
+                        totallancamento += Math.Round((lancamento.HoraFim - lancamento.HoraInicio).TotalHours, 2);
+                }
             }
             return totallancamento;
         }

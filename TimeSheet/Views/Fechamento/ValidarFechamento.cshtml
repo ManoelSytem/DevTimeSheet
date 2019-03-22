@@ -28,7 +28,7 @@
                         <th style="">Lançamento Data</th>
                         <th>Descrição</th>
                         <th>Divergência<br />(justificada/não justificada)</th>
-                        @*<th>Ações</th>*@
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,9 +42,9 @@
                                 <td>
                                     @item.Divergencia
                                 </td>
-                                @*<td>
-                                    <button type="button" class="btn btn-sm btn-editar" name="editar" title="Editar Marcação" onclick="window.open('@Url.Action("Edit", "Marcacao", new { id = item.CodigoMarcacao})','_blank')"><i class="fas fa-pen"></i></button>
-                                </td>*@
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-editar" name="editar" title="Editar Marcação" onclick="EdicaoFechamento('@item.DataLancamento.ToDateProtheusConvert()')"><i class="fas fa-pen"></i></button>
+                                </td>
                             </tr>
                         }
                     }
@@ -123,5 +123,11 @@
 
         });
 
+    }
+
+
+    function EdicaoFechamento(data) {
+      window.open('/Marcacao/Edit/'+data, '_blank');
+        
     }
 </script>
