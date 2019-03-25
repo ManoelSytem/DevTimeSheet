@@ -44,9 +44,14 @@
                     @Html.EditorFor(model => model.DataDia, new { htmlAttributes = new { @id = "DateSelect", @class = "form-control", @type = "date" } })
                     <span asp-validation-for="DataDia" class="text-danger"></span>
                 </div>
-                
+                <div class="col-xs-6 col-sm-2">
+                    <label for="NomeGerencia">
+                        Jornada diária
+                    </label>
+                    @Html.EditorFor(model => model.jornadDiaria, new { htmlAttributes = new { @type = "time", @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Coordenacao" } })
+                    <span asp-validation-for="Coordenacao" class="text-danger"></span>
                 </div>
-
+            </div>
             </div>
     </div>
     <br />
@@ -231,6 +236,7 @@
                                 '</td>');
                         }
                         ObterListaLancamento();
+                       ObterJornadaDiaria();
                     }
                 }
             });
@@ -323,6 +329,21 @@
                             buttons+
                             '</td></tr>');
                     }
+                }
+            });
+    }
+
+ function ObterJornadaDiaria() {
+           $("#modal-body").html("");
+          $.ajax({
+                url: '@Url.Action("ObterJornadaDiariaPorData", "Marcacao")',
+                changeMonth: true,
+                changeYear: true,
+                dataType: 'json',
+                type: 'get',
+                data: { data: $("#DateSelect").val() },
+              success: function (data) {
+                  $("#jornadDiaria").val(data.jornadaDia);
                 }
             });
     }

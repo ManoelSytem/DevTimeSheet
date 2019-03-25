@@ -50,6 +50,8 @@ namespace TimeSheet
             services.AddTransient<IFluigAppService, FluigAppService>();
             services.AddTransient<IFluig, FluigServiceRespository>();
             services.AddTransient<IFechamentoNegocio, FechamentoNegocio>();
+            services.AddTransient<IJornadaTrabalhoNegocio, JornadaTrabalhoNegocio>();
+            
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

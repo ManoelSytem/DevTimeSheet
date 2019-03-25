@@ -535,6 +535,7 @@ namespace TimeSheet.Application
 
         public Fechamento ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(List<Lancamento> lancamento, decimal totalLancamento, JornadaTrabalho jornada)
         {
+            double diferenca = Math.Round(jornada.JornadaDiaria.TotalHours, 2) - Convert.ToDouble(totalLancamento);
             string mensagem = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada Diária: {Math.Round(jornada.JornadaDiaria.TotalHours, 2)} e total apontado : {totalLancamento}.";
             string datalancamento = "0";
             TimeSpan totalhoraLancamentoDiaComCodigoDivergencia = TimeSpan.Parse("00:00:00");
@@ -576,19 +577,19 @@ namespace TimeSheet.Application
             {
                 novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = mensagem;
+                novo.Descricao = mensagem+" Diferênça: " +diferenca+".";
             }
             if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false)
             {
                 novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = mensagem;
+                novo.Descricao = mensagem+" Diferênça: "+Math.Abs(diferenca)+".";
             }
             else if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == true)
             {
                 novo.Divergencia = "Divergência justificada";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = mensagem;
+                novo.Descricao = mensagem+" Diferênça: " +Math.Abs(diferenca)+ ".";
             }
 
             return novo;

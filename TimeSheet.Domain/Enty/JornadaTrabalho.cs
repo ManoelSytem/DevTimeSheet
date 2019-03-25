@@ -12,6 +12,7 @@ namespace TimeSheet.Domain.Enty
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
         public TimeSpan JornadaDiaria { get; set; }
+        public string   JornadaDia { get; set; }
         public TimeSpan HoraInicioDe { get; set; }
         public TimeSpan HoraInicioAte { get; set; }
         public TimeSpan HoraFinal { get; set; }

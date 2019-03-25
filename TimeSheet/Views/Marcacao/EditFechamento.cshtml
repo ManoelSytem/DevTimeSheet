@@ -46,9 +46,11 @@
                     <span asp-validation-for="DataDia" class="text-danger"></span>
                 </div>
                 <div class="col-xs-6 col-sm-2">
-                    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                        <div class="card-header">Jornada diária: @Model.jornadDiaria</div>
-                    </div>
+                    <label for="NomeGerencia">
+                        Jornada diária
+                    </label>
+                    @Html.EditorFor(model => model.jornadDiaria, new { htmlAttributes = new { @type = "time", @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Coordenacao" } })
+                    <span asp-validation-for="Coordenacao" class="text-danger"></span>
                 </div>
             </div>
 
@@ -138,6 +140,7 @@
                                 '</td>');
                         }
                         ObterListaLancamento();
+                        ObterJornadaDiaria();
                     }
                 }
             });
@@ -239,37 +242,20 @@
 
     }
 
-
-    var onSelect = function (dateText) {
-        if ($("#DateSelect").val().length == 10) {
-            $.ajax({
-                url: '@Url.Action("ListApontamento", "Marcacao")',
+    function ObterJornadaDiaria() {
+          $.ajax({
+                url: '@Url.Action("ObterJornadaDiariaPorData", "Marcacao")',
                 changeMonth: true,
                 changeYear: true,
                 dataType: 'json',
                 type: 'get',
                 data: { data: $("#DateSelect").val() },
-                success: function (data) {
-                    if (data.erro != undefined) {
-                        Information(data.msg);
-                    } else {
-                        $('#tbCabecalhoMarcacao tbody td').remove();
-                        $('#tbCabecalhoMarcacao thead tr th').remove();
-                        for (var i = 0; data.length > i; i++) {
-                            if (i%2 == 0) {
-                                $('#tbCabecalhoMarcacao thead tr').append('<th>Entrada</th>');
-                            } else {
-                                $('#tbCabecalhoMarcacao thead tr').append('<th>Saída</th>');
-                            }
-                            $('#tbCabecalhoMarcacao tbody').append('<td>' + data[i].apontamento.substring(0,5) + '</td>' +
-                                '</td>');
-                        }
-                        ObterListaLancamento();
-                    }
+              success: function (data) {
+                  $("#jornadDiaria").val(data.jornadaDia);
                 }
             });
-        }
     }
+
 
 
     $("#salvar").on("click", function (event) {

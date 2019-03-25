@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
 using TimeSheet.Application;
+using TimeSheet.Application.Interface;
 using TimeSheet.Domain;
 using TimeSheet.Domain.Enty;
 using TimeSheet.Domain.Enty.Interface;
@@ -28,10 +29,13 @@ namespace TimeSheet.Controllers
         private readonly IMarcacao _marcacaoServiceRepository;
         private readonly IMapper _mapper;
         private readonly IJornadaTrabalho _jornadaTrbServiceRepository;
+        private readonly IJornadaTrabalhoNegocio _jornadaTrbNegocio;
+
         Configuracao config;
         Marcacao marcacao;
-        public MarcacaoController(IProtheus prothuesService, IMarcacao marcacaoServiceRepository, IMapper mapper, IConfiguracao configuracao, IMarcacao marcacao, ILancamento lancamento, IJornadaTrabalho jornada)
+        public MarcacaoController(IJornadaTrabalhoNegocio jornadaTrabalhoNegocio, IProtheus prothuesService, IMarcacao marcacaoServiceRepository, IMapper mapper, IConfiguracao configuracao, IMarcacao marcacao, ILancamento lancamento, IJornadaTrabalho jornada)
         {
+            _jornadaTrbNegocio = jornadaTrabalhoNegocio;
             _prothuesService = prothuesService;
             _marcacaoServiceRepository = marcacaoServiceRepository;
             _mapper = mapper;
@@ -170,7 +174,7 @@ namespace TimeSheet.Controllers
                 marcacao.NomeUsuario = user.Nome;
                 var objectmarcacao =  _marcacaoServiceRepository.ObterMarcacao(id);
                 var jornada =  _jornadaTrbServiceRepository.ObterJornadaPorCodigo(objectmarcacao.codigojornada);
-                marcacao.jornadDiaria =Convert.ToString(Math.Round(jornada.JornadaDiaria.TotalHours, 2));
+                marcacao.jornadDiaria = jornada.JornadaDiaria;
                 return View(marcacao);
 
             }
@@ -296,6 +300,8 @@ namespace TimeSheet.Controllers
                     data = ano + mes + dia;
                     matricula = User.GetDados("Matricula");
                     filial = User.GetDados("Filial");
+                    var JornadaDiaria = _jornadaTrbNegocio.ObterListaJornadaPorData(data);
+                   
 
 
                 }
@@ -308,6 +314,24 @@ namespace TimeSheet.Controllers
             }
         }
 
+
+        [HttpGet]
+        public ActionResult ObterJornadaDiariaPorData(string data)
+        {
+            try
+            {
+
+                var ano = data.Substring(0, 4);
+                var mes = data.Substring(5, 2);
+                var dia = data.Substring(8, 2);
+                data = ano + mes + dia;
+                return Json(_jornadaTrbNegocio.ObterListaJornadaPorData(data));
+            }
+            catch (Exception e)
+            {
+                return Json(new { msg = e.Message, erro = true });
+            }
+        }
         [HttpGet]
         public ActionResult ImportarApontamento(string matricula, string filial, string data)
         {

@@ -77,6 +77,7 @@ namespace TimeSheet.Infrastructure.Repository
                         jornadaTrabalho.InterFim = TimeSpan.Parse(QueryResult.InterFim);
                         jornadaTrabalho.InterMin = TimeSpan.Parse(QueryResult.InterMin);
                         jornadaTrabalho.InterMax = TimeSpan.Parse(QueryResult.InterMax);
+                        jornadaTrabalho.JornadaDiaria = TimeSpan.Parse(QueryResult.JornadaDiaria);
                         jornadaTrabalho.Filial = QueryResult.Filial;
                         listJornadaTrabalho.Add(jornadaTrabalho);
                     }
@@ -89,6 +90,9 @@ namespace TimeSheet.Infrastructure.Repository
                 throw ex;
             }
         }
+
+
+
 
         public void Update(JornadaTrabalho item)
         {
