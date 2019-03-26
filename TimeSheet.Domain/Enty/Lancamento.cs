@@ -18,6 +18,7 @@ namespace TimeSheet.Domain.Enty
         public string Observacao { get; set; }
         public int CodObservacao { get; set; }
         public int CodDivergencia { get; set; }
+        public string DescricaoCodDiv { get; set; }
         public string Status { get; set; }
         public string[] EmpreendimentoIds { get; set; }
         public virtual ICollection<Empreendimento> Projetos { get; set; }
@@ -41,11 +42,14 @@ namespace TimeSheet.Domain.Enty
         public string Observacao { get; set; }
         public int CodObservacao { get; set; }
         public int CodDivergencia { get; set; }
+        public string DescricaoCodDiv { get; set; }
         public string Status { get; set; }
         public string[] EmpreendimentoIds { get; set; }
         public virtual ICollection<Empreendimento> Projetos { get; set; }
         public string Fase { get; set; }
         public string CodigoProjeto { get; set; }
+
+
     }
       
 }

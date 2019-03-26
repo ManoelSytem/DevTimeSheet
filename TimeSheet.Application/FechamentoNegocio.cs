@@ -536,7 +536,7 @@ namespace TimeSheet.Application
         public Fechamento ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(List<Lancamento> lancamento, decimal totalLancamento, JornadaTrabalho jornada)
         {
             double diferenca = Math.Round(jornada.JornadaDiaria.TotalHours, 2) - Convert.ToDouble(totalLancamento);
-            string mensagem = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada Diária: {Math.Round(jornada.JornadaDiaria.TotalHours, 2)} e total apontado : {totalLancamento}.";
+            string mensagem = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada diária: {Math.Round(jornada.JornadaDiaria.TotalHours, 2)}, total apontado : {totalLancamento}.";
             string datalancamento = "0";
             TimeSpan totalhoraLancamentoDiaComCodigoDivergencia = TimeSpan.Parse("00:00:00");
             Fechamento novo = new Fechamento();

@@ -41,6 +41,13 @@
                             @Html.EditorFor(model => model.DataDia, new { htmlAttributes = new { @id = "DateSelect", @class = "form-control", @type = "date" } })
                             <span asp-validation-for="DataDia" class="text-danger"></span>
                         </div>
+                        <div class="col-xs-6 col-sm-2">
+                            <label for="NomeGerencia">
+                                Jornada diária
+                            </label>
+                            @Html.EditorFor(model => model.jornadDiaria, new { htmlAttributes = new { @type = "time", @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Coordenacao" } })
+                            <span asp-validation-for="Coordenacao" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -128,7 +135,7 @@
                         '<td>' + data[i].horaFim.substring(0, 5) + '</td>' +
                         '<td>' + data[i].descricaoEmp + ' - Fase - ' + data[i].fase + '</td>' +
                         '<td>' + data[i].observacao + '...' + '</td>' +
-                        '<td>' + data[i].codDivergencia + '</td>' +
+                        '<td>' + data[i].codDivergencia + ' - ' + data[i].descricaoCodDiv + '</td>' +
                         '</tr>');
                 }
                 

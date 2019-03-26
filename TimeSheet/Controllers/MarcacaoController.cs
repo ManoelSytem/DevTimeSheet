@@ -432,7 +432,9 @@ namespace TimeSheet.Controllers
                 var mes = marcacao.AnoMes.ToString().Substring(4, 2);
                 var ano = marcacao.AnoMes.ToString().Substring(0, 4);
                 string month = new CultureInfo("pt-BR").DateTimeFormat.GetMonthName(Convert.ToInt32(mes));
-
+                var objectmarcacao = _marcacaoServiceRepository.ObterMarcacao(id);
+                var jornada = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(objectmarcacao.codigojornada);
+                marcacao.jornadDiaria = jornada.JornadaDiaria;
                 marcacao.AnoMesDescricao = char.ToUpper(month[0]) + month.Substring(1) + "/" + ano;
                 marcacao.Lancamentolist = _mapper.Map<List<ViewModelLancamento>>(list);
                 return View(marcacao);

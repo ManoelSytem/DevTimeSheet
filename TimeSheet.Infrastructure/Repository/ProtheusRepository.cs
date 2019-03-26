@@ -50,7 +50,7 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 List<CodDivergencia> listCodivegencia = new List<CodDivergencia>();
                 Conexao.Open();
-                var sql = $@"SELECT LTRIM(RTRIM(P6_FSTPTS))  as Constant, P6_CODIGO as Codigo, P6_DESC as Descricao  FROM SP6010
+                var sql = $@"SELECT LTRIM(RTRIM(P6_FSTPTS))  as Constant, P6_CODIGO as Codigo, LTRIM(RTRIM(P6_DESC)) as Descricao  FROM SP6010
                                 WHERE (P6_DESC LIKE LTRIM(RTRIM('%{descId}%')) OR P6_CODIGO LIKE LTRIM(RTRIM('%{descId}%'))) AND P6_FSTPTS IN('01','02','03') AND D_E_L_E_T_ <> '*'";
                 Conexao.Query<CodDivergencia>(sql);
                 var QueryResult = Conexao.Query<CodDivergencia>(sql);

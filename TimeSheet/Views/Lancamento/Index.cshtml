@@ -40,10 +40,8 @@
                     <div class="col-md-3 col-sm-2 coddivergencia">
                         <label for="DiaFim">Código de divergência</label>
                         <div class="input-group mb-3">
-                            @Html.EditorFor(model => model.Lancamento.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "searchInput", @class = "form-control  col-md-8", @placeholder = "Código divergência..." } })
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" onclick="BuscarCodigoDivergencia();"><i class="fas fa-search"></i></button>
-                            </div>
+                            <input class="form-control col-md-12 text-box single-line ui-autocomplete-input" id="searchInput"  placeholder="Informe o código de divergência..." type="text">
+                            @Html.HiddenFor(model => model.Lancamento.CodDivergencia, new { htmlAttributes = new { @type = "text", @class="form-control  col-md-8", @placeholder = "Informe o código de divergência..." } })
                         </div>
                         @Html.ValidationMessageFor(model => model.Lancamento.CodDivergencia, "", new { @class = "text-danger" })
                     </div>
@@ -54,7 +52,7 @@
                         <label for="Observacao">
                             Observação
                         </label>
-                        @Html.TextAreaFor(model => model.Lancamento.Observacao, new { @Id = "comentario", @maxlength="60", @class = "form-control comment", @cols = 50, @rows = 7 })
+                        @Html.TextAreaFor(model => model.Lancamento.Observacao, new { @Id = "comentario", @maxlength = "60", @class = "form-control comment", @cols = 50, @rows = 7 })
                         <h7 class="float-right" id="totalCar"></h7>
                         @Html.ValidationMessageFor(model => model.Lancamento.Observacao, "", new { @class = "text-danger" })
                     </div>
@@ -80,6 +78,12 @@
                     alert("Error");
                 }
             });
+        },
+        select: function (event, ui) {
+            $("#searchInput").val(ui.item.label);
+            var codigo = ui.item.label;
+            $("#Lancamento_CodDivergencia").val(codigo.substr(0, 3));
+            return false;
         }
 });
                         function CarregarEmpreendimentos() {
@@ -103,10 +107,22 @@
         $('#Lancamento_EmpreendimentoIds option:not(:selected)').remove();
         for (var i in data) {
             if ($('#Lancamento_EmpreendimentoIds option[value="' + data[i].codigoProtheus + '"]').val() === undefined) {
-                $('#Lancamento_EmpreendimentoIds').append('<option value="' + data[i].codigoProtheus + '-' + data[i].fase + '">' + data[i].codigoProtheus + ' - ' + data[i].nome + '- Fase -' + data[i].fase + '</option>');
+                if (data[i].codigoProtheus === 'ZZZZZ') {
+                    $('#Lancamento_EmpreendimentoIds').append('<option value="' + data[i].codigoProtheus + '-' + data[i].fase + '">' + data[i].codigoProtheus + ' - ' + data[i].nome);
+                } else {
+                 $('#Lancamento_EmpreendimentoIds').append('<option value="' + data[i].codigoProtheus + '-' + data[i].fase + '">' + data[i].codigoProtheus + ' - ' + data[i].nome + '- Fase -' + data[i].fase + '</option>');
+                }
+               
             }
         }
     }
+
+
+    $("#Lancamento_EmpreendimentoIds").change(function () {
+        var selectedVal = $(this).find(':selected').text();
+        $("#nomeEmpreendimento").val(selectedVal);
+    });
+
 
     var carMaximo = $('.comment').attr('maxlength');
     $('#totalCar').html(carMaximo + ' restante(s)');
@@ -131,19 +147,19 @@
     });
 
     function BuscarCodigoDivergencia() {
-            $.ajax({
-                url: '@Url.Action("GetSearchValue", "Lancamento")',
-                dataType: "json",
-                data: { search: $("#searchInput").val() },
-                success: function (data) {
-                    response($.map(data, function (item) {
-                        return { label: item.codigo + "-" + item.descricao + " - " + item.constant, value: item.codigo};
-                    }));
-                },
-                error: function (xhr, status, error) {
-                    alert("Error");
-                }
-            });
+            if ($("#searchInput").val().length >= 3) {
+                                $('.loader-overlay').show();
+                                $.ajax({
+                                    url:'@Url.Action("GetEmpreendimentos", "Lancamento")',
+                                    data: { nome: $("#nomeEmpreendimento").val() },
+                                    type: 'get'
+                                }).done(function (data) {
+                                    CarregarDadosEmpreendimento(data);
+                                    $('.loader-overlay').hide();
+                                });
+                            } else {
+                                Information("Não é possível realizar pesquisa com menos de 3 caracteres.");
+                            }
     }
  
 </script>

@@ -39,14 +39,10 @@
                     <div class="col-md-3 col-sm-2 coddivergencia">
                         <label for="DiaFim">Código de divergência</label>
                         <div class="input-group mb-3">
-                            @Html.EditorFor(model => model.Lancamento.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "searchInput", @class = "form-control  col-md-8", @placeholder = "Código divergência..." } })
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" onclick="BuscarCodigoDivergencia();"><i class="fas fa-search"></i></button>
-                            </div>
+                            @Html.EditorFor(model => model.Lancamento.CodDivergencia, new { htmlAttributes = new { @type = "text", @id = "searchInput", @class = "form-control  col-md-12", @placeholder = "Informe o código de divergência..." } })
                         </div>
                         @Html.ValidationMessageFor(model => model.Lancamento.CodDivergencia, "", new { @class = "text-danger" })
-                    </div>>
-
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-6 col-sm-6">
@@ -78,6 +74,11 @@
                     alert("Error");
                 }
             });
+        },
+        select: function (event, ui) {
+            var codigo = $("#searchInput").val(ui.item.label);
+           
+            return false;
         }
 });
                         function CarregarEmpreendimentos() {
@@ -101,7 +102,12 @@
         $('#Lancamento_EmpreendimentoIds option:not(:selected)').remove();
         for (var i in data) {
             if ($('#Lancamento_EmpreendimentoIds option[value="' + data[i].codigoProtheus + '"]').val() === undefined) {
-                $('#Lancamento_EmpreendimentoIds').append('<option value="' + data[i].codigoProtheus + '-' + data[i].fase + '">' + data[i].codigoProtheus + ' - ' + data[i].nome +' - Fase - ' + data[i].fase + '</option>');
+                if (data[i].codigoProtheus === 'ZZZZZ') {
+                    $('#Lancamento_EmpreendimentoIds').append('<option value="' + data[i].codigoProtheus + '-' + data[i].fase + '">' + data[i].codigoProtheus + ' - ' + data[i].nome);
+                } else {
+                    $('#Lancamento_EmpreendimentoIds').append('<option value="' + data[i].codigoProtheus + '-' + data[i].fase + '">' + data[i].codigoProtheus + ' - ' + data[i].nome + '- Fase -' + data[i].fase + '</option>');
+                }
+
             }
         }
     }
@@ -127,20 +133,4 @@
         texto.html(calcCar + ' restante(s)');
 
     });
-
-      function BuscarCodigoDivergencia() {
-            $.ajax({
-                url: '@Url.Action("GetSearchValue", "Lancamento")',
-                dataType: "json",
-                data: { search: $("#searchInput").val() },
-                success: function (data) {
-                    response($.map(data, function (item) {
-                        return { label: item.codigo + "-" + item.descricao + " - " + item.constant, value: item.codigo};
-                    }));
-                },
-                error: function (xhr, status, error) {
-                    alert("Error");
-                }
-            });
-    }
 </script>
