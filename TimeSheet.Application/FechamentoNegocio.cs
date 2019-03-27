@@ -542,7 +542,7 @@ namespace TimeSheet.Application
             }
 
             TimeSpan diferenca = jornada.JornadaDiaria - totalhoraLancamentoDia;
-            string mensagem = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada diária: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
+            string mensagem = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é maior que a jornada diária. Jornada diária: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             string datalancamento = "0";
             TimeSpan totalhoraLancamentoDiaComCodigoDivergencia = TimeSpan.Parse("00:00:00");
             Fechamento novo = new Fechamento();
@@ -583,7 +583,7 @@ namespace TimeSheet.Application
             {
                 novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = mensagem+" Diferênça: "+diferenca.ToString(@"hh\:mm")+ ".";
+                novo.Descricao = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada diária: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             }
             if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false)
             {

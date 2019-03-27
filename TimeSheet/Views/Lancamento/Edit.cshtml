@@ -28,6 +28,7 @@
                             @Html.LabelFor(model => model.Lancamento.Projetos)
                             <div class="input-group mb-3">
                                 <input id="nomeEmpreendimento" value="@ViewBag.codigoEmpreendimento - @ViewBag.descricaoEmprendimento" type="text" class="form-control">
+                                <input style="display:none" id="codigoEmpreedimento" value="@ViewBag.codigoEmpreendimento" type="text" class="form-control">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
                                 </div>
@@ -76,8 +77,9 @@
             });
         },
         select: function (event, ui) {
-            var codigo = $("#searchInput").val(ui.item.label);
-           
+            $("#searchInput").val(ui.item.label);
+            var codigo = ui.item.label;
+            $("#Lancamento_CodDivergencia").val(codigo.substr(0, 3));
             return false;
         }
 });
@@ -90,6 +92,7 @@
                                     type: 'get'
                                 }).done(function (data) {
                                     CarregarDadosEmpreendimento(data);
+                                    CarregarEmpreendimentoEdit();
                                     $('.loader-overlay').hide();
                                 });
                             } else {
@@ -133,4 +136,16 @@
         texto.html(calcCar + ' restante(s)');
 
     });
+
+    function CarregarEmpreendimentoEdit() {
+        $.ajax({
+            url: '@Url.Action("GetEmpreendimentos", "Lancamento")',
+            data: { nome: $("#codigoEmpreedimento").val() },
+            type: 'get'
+        }).done(function (data) {
+            CarregarDadosEmpreendimento(data);
+        });
+    }
+
+   
 </script>

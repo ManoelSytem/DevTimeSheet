@@ -102,7 +102,7 @@ namespace TimeSheet.Controllers
 
         public JsonResult GetEmpreendimentos(string nome)
         {
-            return Json(_prothuesService.ObterListEmpreendimentos(nome));
+            return Json(_prothuesService.ObterListEmpreendimentos(nome.Trim()));
         }
 
         public JsonResult Excluir(string seq)
