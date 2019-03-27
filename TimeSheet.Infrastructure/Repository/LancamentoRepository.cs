@@ -58,14 +58,14 @@ namespace TimeSheet.Infrastructure.Repository
                                ZYY_HORFIN as HoraFim,
                                ZYY_PROJET as codEmpredimento,
                                ZYY_CODDIV as CodDivergencia,
-                               LTRIM(RTRIM(SP.P6_DESC)) as DescricaoCodDiv,
+                               NVL(LTRIM(RTRIM(SP.P6_DESC)),' ') as DescricaoCodDiv,
                                LTRIM(RTRIM(ZYY_OBSERV)) as Observacao,
                                LTRIM(RTRIM(SZ.ZA_DESC)) as DescricaoEmp,
                                ZB.ZYZ_STATUS AS Status
                                FROM ZYY010 ZA
                                INNER JOIN  ZYZ010  ZB ON (ZB.ZYZ_CODIGO =  ZA.ZYY_CODIGO) 
                                INNER JOIN  SZA010 SZ ON (ZA.ZYY_PROJET =  SZ.ZA_COD) 
-                               INNER JOIN  SP6010 SP ON (ZA.ZYY_CODDIV =  SP.P6_CODIGO) 
+                               LEFT JOIN  SP6010 SP ON (ZA.ZYY_CODDIV =  SP.P6_CODIGO)
                                WHERE ZB.ZYZ_MATUSU = '{matricula}' AND ZA.ZYY_DATA = '{data}' AND ZA.D_E_L_E_T_ <> '*'";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
@@ -115,12 +115,12 @@ namespace TimeSheet.Infrastructure.Repository
                                LTRIM(RTRIM(ZYY_OBSERV)) as Observacao,
                                ZYY_PROJET as codEmpredimento,
                                ZYY_CODDIV AS CodDivergencia,
-                               LTRIM(RTRIM(SP.P6_DESC)) as DescricaoCodDiv,
+                               NVL(LTRIM(RTRIM(SP.P6_DESC)),' ') as DescricaoCodDiv,
                                LTRIM(RTRIM(SZ.ZA_DESC)) as DescricaoEmp
                                FROM ZYY010 ZA
                                INNER JOIN  ZYZ010  ZB ON (ZB.ZYZ_CODIGO =  ZA.ZYY_CODIGO)
                                INNER JOIN  SZA010 SZ ON (ZA.ZYY_PROJET =  SZ.ZA_COD) 
-                               INNER JOIN  SP6010 SP ON (ZA.ZYY_CODDIV =  SP.P6_CODIGO) 
+                               LEFT JOIN  SP6010 SP ON (ZA.ZYY_CODDIV =  SP.P6_CODIGO)
                                WHERE ZB.ZYZ_MATUSU = '{matricula}' AND ZA.ZYY_DATA = '{data}'  AND ZYY_SEQ = '{codlancamento}' AND ZA.D_E_L_E_T_ <> '*'
                                ";
                     var LacamentoResult = dbConnection.QueryFirstOrDefault<LancamentoDb>(sQuery);
@@ -164,12 +164,12 @@ namespace TimeSheet.Infrastructure.Repository
                                ZYY_HORINI as  HoraInicio,
                                ZYY_HORFIN as HoraFim,
                                ZYY_CODDIV AS CodDivergencia,
-                               LTRIM(RTRIM(SP.P6_DESC)) as DescricaoCodDiv,
+                               NVL(LTRIM(RTRIM(SP.P6_DESC)),' ') as DescricaoCodDiv,
                                LTRIM(RTRIM(SZ.ZA_DESC)) AS DescricaoEmp
                                FROM ZYY010 ZA
                                INNER JOIN  ZYZ010  ZB ON (ZB.ZYZ_CODIGO =  ZA.ZYY_CODIGO) 
                                INNER JOIN  SZA010 SZ ON (ZA.ZYY_PROJET =  SZ.ZA_COD) 
-                               INNER JOIN  SP6010 SP ON (ZA.ZYY_CODDIV =  SP.P6_CODIGO) 
+                               LEFT JOIN  SP6010 SP ON (ZA.ZYY_CODDIV =  SP.P6_CODIGO)
                                WHERE ZA.ZYY_CODIGO = '{codigoMarcacao}'AND ZB.ZYZ_MATUSU = '{matricula}' AND ZA.D_E_L_E_T_ <> '*' ";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);

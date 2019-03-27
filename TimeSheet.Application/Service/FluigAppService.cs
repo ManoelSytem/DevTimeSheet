@@ -28,7 +28,7 @@ namespace TimeSheet.Application
             {
                 Username = Configuration.GetSection("Fluig")["UserName"],
                 Password = Configuration.GetSection("Fluig")["Password"],
-                UserCordFluig = Configuration.GetSection("Fluig")["UserName"],
+                UserCordFluig = userCodFluig, 
                 CompanyId = Convert.ToInt32(Configuration.GetSection("Fluig")["CompanyId"]),
                 IdProcesso = Configuration.GetSection("Fluig")["IdProcesso"],
                 Atividade = 0,
@@ -37,8 +37,9 @@ namespace TimeSheet.Application
                 ColleagueId = new string[] { },
                 Comment = "",
                 CardData = new string[][] {
-                    new[] { "txtGrupoGerencia", "GETIN"},
+                    new[] { "txtGrupoGerencia", GrupoGerencia},
                     new[] { "hddFilial", filial },
+                    new[] { "txtGrupoCoord", GrupoGerencia},
                     new[] { "hddCodigo",  codmarcacao }, // CODIGO DA ZYU_CODIGO
                     new[] { "hddDivergencia", ""},
                     new[] { "hddAprovCoord",  "" },

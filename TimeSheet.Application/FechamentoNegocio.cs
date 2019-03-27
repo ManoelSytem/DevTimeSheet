@@ -535,8 +535,14 @@ namespace TimeSheet.Application
 
         public Fechamento ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(List<Lancamento> lancamento, decimal totalLancamento, JornadaTrabalho jornada)
         {
-            double diferenca = Math.Round(jornada.JornadaDiaria.TotalHours, 2) - Convert.ToDouble(totalLancamento);
-            string mensagem = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada diária: {Math.Round(jornada.JornadaDiaria.TotalHours, 2)}, total apontado : {totalLancamento}.";
+            TimeSpan totalhoraLancamentoDia = TimeSpan.Parse("00:00:00");
+            foreach (Lancamento LancamentoResult in lancamento)
+            {
+              totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
+            }
+
+            TimeSpan diferenca = jornada.JornadaDiaria - totalhoraLancamentoDia;
+            string mensagem = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada diária: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             string datalancamento = "0";
             TimeSpan totalhoraLancamentoDiaComCodigoDivergencia = TimeSpan.Parse("00:00:00");
             Fechamento novo = new Fechamento();
@@ -577,19 +583,19 @@ namespace TimeSheet.Application
             {
                 novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = mensagem+" Diferênça: " +diferenca+".";
+                novo.Descricao = mensagem+" Diferênça: "+diferenca.ToString(@"hh\:mm")+ ".";
             }
             if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false)
             {
                 novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = mensagem+" Diferênça: "+Math.Abs(diferenca)+".";
+                novo.Descricao = mensagem+" Diferênça: "+diferenca.ToString(@"hh\:mm") + ".";
             }
             else if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == true)
             {
                 novo.Divergencia = "Divergência justificada";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = mensagem+" Diferênça: " +Math.Abs(diferenca)+ ".";
+                novo.Descricao = mensagem+" Diferênça: "+diferenca.ToString(@"hh\:mm") + ".";
             }
 
             return novo;

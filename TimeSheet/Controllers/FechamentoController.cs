@@ -746,16 +746,17 @@ namespace TimeSheet.Controllers
         {
             string[][] result;
             var Usuario = _fluigAppService.ObterUserCodFluig(User.GetClaim(ClaimTypes.Email));
-            // _fluigAppService.ValidarUserFluig(Usuario);
+            _fluigAppService.ValidarUserFluig(Usuario);
             var marcacao = _fluigAppService.ObterCodFluig(codMarcacao);
             if (_fluigAppService.ValidaNovoProcesso(marcacao))
             {
                 var UsuarioGerencia = _fluigAppService.ObterUserGerencia(User.GetDados("Centro de Custo"));
-                result = _fluigAppService.IniciarProcesso("", matricula, filial, UsuarioGerencia.Gerencia, codMarcacao);
+                result = _fluigAppService.IniciarProcesso(Usuario.CodigoFluig, matricula, filial, UsuarioGerencia.Gerencia, codMarcacao);
             }
             else
             {
-                _fluigAppService.RestartProcesso("", marcacao.CodigoFluig, matricula, filial, "GETIN", codMarcacao);
+                var UsuarioGerencia = _fluigAppService.ObterUserGerencia(User.GetDados("Centro de Custo"));
+                _fluigAppService.RestartProcesso(Usuario.CodigoFluig, marcacao.CodigoFluig, matricula, filial, UsuarioGerencia.Gerencia, codMarcacao);
             }
             
         }

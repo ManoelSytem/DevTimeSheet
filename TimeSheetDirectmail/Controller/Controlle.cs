@@ -95,7 +95,7 @@ namespace TimeSheetDirectmail.Controller
             Client.SetBearerToken(token);
 
            
-            var response = Client.GetAsync($"http://localhost:8081/api/usuarios/obterporperfil?key={Constante.COLABORADOR}").GetAwaiter().GetResult();
+            var response = Client.GetAsync($"http://localhost:8081/api/usuarios/obterporperfil?Perfil={Constante.COLABORADOR}").GetAwaiter().GetResult();
             if (response.IsSuccessStatusCode)
             {
                 var content = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();

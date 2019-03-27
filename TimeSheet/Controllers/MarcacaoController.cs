@@ -383,6 +383,8 @@ namespace TimeSheet.Controllers
                 data = ano + mes + dia;
 
             }
+
+
             return Json(_lancamentoerviceRepository.ObterLancamento(data, User.GetDados("Matricula")).OrderBy(c => c.HoraInicio).ToList());
         }
 

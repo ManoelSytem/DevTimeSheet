@@ -75,6 +75,7 @@ namespace TimeSheet.Controllers
                 var lancamento = _mapper.Map<ViewModelLancamento>(_lancamentoServiceRepository.ObterLancamentoEdit(data, User.GetDados("Matricula"), seq));
                 viewMarcacao.Lancamento = lancamento;
                 ViewBag.descricaoEmprendimento = lancamento.DescricaoEmp;
+                ViewBag.codigoEmpreendimento = lancamento.codEmpredimento;
                 return View(viewMarcacao);
 
             }
@@ -133,6 +134,7 @@ namespace TimeSheet.Controllers
                 
                 var lancamento = _mapper.Map<ViewModelLancamento>(_lancamentoServiceRepository.ObterLancamentoEdit(data, User.GetDados("Matricula"), seq));
                 ViewBag.descricaoEmprendimento = lancamento.DescricaoEmp;
+                ViewBag.codigoEmpreendimento = lancamento.codEmpredimento;
                 return View(lancamento);
 
             }
