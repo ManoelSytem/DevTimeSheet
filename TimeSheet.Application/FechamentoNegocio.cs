@@ -536,6 +536,7 @@ namespace TimeSheet.Application
         public Fechamento ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(List<Lancamento> lancamento, decimal totalLancamento, JornadaTrabalho jornada)
         {
             TimeSpan totalhoraLancamentoDia = TimeSpan.Parse("00:00:00");
+            bool ESabadoDomingoOuFeriado = false;
             foreach (Lancamento LancamentoResult in lancamento)
             {
               totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
@@ -553,7 +554,7 @@ namespace TimeSheet.Application
                 var CodDivergencia = _serviceProthues.ObterTipoCodigoDivergencia(Convert.ToString(LancamentoResult.CodDivergencia));
                 if (CodDivergencia != null)
                 {
-                    if (CodDivergencia.Constant == Constantes.HRSEXCEDENTES)
+                    if(CodDivergencia.Constant == Constantes.HRSEXCEDENTES)
                     {
                         totalhoraLancamentoDiaComCodigoDivergencia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
                         existeCodigoDivergencia = true;
@@ -579,9 +580,15 @@ namespace TimeSheet.Application
 
             double total = Convert.ToDouble(totalLancamento);
 
-            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2))
+            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) & existeCodigoDivergencia == false)
             {
                 novo.Divergencia = "Divergência a justificar";
+                novo.DataLancamento = datalancamento;
+                novo.Descricao = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada diária: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
+            }
+            else if(total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) & existeCodigoDivergencia == true)
+            {
+                novo.Divergencia = "Divergência justificada";
                 novo.DataLancamento = datalancamento;
                 novo.Descricao = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada diária: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             }
