@@ -550,6 +550,7 @@ namespace TimeSheet.Application
             bool existeCodigoDivergencia = false;
             foreach (Lancamento LancamentoResult in lancamento)
             {
+                ESabadoDomingoOuFeriado = ESabadoOuDomingo(Convert.ToDateTime(LancamentoResult.DateLancamento.ToDateProtheusReverseformate()));
                 datalancamento = LancamentoResult.DateLancamento.ToDateProtheusReverseformate();
                 var CodDivergencia = _serviceProthues.ObterTipoCodigoDivergencia(Convert.ToString(LancamentoResult.CodDivergencia));
                 if (CodDivergencia != null)
@@ -580,17 +581,44 @@ namespace TimeSheet.Application
 
             double total = Convert.ToDouble(totalLancamento);
 
-            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) & existeCodigoDivergencia == false)
+            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false && ESabadoDomingoOuFeriado == false)
             {
                 novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = datalancamento;
                 novo.Descricao = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada diária: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             }
-            else if(total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) & existeCodigoDivergencia == true)
+            else if(total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == true && ESabadoDomingoOuFeriado == false)
             {
                 novo.Divergencia = "Divergência justificada";
                 novo.DataLancamento = datalancamento;
                 novo.Descricao = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada diária: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
+            }
+            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false && ESabadoDomingoOuFeriado == true)
+            {
+                novo.Divergencia = "Divergência a justificar";
+                novo.DataLancamento = datalancamento;
+                novo.Descricao = $"Sábados, domingos e feriados com lançamentos e sem código de divergência.";
+
+            }
+            else if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == true && ESabadoDomingoOuFeriado == true)
+            {
+                novo.Divergencia = "Divergência justificada";
+                novo.DataLancamento = datalancamento;
+                novo.Descricao = $"Sábados, domingos e feriados com lançamentos e com código de divergência.";
+            }
+
+            if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false && ESabadoDomingoOuFeriado == true)
+            {
+                novo.Divergencia = "Divergência a justificar";
+                novo.DataLancamento = datalancamento;
+                novo.Descricao = $"Sábados, domingos e feriados com lançamentos e sem código de divergência.";
+
+            }
+            else if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == true && ESabadoDomingoOuFeriado == true)
+            {
+                novo.Divergencia = "Divergência justificada";
+                novo.DataLancamento = datalancamento;
+                novo.Descricao = $"Sábados, domingos e feriados com lançamentos e com código de divergência.";
             }
             if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false)
             {
@@ -865,7 +893,7 @@ namespace TimeSheet.Application
         public bool ESabadoOuDomingo(DateTime initialDate)
         {
             if (initialDate.DayOfWeek == DayOfWeek.Sunday
-                    &&
+                   ||
                    initialDate.DayOfWeek == DayOfWeek.Saturday)
                 return true;
             else return false;

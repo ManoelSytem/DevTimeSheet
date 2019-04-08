@@ -22,7 +22,7 @@ namespace TimeSheet.Application
             Configuration = configuration;
         }
 
-        public string[][] IniciarProcesso(string userCodFluig, string matricula, string filial, string GrupoGerencia, string codmarcacao)
+        public string[][] IniciarProcesso(string userCodFluig, string matricula, string filial, string grupoGerencia, string codmarcacao, string coordenacao)
         {
             var fluigProcess = new FluigProcess()
             {
@@ -37,10 +37,10 @@ namespace TimeSheet.Application
                 ColleagueId = new string[] { },
                 Comment = "",
                 CardData = new string[][] {
-                    new[] { "txtGrupoGerencia", GrupoGerencia},
+                    new[] { "txtGrupoGerencia", grupoGerencia},
                     new[] { "hddFilial", filial },
-                    new[] { "txtGrupoCoord", GrupoGerencia},
-                    new[] { "hddCodigo",  codmarcacao }, // CODIGO DA ZYU_CODIGO
+                    new[] { "txtGrupoCoord", grupoGerencia},
+                    new[] { "hddCodigo",  coordenacao}, 
                     new[] { "hddDivergencia", ""},
                     new[] { "hddAprovCoord",  "" },
                     new[] { "hddAprovGerencia",  "" },
@@ -108,7 +108,7 @@ namespace TimeSheet.Application
         {
             if (user == null)
             {
-                throw new Exception("Usuário fluig não encontrado! Favor contatar o coordenador!");
+                throw new Exception("Fechamento não realizado, usuário fluig não encontrado! Favor contatar o coordenador!");
             }
         }
 

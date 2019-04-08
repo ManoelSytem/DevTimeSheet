@@ -201,6 +201,8 @@ namespace TimeSheet.Controllers
                 List<Fechamento> listaDeDiasSemLancamento = new List<Fechamento>();
                 Marcacao marcacao = new Marcacao();
 
+                var Usuario = _fluigAppService.ObterUserCodFluig(User.GetClaim(ClaimTypes.Email));
+                _fluigAppService.ValidarUserFluig(Usuario);
 
                 marcacao = _marcacao.ObterMarcacao(viewModelfechamento.CodigoMarcacao);
                 filial = marcacao.Filial;
@@ -215,6 +217,7 @@ namespace TimeSheet.Controllers
                 var configuracao = _configuracao.ObterConfiguracao();
                 string DataFechamento = String.Format("{0:MM/dd/yyyy}", DateTime.Now.ToString());
 
+
                 listaCalculadaFechamentoPorProjeto = _fechamentoNegocio.CalcularLancamentoPorProjeto(marcacao.Lancamentolist, jornadaTrabalho, configuracao, matricula, filial, viewModelfechamento.CodigoMarcacao);
                 _fechamentoServiceRepository.SalvarFechamentoPorProjeto(listaCalculadaFechamentoPorProjeto, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
 
@@ -225,7 +228,7 @@ namespace TimeSheet.Controllers
                 _marcacaoServiceRepository.UpdateStatusFechamento(viewModelfechamento.CodigoMarcacao);
                 NotificarFechamento(viewModelfechamento);
                 StartProcessoFluig(matricula, filial, viewModelfechamento.CodigoMarcacao);
-                return Json(new { sucesso = "Fechamento realizado com sucesso! Processo do fluig foi aberto com sucesso!" });
+                return Json(new { sucesso = "Fechamento realizado com sucesso! Processo do fluig foi aberto com sucesso! " });
             }
             catch (Exception e)
             {
@@ -751,7 +754,7 @@ namespace TimeSheet.Controllers
             if (_fluigAppService.ValidaNovoProcesso(marcacao))
             {
                 var UsuarioGerencia = _fluigAppService.ObterUserGerencia(User.GetDados("Centro de Custo"));
-                result = _fluigAppService.IniciarProcesso(Usuario.CodigoFluig, matricula, filial, UsuarioGerencia.Gerencia, codMarcacao);
+                result = _fluigAppService.IniciarProcesso(Usuario.CodigoFluig, matricula, filial, UsuarioGerencia.Gerencia, codMarcacao, User.GetDados("Coordenacao"));
             }
             else
             {
