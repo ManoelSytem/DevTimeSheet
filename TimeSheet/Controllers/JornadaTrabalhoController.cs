@@ -62,7 +62,8 @@ namespace TimeSheet.Controllers
                     viewModelCadastroHora.ValidaIntervalo();
                     viewModelCadastroHora.ValidaJornadaDiaria();
                     viewModelCadastroHora.ValidaData();
-                    
+                    viewModelCadastroHora.ValidaJornadaMax();
+
                     var JornadaTrb = _mapper.Map<JornadaTrabalho>(viewModelCadastroHora);
                     _jornadaTrbServiceRepository.SalvarJornada(JornadaTrb);
                     TempData["CreateSucesso"] = true;
@@ -106,6 +107,7 @@ namespace TimeSheet.Controllers
                     viewModelCadastroHora.ValidaIntervalo();
                     viewModelCadastroHora.ValidaJornadaDiaria();
                     viewModelCadastroHora.ValidaData();
+                    viewModelCadastroHora.ValidaJornadaMax();
                     var JornadaTrb = _mapper.Map<JornadaTrabalho>(viewModelCadastroHora);
                     _jornadaTrbServiceRepository.AtualizarJornada(JornadaTrb);
                     TempData["CreateSucesso"] = true;

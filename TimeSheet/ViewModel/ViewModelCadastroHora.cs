@@ -13,6 +13,7 @@ namespace TimeSheet.ViewModel
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? DataFim { get; set; }
         public TimeSpan JornadaDiaria { get; set; }
+        public TimeSpan JornadaMax { get; set; }
         public TimeSpan HoraInicioDe { get; set; }
         public TimeSpan HoraInicioAte { get; set; }
         public TimeSpan HoraFinal { get; set; }
@@ -47,8 +48,18 @@ namespace TimeSheet.ViewModel
 
         public void ValidaJornadaDiaria()
         {
-            if (!(this.JornadaDiaria.Hours <= 24))
+            if (!(this.JornadaMax.Hours <= 24))
                 throw new Exception("Total jornada diária maior que "+this.JornadaDiaria+"hs!Favor verificar");
+            if (this.JornadaDiaria > this.JornadaMax)
+                throw new Exception("Jornada mínima deve ser menor quer a jornada máxima! Favor verificar");
+        }
+
+        public void ValidaJornadaMax()
+        {
+            if (!(this.JornadaDiaria.Hours <= 24))
+                throw new Exception("Total jornada diária maior que " + this.JornadaDiaria + "hs!Favor verificar");
+            if (!(this.JornadaMax > this.JornadaDiaria))
+                throw new Exception("Jornada máxima deve ser maior quer a jornada mínima! Favor verificar");
         }
 
         public void ValidaData()

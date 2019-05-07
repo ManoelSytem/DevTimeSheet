@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-xs-6 col-sm-2">
                             <label for="Filial">Filial</label>
-                            @Html.EditorFor(model => model.Filial, new { htmlAttributes = new { @type= "number", @class = "form-control col-md-12", @placeholder = "Informe o código da filial..." } })
+                            @Html.EditorFor(model => model.Filial, new { htmlAttributes = new { @type = "number", @class = "form-control col-md-12", @placeholder = "Informe o código da filial..." } })
                             <span asp-validation-for="Filial" class="text-danger"></span>
                         </div>
                     </div>
@@ -71,15 +71,21 @@
                         </div>
                     </div>
                     <br />
-                    <div class="row">
-                        <div class="col-xs-6 col-sm-2">
-                            <label for="JornadaDiaria">
-                                Jornada diária
+                    <div style="align-content='center'" class="row">
+                        <div class="col-xs-6 col-sm-1">
+                            <label for="HoraInicioDe">
+                                Jornada diária mínima
                             </label>
-                            @Html.EditorFor(model => model.JornadaDiaria, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-6" } })
-                            <span asp-validation-for="JornadaDiaria" class="text-danger"></span>
+                            @Html.EditorFor(model => model.JornadaDiaria, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-12", @placeholder = "..." } })
+                            <span asp-validation-for="HoraInicioDe" class="text-danger"></span>
                         </div>
-                        
+                        <div class="col-md-1 col-sm-4">
+                            <label for="HoraInicioAte">
+                                Jornada diária máxima
+                            </label>
+                            @Html.EditorFor(model => model.JornadaMax, new { htmlAttributes = new { @type = "time", @class = "form-control col-md-12", @placeholder = "..." } })
+                            <span asp-validation-for="HoraInicioAte" class="text-danger"></span>
+                        </div>
                     </div>
                     <br />
                     <br />
