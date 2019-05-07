@@ -8,7 +8,7 @@
     <div class="col-md-12">
         <div class="card azulc-azule">
             <div class="card-header">
-               Edição de Lançamento
+                Edição de Lançamento
             </div>
             <div class="card-body">
                 <div class="row">
@@ -30,7 +30,7 @@
                                 <input id="nomeEmpreendimento" value="@ViewBag.codigoEmpreendimento - @ViewBag.descricaoEmprendimento" type="text" class="form-control">
                                 <input style="display:none" id="codigoEmpreedimento" value="@ViewBag.codigoEmpreendimento" type="text" class="form-control">
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="CarregarEmpreendimentos();"><i class="fas fa-search"></i></button>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="PesquisarEmpreendimentos();"><i class="fas fa-search"></i></button>
                                 </div>
                             </div>
                             @Html.DropDownListFor(model => model.Lancamento.EmpreendimentoIds, new List<SelectListItem>(), new { @class = "form-control" })
@@ -83,7 +83,23 @@
             return false;
         }
 });
-                        function CarregarEmpreendimentos() {
+    function CarregarEmpreendimentos() {
+        if ($("#nomeEmpreendimento").val().length >= 3) {
+            $('.loader-overlay').show();
+            $.ajax({
+                url: '@Url.Action("GetEmpreendimentos", "Lancamento")',
+                data: { nome: $("#nomeEmpreendimento").val().replace(/[^\d]+/g, '') },
+                type: 'get'
+            }).done(function (data) {
+                CarregarDadosEmpreendimento(data);
+                $('.loader-overlay').hide();
+            });
+        } else {
+            Information("Não é possível realizar pesquisa com menos de 3 caracteres.");
+        }
+    }
+
+    function PesquisarEmpreendimentos() {
                             if ($("#nomeEmpreendimento").val().length >= 3) {
                                 $('.loader-overlay').show();
                                 $.ajax({
@@ -92,12 +108,11 @@
                                     type: 'get'
                                 }).done(function (data) {
                                     CarregarDadosEmpreendimento(data);
-                                    CarregarEmpreendimentoEdit();
                                     $('.loader-overlay').hide();
                                 });
                             } else {
                                 Information("Não é possível realizar pesquisa com menos de 3 caracteres.");
-                            }
+         }
     }
 
     function CarregarDadosEmpreendimento(data) {
@@ -110,7 +125,6 @@
                 } else {
                     $('#Lancamento_EmpreendimentoIds').append('<option value="' + data[i].codigoProtheus + '-' + data[i].fase + '">' + data[i].codigoProtheus + ' - ' + data[i].nome + '- Fase -' + data[i].fase + '</option>');
                 }
-
             }
         }
     }
@@ -137,6 +151,11 @@
 
     });
 
+    $("#Lancamento_EmpreendimentoIds").change(function () {
+        var selectedVal = $(this).find(':selected').text();
+        $("#nomeEmpreendimento").val(selectedVal);
+    });
+
     function CarregarEmpreendimentoEdit() {
         $.ajax({
             url: '@Url.Action("GetEmpreendimentos", "Lancamento")',
@@ -147,5 +166,5 @@
         });
     }
 
-   
+
 </script>

@@ -122,7 +122,7 @@
                 changeYear: true,
                 dataType: 'json',
                 type: 'get',
-                data: { data: $("#DateSelect").val() },
+               data: { data: $("#DateSelect").val(), matricula: $("#MatUsuario").val() },
                 success: function (data) {
                     if (data.erro != undefined) {
                         Information(data.msg);
@@ -249,7 +249,7 @@
                 changeYear: true,
                 dataType: 'json',
                 type: 'get',
-                data: { data: $("#DateSelect").val() },
+                data: { data: $("#DateSelect").val(), matricula: $("#MatUsuario").val()},
                 success: function (data) {
                     if (data.erro != undefined) {
                         Information(data.msg);
@@ -528,7 +528,7 @@
                                     data: { nome: $("#nomeEmpreendimento").val() },
                                     type: 'get'
                                 }).done(function (data) {
-                                    CarregarDadosEmpreendimento(data);
+                                    CarregarEmpreendimentoEdit();
                                     $('.loader-overlay').hide();
                                 });
                             } else {

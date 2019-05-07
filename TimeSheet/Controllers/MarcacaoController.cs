@@ -295,8 +295,8 @@ namespace TimeSheet.Controllers
                     marcacao = new Marcacao();
 
                     var ano = data.Substring(0, 4);
-                    var mes = data.Substring(5, 2);
-                    var dia = data.Substring(8, 2);
+                    var dia = data.Substring(5, 2);
+                    var mes = data.Substring(8, 2);
                     data = ano + mes + dia;
                     matricula = User.GetDados("Matricula");
                     filial = User.GetDados("Filial");
