@@ -589,7 +589,8 @@ namespace TimeSheet.Application
             {
                 novo.Divergencia = "Divergência";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = $"Dia com diferença entre o total apontado e a jornada mínima. Jornada mínima: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
+                novo.Descricao = $"Dia com diferença entre o total apontado e a jor" +
+                    $"nada mínima. Jornada mínima: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             }
             if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false && ESabadoDomingoOuFeriado == true)
             {
@@ -618,19 +619,12 @@ namespace TimeSheet.Application
                 novo.DataLancamento = datalancamento;
                 novo.Descricao = $"Sábados, domingos e feriados com lançamentos e com código de divergência.";
             }
-            if (total > Math.Round(Convert.ToDouble(jornada.JornadaMax.TotalHours), 2))
+            if (total > Math.Round(Convert.ToDouble(jornada.JornadaMax.TotalHours), 2) && ESabadoDomingoOuFeriado == false)
             {
                 novo.Divergencia = "Divergência";
                 novo.DataLancamento = datalancamento;
                 novo.Descricao = mensagem+" Diferênça: "+diferenca.ToString(@"hh\:mm") + ".";
             }
-            else if (total > Math.Round(Convert.ToDouble(jornada.JornadaMax.TotalHours), 2))
-            {
-                novo.Divergencia = "Divergência";
-                novo.DataLancamento = datalancamento;
-                novo.Descricao = mensagem+" Diferênça: "+diferenca.ToString(@"hh\:mm") + ".";
-            }
-
             return novo;
         }
 

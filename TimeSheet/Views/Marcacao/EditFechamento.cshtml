@@ -257,6 +257,7 @@
                 data: { data: $("#DateSelect").val() },
               success: function (data) {
                   $("#jornadDiaria").val(data.jornadaDia);
+                  $("#jornadaMax").val(data.jornadaMax);
                 }
             });
     }
