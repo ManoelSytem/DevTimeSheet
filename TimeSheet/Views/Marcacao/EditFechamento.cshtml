@@ -46,11 +46,16 @@
                     <span asp-validation-for="DataDia" class="text-danger"></span>
                 </div>
                 <div class="col-xs-6 col-sm-2">
-                    <label for="NomeGerencia">
-                        Jornada diária
+                    <label for="JornadaMinima">
+                        Jornada diária mínima
                     </label>
-                    @Html.EditorFor(model => model.jornadDiaria, new { htmlAttributes = new { @type = "time", @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Coordenacao" } })
-                    <span asp-validation-for="Coordenacao" class="text-danger"></span>
+                    @Html.EditorFor(model => model.jornadDiaria, new { htmlAttributes = new { @type = "time", @disabled = "disabled", @class = "form-control col-md-8"} })
+                </div>
+                <div class="col-xs-6 col-sm-2">
+                    <label for="JornadaMaxima">
+                        Jornada diária máxima
+                    </label>
+                    @Html.EditorFor(model => model.jornadaMax, new { htmlAttributes = new { @type = "time", @disabled = "disabled", @class = "form-control col-md-8" } })
                 </div>
             </div>
 

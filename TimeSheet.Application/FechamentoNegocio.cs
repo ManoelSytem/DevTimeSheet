@@ -42,7 +42,7 @@ namespace TimeSheet.Application
             double totalHoraExedente = 0;
             double totalAbono = 0;
             double totalHorasNaoTrabalhada = 0;
-            var jrDiaria = jornada.JornadaDiaria;
+            var jrDiaria = jornada.JornadaMax;
             List<Fechamento> Fechamento = new List<Fechamento>();
             string codEmprendimento = "0";
             string data = "";
@@ -66,6 +66,10 @@ namespace TimeSheet.Application
                     if (!ValidaEferiado(LancamentoResult.DateLancamento, filial) | !ESabadoOuDomingo(Convert.ToDateTime(LancamentoResult.DateLancamento.ToDateProtheusReverseformate())))
                     {
                         totalHorasNaoTrabalhada += CalcularTotalNaoTrabalhadas(listaLancamentoPorDia);
+                        if (totalLancamento < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2))
+                        {
+                            totalHorasNaoTrabalhada += totalLancamento;
+                        }
                     }
                     totalgeral += totalLancamento;
                 }
@@ -376,9 +380,9 @@ namespace TimeSheet.Application
 
             }
 
-            if (Math.Round(Convert.ToDouble(totalhoraLancamentoDia.TotalHours), 2) > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2))
+            if (Math.Round(Convert.ToDouble(totalhoraLancamentoDia.TotalHours), 2) > Math.Round(Convert.ToDouble(jornada.JornadaMax.TotalHours), 2))
             {
-                totalGeral = Math.Round(Convert.ToDouble(totalhoraLancamentoDia.TotalHours), 2) - Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2);
+                totalGeral = Math.Round(Convert.ToDouble(totalhoraLancamentoDia.TotalHours), 2) - Math.Round(Convert.ToDouble(jornada.JornadaMax.TotalHours), 2);
                 return Math.Round(totalGeral, 2);
             }
             else
@@ -542,8 +546,8 @@ namespace TimeSheet.Application
               totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
             }
 
-            TimeSpan diferenca = jornada.JornadaDiaria - totalhoraLancamentoDia;
-            string mensagem = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é maior que a jornada diária. Jornada diária: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
+            TimeSpan diferenca = jornada.JornadaMax - totalhoraLancamentoDia;
+            string mensagem = $"Dia com hora excedente. Jornada máxima: {jornada.JornadaMax.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             string datalancamento = "0";
             TimeSpan totalhoraLancamentoDiaComCodigoDivergencia = TimeSpan.Parse("00:00:00");
             Fechamento novo = new Fechamento();
@@ -581,17 +585,11 @@ namespace TimeSheet.Application
 
             double total = Convert.ToDouble(totalLancamento);
 
-            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false && ESabadoDomingoOuFeriado == false)
+            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2)  && ESabadoDomingoOuFeriado == false)
             {
-                novo.Divergencia = "Divergência a justificar";
+                novo.Divergencia = "Divergência";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada diária: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
-            }
-            else if(total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == true && ESabadoDomingoOuFeriado == false)
-            {
-                novo.Divergencia = "Divergência justificada";
-                novo.DataLancamento = datalancamento;
-                novo.Descricao = $"Dia com diferença entre o total apontado e a jornada diária. O total apontado é menor que a jornada diária. Jornada diária: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
+                novo.Descricao = $"Dia com diferença entre o total apontado e a jornada mínima. Jornada mínima: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             }
             if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false && ESabadoDomingoOuFeriado == true)
             {
@@ -620,15 +618,15 @@ namespace TimeSheet.Application
                 novo.DataLancamento = datalancamento;
                 novo.Descricao = $"Sábados, domingos e feriados com lançamentos e com código de divergência.";
             }
-            if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false)
+            if (total > Math.Round(Convert.ToDouble(jornada.JornadaMax.TotalHours), 2))
             {
-                novo.Divergencia = "Divergência a justificar";
+                novo.Divergencia = "Divergência";
                 novo.DataLancamento = datalancamento;
                 novo.Descricao = mensagem+" Diferênça: "+diferenca.ToString(@"hh\:mm") + ".";
             }
-            else if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == true)
+            else if (total > Math.Round(Convert.ToDouble(jornada.JornadaMax.TotalHours), 2))
             {
-                novo.Divergencia = "Divergência justificada";
+                novo.Divergencia = "Divergência";
                 novo.DataLancamento = datalancamento;
                 novo.Descricao = mensagem+" Diferênça: "+diferenca.ToString(@"hh\:mm") + ".";
             }
@@ -745,11 +743,15 @@ namespace TimeSheet.Application
                     {
                         novo.TotalHoraExedente = totalLancamento;
                     }
-                    else if (totalLancamento > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2)) novo.TotalHoraExedente = Math.Round(totalLancamento - Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2), 2);
+                    else if (totalLancamento > Math.Round(Convert.ToDouble(jornada.JornadaMax.TotalHours), 2)) novo.TotalHoraExedente = Math.Round(totalLancamento - Math.Round(Convert.ToDouble(jornada.JornadaMax.TotalHours), 2), 2);
                     if (!ValidaEferiado(LancamentoResult.DateLancamento, filial) | !ESabadoOuDomingo(Convert.ToDateTime(LancamentoResult.DateLancamento.ToDateProtheusReverseformate())))
                     {
                         novo.TotalAbono = totalAbono;
-                        novo.TotalFaltaAtraso = CalcularTotalNaoTrabalhadas(listaLancamentoPorDia); ;
+                        novo.TotalFaltaAtraso = CalcularTotalNaoTrabalhadas(listaLancamentoPorDia);
+                        if(totalLancamento < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2))
+                        {
+                            novo.TotalFaltaAtraso += totalLancamento;
+                        }
                     }
                     if (ValidaEferiado(LancamentoResult.DateLancamento, filial) | ESabadoOuDomingo(Convert.ToDateTime(LancamentoResult.DateLancamento.ToDateProtheusReverseformate())))
                     {
@@ -921,7 +923,6 @@ namespace TimeSheet.Application
         public double CalcularTotalNaoTrabalhadas(List<Lancamento> listlancamento)
         {
             double totalNaoTrabalhada = 0;
-
             foreach (Lancamento lancamento in listlancamento)
             {
                 if (lancamento.CodDivergencia != 0)
@@ -933,8 +934,8 @@ namespace TimeSheet.Application
                             totalNaoTrabalhada += Math.Round((lancamento.HoraFim - lancamento.HoraInicio).TotalHours, 2);
                     }
                 }
-
             }
+
             return totalNaoTrabalhada;
         }
 

@@ -14,6 +14,7 @@ namespace TimeSheet.Domain.Enty
         public TimeSpan JornadaDiaria { get; set; }
         public TimeSpan JornadaMax { get; set; }
         public string   JornadaDia { get; set; }
+        public string   JornadaMaxDia { get; set; }
         public TimeSpan HoraInicioDe { get; set; }
         public TimeSpan HoraInicioAte { get; set; }
         public TimeSpan HoraFinal { get; set; }

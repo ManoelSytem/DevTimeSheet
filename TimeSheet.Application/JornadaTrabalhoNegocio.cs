@@ -27,6 +27,7 @@ namespace TimeSheet.Application
                 if (Convert.ToDateTime(data.ToDateProtheusReverseformate()) >= jornada.DataInicio && Convert.ToDateTime(data.ToDateProtheusReverseformate()) <= jornada.DataFim)
                 {
                     jornada.JornadaDia = jornada.JornadaDiaria.ToString(@"hh\:mm");
+                    jornada.JornadaMaxDia = jornada.JornadaMax.ToString(@"hh\:mm");
                     return jornada;
                 }
                 

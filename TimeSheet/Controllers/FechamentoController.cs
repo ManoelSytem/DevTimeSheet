@@ -245,7 +245,7 @@ namespace TimeSheet.Controllers
         {
             List<Fechamento> listFechamento = new List<Fechamento>();
            
-            //Mit Validação 8.4.4 erro não concluirá o fechamento caso possuir divergências.
+            //Mit Validação 8.4.4.
             var listD = ValidaSabadoDomingoEFeriado(id);
             if (listD.Count > 0)
             {
@@ -315,7 +315,7 @@ namespace TimeSheet.Controllers
                 }
             }
 
-            //Mit Validação 8.4.5 e  Validação 8.4.7 não concluirá o fechamento caso possuir divergências.
+            //Mit Validação 8.4.5 e  Validação 8.4.7.
             var listB = ValidaDiferencaBatida(id);
             if (listB.Count > 0)
             {
@@ -344,7 +344,7 @@ namespace TimeSheet.Controllers
 
 
 
-            //Mit Validação 8.4.8 e 8.4.9 e 8.4.10 não concluirá o fechamento caso possuir divergências.
+            //Mit Validação 8.4.8 e 8.4.9 e 8.4.10.
             var listF = ValidaLancamentoForaDeIntervalo(id);
             if (listF.Count > 0)
             {

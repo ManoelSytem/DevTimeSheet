@@ -175,6 +175,7 @@ namespace TimeSheet.Controllers
                 var objectmarcacao =  _marcacaoServiceRepository.ObterMarcacao(id);
                 var jornada =  _jornadaTrbServiceRepository.ObterJornadaPorCodigo(objectmarcacao.codigojornada);
                 marcacao.jornadDiaria = jornada.JornadaDiaria;
+                marcacao.jornadaMax = jornada.JornadaMax;
                 return View(marcacao);
 
             }
@@ -380,7 +381,7 @@ namespace TimeSheet.Controllers
                 var ano = data.Substring(0, 4);
                 var mes = data.Substring(5, 2);
                 var dia = data.Substring(8, 2);
-                data = ano + dia + mes;
+                data = ano+mes+dia;
 
             }
 
@@ -437,6 +438,7 @@ namespace TimeSheet.Controllers
                 var objectmarcacao = _marcacaoServiceRepository.ObterMarcacao(id);
                 var jornada = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(objectmarcacao.codigojornada);
                 marcacao.jornadDiaria = jornada.JornadaDiaria;
+                marcacao.jornadaMax = jornada.JornadaMax;
                 marcacao.AnoMesDescricao = char.ToUpper(month[0]) + month.Substring(1) + "/" + ano;
                 marcacao.Lancamentolist = _mapper.Map<List<ViewModelLancamento>>(list);
                 return View(marcacao);
