@@ -298,7 +298,7 @@ namespace TimeSheet.Controllers
                     var ano = data.Substring(0, 4);
                     var dia = data.Substring(5, 2);
                     var mes = data.Substring(8, 2);
-                    data = ano + mes + dia;
+                    data = ano+dia+mes;
                     matricula = User.GetDados("Matricula");
                     filial = User.GetDados("Filial");
                     var JornadaDiaria = _jornadaTrbNegocio.ObterListaJornadaPorData(data);

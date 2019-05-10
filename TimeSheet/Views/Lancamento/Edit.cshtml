@@ -82,7 +82,8 @@
             $("#Lancamento_CodDivergencia").val(codigo.substr(0, 3));
             return false;
         }
-});
+    });
+
     function CarregarEmpreendimentos() {
         if ($("#nomeEmpreendimento").val().length >= 3) {
             $('.loader-overlay').show();
@@ -159,7 +160,7 @@
     function CarregarEmpreendimentoEdit() {
         $.ajax({
             url: '@Url.Action("GetEmpreendimentos", "Lancamento")',
-            data: { nome: $("#codigoEmpreedimento").val() },
+            data: { nome: $("#nomeEmpreendimento").val() },
             type: 'get'
         }).done(function (data) {
             CarregarDadosEmpreendimento(data);

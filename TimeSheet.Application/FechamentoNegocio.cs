@@ -574,50 +574,46 @@ namespace TimeSheet.Application
                 var CodDivergencia = _serviceProthues.ObterTipoCodigoDivergencia(Convert.ToString(LancamentoResult.CodDivergencia));
                 if (CodDivergencia != null)
                 { 
-                    if (CodDivergencia.Constant == Constantes.HRSEXCEDENTES)
-                {
                     existeCodigoDivergencia = true;
                     break;
-                }
-
                 }
             }
 
             double total = Convert.ToDouble(totalLancamento);
 
-            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2)  && ESabadoDomingoOuFeriado == false)
+            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false && ESabadoDomingoOuFeriado == false)
             {
-                novo.Divergencia = "Divergência";
+                novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = datalancamento;
                 novo.Descricao = $"Dia com diferença entre o total apontado e a jor" +
                     $"nada mínima. Jornada mínima: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             }
-            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false && ESabadoDomingoOuFeriado == true)
-            {
-                novo.Divergencia = "Divergência a justificar";
-                novo.DataLancamento = datalancamento;
-                novo.Descricao = $"Sábados, domingos e feriados com lançamentos e sem código de divergência.";
-
-            }
-            else if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == true && ESabadoDomingoOuFeriado == true)
+            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == true && ESabadoDomingoOuFeriado == false)
             {
                 novo.Divergencia = "Divergência justificada";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = $"Sábados, domingos e feriados com lançamentos e com código de divergência.";
+                novo.Descricao = $"Dia com diferença entre o total apontado e a jor" +
+                    $"nada mínima. Jornada mínima: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             }
-
-            if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false && ESabadoDomingoOuFeriado == true)
+            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2)  && ESabadoDomingoOuFeriado == true)
             {
-                novo.Divergencia = "Divergência a justificar";
+                novo.Divergencia = "Divergência";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = $"Sábados, domingos e feriados com lançamentos e sem código de divergência.";
+                novo.Descricao = $"Sabado, domingo ou feriado com lançamento é considerado como hora excedente.";
 
             }
-            else if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == true && ESabadoDomingoOuFeriado == true)
+            if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2)  && ESabadoDomingoOuFeriado == true)
             {
-                novo.Divergencia = "Divergência justificada";
+                novo.Divergencia = "Divergência";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = $"Sábados, domingos e feriados com lançamentos e com código de divergência.";
+                novo.Descricao = $"Sabado, domingo ou feriado com lançamento é considerado como hora excedente.";
+
+            }
+            else if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && ESabadoDomingoOuFeriado == true)
+            {
+                novo.Divergencia = "Divergência";
+                novo.DataLancamento = datalancamento;
+                novo.Descricao = $"Sabado, domingo ou feriado com lançamento é considerado como hora excedente.";
             }
             if (total > Math.Round(Convert.ToDouble(jornada.JornadaMax.TotalHours), 2) && ESabadoDomingoOuFeriado == false)
             {
@@ -635,15 +631,15 @@ namespace TimeSheet.Application
             if ((Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Sunday |
                Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Saturday | feriado.Descricao != null) && lancamento.CodDivergencia == 0)
             {
-                novo.Divergencia = "Divergência a justificar";
+                novo.Divergencia = "Divergência";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
-                novo.Descricao = "Sábados, domingos e feriados com lançamento e sem código de divergência.";
+                novo.Descricao = "Sábados, domingos e feriados com lançamento.";
 
             }
             if ((Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Sunday |
                Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate()).DayOfWeek == DayOfWeek.Saturday | feriado.Descricao != null) && lancamento.CodDivergencia != 0)
             {
-                novo.Divergencia = "Divergência justificada";
+                novo.Divergencia = "Divergência";
                 novo.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
                 novo.Descricao = "Sábados, domingos e feriados com lançamentos.";
 
@@ -679,7 +675,7 @@ namespace TimeSheet.Application
         public Fechamento ValidarUltimoLancamentoForaDeJornada(Lancamento lancamento, JornadaTrabalho jornada)
         {
             Fechamento novoFechamento = new Fechamento();
-
+            if (!ESabadoOuDomingo(Convert.ToDateTime(lancamento.DateLancamento.ToDateProtheusReverseformate())) && !(ValidaEferiado(lancamento.DateLancamento.ToDateProtheusReverseformate(),jornada.Filial)) ) { 
             if ((lancamento.HoraFim < jornada.HoraFinal) && lancamento.CodDivergencia == 0)
             {
                 Fechamento novo = new Fechamento();
@@ -693,6 +689,7 @@ namespace TimeSheet.Application
                 novoFechamento.Divergencia = "Divergência justificada";
                 novoFechamento.DataLancamento = lancamento.DateLancamento.ToDateProtheusReverseformate();
                 novoFechamento.Descricao = "Dia onde a última marcação seja menor que o campo “Hora Saída” na tabela de Intervalos para o período do fechamento.";
+            }
             }
             return novoFechamento;
         }

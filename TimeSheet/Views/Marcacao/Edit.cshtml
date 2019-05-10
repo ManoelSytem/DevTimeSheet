@@ -526,24 +526,6 @@
     }
 
 
-       function CarregarEmpreendimentos() {
-                            if ($("#nomeEmpreendimento").val().length >= 3) {
-                                $('.loader-overlay').show();
-                                $.ajax({
-                                    url:'@Url.Action("GetEmpreendimentos", "Lancamento")',
-                                    data: { nome: $("#nomeEmpreendimento").val() },
-                                    type: 'get'
-                                }).done(function (data) {
-                                    CarregarEmpreendimentoEdit();
-                                    $('.loader-overlay').hide();
-                                });
-                            } else {
-                                Information("Não é possível realizar pesquisa com menos de 3 caracteres.");
-                            }
-    }
-
-
-
     $('#tbLancamento').DataTable({
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
         "columnDefs": [

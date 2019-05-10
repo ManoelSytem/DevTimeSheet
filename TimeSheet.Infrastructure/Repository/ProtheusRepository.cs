@@ -133,8 +133,10 @@ namespace TimeSheet.Infrastructure.Repository
                     foreach (Apontamento ApResult in QueryResult)
                     {
                         apontamento = new Apontamento();
+                        int virgulaIndice = ApResult.hora.IndexOf(',');
+                        string valor = ApResult.hora.Substring(virgulaIndice);
                         if (ApResult.hora.Length == 1 | ApResult.hora.Length == 2) { apontamento.apontamento = TimeSpan.Parse("0"+ApResult.hora+":00"); }
-                        else if (ApResult.hora.Length == 3) { string horaMinuto = ApResult.hora + "0"; apontamento.apontamento = TimeSpan.Parse(horaMinuto.Replace(',', ':')); } else
+                        else if (valor.Length == 2) { string horaMinuto = ApResult.hora + "0"; apontamento.apontamento = TimeSpan.Parse(horaMinuto.Replace(',', ':')); } else
                         {
                             
                             apontamento.apontamento = TimeSpan.Parse(ApResult.hora.Replace(',', ':'));

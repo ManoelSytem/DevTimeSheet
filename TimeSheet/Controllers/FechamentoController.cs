@@ -249,10 +249,7 @@ namespace TimeSheet.Controllers
             var listD = ValidaSabadoDomingoEFeriado(id);
             if (listD.Count > 0)
             {
-                foreach (Fechamento fechamentoResult in listD.ToList())
-                {
-                    listFechamento.Add(fechamentoResult);
-                }
+               
             }
 
             //Mit Validação 8.4.1
@@ -377,20 +374,6 @@ namespace TimeSheet.Controllers
             if (listH.Count > 0)
             {
                 foreach (Fechamento fechamentoResult in listH.ToList())
-                {
-                    if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
-                    {
-                        listFechamento.Add(fechamentoResult);
-                    }
-                }
-
-            }
-
-
-            var listEx = ValidarHorasExecedentesSemCodigoDivergencia(id);
-            if (listEx.Count > 0)
-            {
-                foreach (Fechamento fechamentoResult in listEx.ToList())
                 {
                     if (!VerificaSeDataEsabadoDomingoOUferiado(listD, fechamentoResult))
                     {
