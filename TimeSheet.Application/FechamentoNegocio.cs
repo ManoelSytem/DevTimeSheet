@@ -607,7 +607,6 @@ namespace TimeSheet.Application
                 novo.Divergencia = "Divergência";
                 novo.DataLancamento = datalancamento;
                 novo.Descricao = $"Sabado, domingo ou feriado com lançamento é considerado como hora excedente.";
-
             }
             else if (total > Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && ESabadoDomingoOuFeriado == true)
             {
@@ -619,7 +618,7 @@ namespace TimeSheet.Application
             {
                 novo.Divergencia = "Divergência";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = mensagem+" Diferênça: "+diferenca.ToString(@"hh\:mm") + ".";
+                novo.Descricao = mensagem+ " Exedente: " + diferenca.ToString(@"hh\:mm") + ".";
             }
             return novo;
         }
@@ -999,7 +998,7 @@ namespace TimeSheet.Application
             {
                 novo.Divergencia = "Divergência";
                 novo.DataLancamento = dataDia.ToDateProtheusReverseformate();
-                novo.Descricao = "Dia sem apontamento no relogio.";
+                novo.Descricao = "Dia sem apontamento no relógio.";
                 return novo;
 
             }

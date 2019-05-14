@@ -51,15 +51,19 @@ namespace TimeSheet.ViewModel
         {
             if (!(this.JornadaMax.Hours <= 24))
                 throw new Exception("Total jornada diária maior que "+this.JornadaDiaria+"hs!Favor verificar");
-            if (this.JornadaDiaria > this.JornadaMax)
-                throw new Exception("Jornada mínima deve ser menor quer a jornada máxima! Favor verificar");
+            if (this.JornadaMin > this.JornadaMax)
+                throw new Exception("Jornada mínima deve ser menor quer a jornada máxima! Favor verificar");  
+            if (this.JornadaMin > this.JornadaDiaria)
+                throw new Exception("Jornada mínima maior quer a jornada diária! Favor verificar");
+            if (this.JornadaMax < this.JornadaDiaria)
+                throw new Exception("Jornada máxima menor que a jornada diária! Favor verificar");
         }
 
         public void ValidaJornadaMax()
         {
             if (!(this.JornadaDiaria.Hours <= 24))
                 throw new Exception("Total jornada diária maior que " + this.JornadaDiaria + "hs!Favor verificar");
-            if (!(this.JornadaMax > this.JornadaDiaria))
+            if (!(this.JornadaMax > this.JornadaMin))
                 throw new Exception("Jornada máxima deve ser maior quer a jornada mínima! Favor verificar");
         }
 
