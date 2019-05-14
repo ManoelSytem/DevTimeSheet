@@ -581,19 +581,19 @@ namespace TimeSheet.Application
 
             double total = Convert.ToDouble(totalLancamento);
 
-            if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == false && ESabadoDomingoOuFeriado == false)
+            if (total < Math.Round(Convert.ToDouble(jornada.JornadaMin.TotalHours), 2) && existeCodigoDivergencia == false && ESabadoDomingoOuFeriado == false)
             {
                 novo.Divergencia = "Divergência a justificar";
                 novo.DataLancamento = datalancamento;
                 novo.Descricao = $"Dia com diferença entre o total apontado e a jor" +
-                    $"nada mínima. Jornada mínima: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
+                    $"nada mínima. Jornada mínima: {jornada.JornadaMin.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             }
             if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2) && existeCodigoDivergencia == true && ESabadoDomingoOuFeriado == false)
             {
                 novo.Divergencia = "Divergência justificada";
                 novo.DataLancamento = datalancamento;
                 novo.Descricao = $"Dia com diferença entre o total apontado e a jor" +
-                    $"nada mínima. Jornada mínima: {jornada.JornadaDiaria.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
+                    $"nada mínima. Jornada mínima: {jornada.JornadaMin.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             }
             if (total < Math.Round(Convert.ToDouble(jornada.JornadaDiaria.TotalHours), 2)  && ESabadoDomingoOuFeriado == true)
             {

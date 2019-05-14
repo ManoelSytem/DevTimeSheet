@@ -13,6 +13,7 @@ namespace TimeSheet.ViewModel
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? DataFim { get; set; }
         public TimeSpan JornadaDiaria { get; set; }
+        public TimeSpan JornadaMin { get; set; }
         public TimeSpan JornadaMax { get; set; }
         public TimeSpan HoraInicioDe { get; set; }
         public TimeSpan HoraInicioAte { get; set; }

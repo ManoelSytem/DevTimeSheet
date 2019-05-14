@@ -53,9 +53,16 @@
                     <div style="align-content='center'" class="row">
                         <div class="col-xs-6 col-sm-1">
                             <label for="HoraInicioDe">
-                                Jornada diária mínima
+                                Jornada diária
                             </label>
                             @Html.EditorFor(model => model.JornadaDiaria, new { htmlAttributes = new { @disabled = "disabled", @type = "time", @class = "form-control col-md-12", @placeholder = "..." } })
+                            <span asp-validation-for="HoraInicioDe" class="text-danger"></span>
+                        </div>
+                        <div class="col-xs-6 col-sm-1">
+                            <label for="HoraInicioDe">
+                                Jornada diária mínima
+                            </label>
+                            @Html.EditorFor(model => model.JornadaMin, new { htmlAttributes = new { @disabled = "disabled", @type = "time", @class = "form-control col-md-12", @placeholder = "..." } })
                             <span asp-validation-for="HoraInicioDe" class="text-danger"></span>
                         </div>
                         <div class="col-md-1 col-sm-4">

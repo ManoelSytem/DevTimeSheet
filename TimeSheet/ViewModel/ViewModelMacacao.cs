@@ -11,6 +11,7 @@ namespace TimeSheet.ViewModel
         public string Filial { get; set; }
         public TimeSpan jornadDiaria { get; set; }
         public TimeSpan jornadaMax { get; set; }
+        public TimeSpan jornadaMin { get; set; }
         public string DataInicio { get; set; }
         public string DataFim { get; set; }
         public DateTime? DataDialancamento { get; set; }

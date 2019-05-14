@@ -46,15 +46,9 @@
                 </div>
                 <div class="col-xs-6 col-sm-2">
                     <label for="JornadaMinima">
-                        Jornada diária mínima
+                        Jornada diária
                     </label>
                     @Html.EditorFor(model => model.jornadDiaria, new { htmlAttributes = new { @type = "time", @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Coordenacao" } })
-                </div>
-                <div class="col-xs-6 col-sm-2">
-                    <label for="JornadaMaxima">
-                        Jornada diária máxima
-                    </label>
-                    @Html.EditorFor(model => model.jornadaMax, new { htmlAttributes = new { @type = "time", @disabled = "disabled", @class = "form-control col-md-8", @placeholder = "Coordenacao" } })
                 </div>
             </div>
          </div>
