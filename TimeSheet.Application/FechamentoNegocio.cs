@@ -546,7 +546,7 @@ namespace TimeSheet.Application
               totalhoraLancamentoDia += LancamentoResult.HoraFim - LancamentoResult.HoraInicio;
             }
 
-            TimeSpan diferenca = jornada.JornadaMax - totalhoraLancamentoDia;
+            TimeSpan diferenca = jornada.JornadaDiaria - totalhoraLancamentoDia;
             string mensagem = $"Dia com hora excedente. Jornada máxima: {jornada.JornadaMax.ToString(@"hh\:mm")}, total apontado : {totalhoraLancamentoDia.ToString(@"hh\:mm")}.";
             string datalancamento = "0";
             TimeSpan totalhoraLancamentoDiaComCodigoDivergencia = TimeSpan.Parse("00:00:00");
