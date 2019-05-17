@@ -85,11 +85,18 @@
     });
 
     function CarregarEmpreendimentos() {
+        var codigo = "";
         if ($("#nomeEmpreendimento").val().length >= 3) {
+            if ($("#nomeEmpreendimento").val() == "ZZZZZ  - CUSTEIO") {
+                codigo = $("#nomeEmpreendimento").val().substring(0,5);
+            }
+            else {
+                codigo = $("#nomeEmpreendimento").val().replace(/[^\d]+/g, '');
+            }
             $('.loader-overlay').show();
             $.ajax({
                 url: '@Url.Action("GetEmpreendimentos", "Lancamento")',
-                data: { nome: $("#nomeEmpreendimento").val().replace(/[^\d]+/g, '') },
+                data: { nome: codigo },
                 type: 'get'
             }).done(function (data) {
                 CarregarDadosEmpreendimento(data);
