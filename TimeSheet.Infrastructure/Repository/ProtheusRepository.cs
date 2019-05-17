@@ -123,6 +123,7 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 using (OracleConnection Conexao = new OracleConnection(ConnectionString))
                 {
+                   
                     List<Apontamento> listApontamento = new List<Apontamento>();
                     Apontamento apontamento;
                     var sql = $@"Select  LTRIM(RTRIM(P8_HORA)) AS hora from SP8010
@@ -132,9 +133,12 @@ namespace TimeSheet.Infrastructure.Repository
                     var QueryResult = Conexao.Query<Apontamento>(sql);
                     foreach (Apontamento ApResult in QueryResult)
                     {
+                        string valor = "";
                         apontamento = new Apontamento();
+                        if (ApResult.hora.Length > 2) { 
                         int virgulaIndice = ApResult.hora.IndexOf(',');
-                        string valor = ApResult.hora.Substring(virgulaIndice);
+                        valor = ApResult.hora.Substring(virgulaIndice);
+                        }
                         if (ApResult.hora.Length == 1 | ApResult.hora.Length == 2) { apontamento.apontamento = TimeSpan.Parse("0"+ApResult.hora+":00"); }
                         else if (valor.Length == 2) { string horaMinuto = ApResult.hora + "0"; apontamento.apontamento = TimeSpan.Parse(horaMinuto.Replace(',', ':')); } else
                         {

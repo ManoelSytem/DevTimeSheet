@@ -618,7 +618,7 @@ namespace TimeSheet.Application
             {
                 novo.Divergencia = "Divergência";
                 novo.DataLancamento = datalancamento;
-                novo.Descricao = mensagem+ " Exedente: " + diferenca.ToString(@"hh\:mm") + ".";
+                novo.Descricao = mensagem+ " Excedente: " + diferenca.ToString(@"hh\:mm") + ".";
             }
             return novo;
         }
