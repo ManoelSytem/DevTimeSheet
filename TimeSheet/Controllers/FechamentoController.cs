@@ -224,7 +224,7 @@ namespace TimeSheet.Controllers
                 var listmacarcao = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(viewModelfechamento.CodigoMarcacao, matricula).Distinct(new LancamentoComparer());
                 listaCalculadaFechamentoPorDia = _fechamentoNegocio.CalcularTotalHoraExedenteETrabalhadaEabonoeFaltaPorDia(listmacarcao.ToList(), configuracao, jornadaTrabalho, matricula, filial, viewModelfechamento.CodigoMarcacao);
                 _fechamentoServiceRepository.SalvarFechamentoPorDia(listaCalculadaFechamentoPorDia, filial, DataFechamento.ToDateProtheusConvert(), User.GetDados("Matricula"), centrocusto, "2");
-
+               
                 _marcacaoServiceRepository.UpdateStatusFechamento(viewModelfechamento.CodigoMarcacao);
                 NotificarFechamento(viewModelfechamento);
                 StartProcessoFluig(matricula, filial, viewModelfechamento.CodigoMarcacao);

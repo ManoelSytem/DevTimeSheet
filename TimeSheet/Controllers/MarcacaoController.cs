@@ -437,8 +437,6 @@ namespace TimeSheet.Controllers
                 string month = new CultureInfo("pt-BR").DateTimeFormat.GetMonthName(Convert.ToInt32(mes));
                 var objectmarcacao = _marcacaoServiceRepository.ObterMarcacao(id);
                 var jornada = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(objectmarcacao.codigojornada);
-                marcacao.jornadaMin = jornada.JornadaMin;
-                marcacao.jornadaMax = jornada.JornadaMax;
                 marcacao.jornadDiaria = jornada.JornadaDiaria;
                 marcacao.AnoMesDescricao = char.ToUpper(month[0]) + month.Substring(1) + "/" + ano;
                 marcacao.Lancamentolist = _mapper.Map<List<ViewModelLancamento>>(list);
