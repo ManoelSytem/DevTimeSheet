@@ -23,7 +23,7 @@ namespace TimeSheet.Application.Interface
         Fechamento ValidarApontamentoImpar(Fechamento fechamento, List<Apontamento> apontamento);
         bool VerificaImpar(List<Apontamento> apontamento);
         decimal CalcularTotalApontamentoPorDiaLancamento(List<Apontamento> apontamentolist, List<Lancamento> listlancamento);
-        double CalcularTotalHoraLancamentoPorDia(List<Lancamento> lancamento);
+        TimeSpan CalcularTotalHoraLancamentoPorDia(List<Lancamento> lancamento);
         List<Fechamento> ValidaSeExisteMarcacaoAntesEdepoisDoApontamento(List<Lancamento> listlancamento, List<Apontamento> apontamentolist);
         Fechamento ValidaPrimeiroLancamento(Lancamento lancamento, List<Apontamento> apontamentolist);
         Fechamento ValidaUltimoLancamento(Lancamento lancamento, List<Apontamento> apontamentolist);

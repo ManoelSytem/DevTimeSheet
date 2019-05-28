@@ -589,7 +589,7 @@ namespace TimeSheet.Controllers
             {
                 var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, lancamento.DateLancamento);
                 var lancamentolist = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, matricula);
-                var totalHoraDecimalLancamanetoPorDia = _fechamentoNegocio.CalcularTotalHoraLancamentoPorDia(lancamentolist);
+                var totalHoraDecimalLancamanetoPorDia = Math.Round(_fechamentoNegocio.CalcularTotalHoraLancamentoPorDia(lancamentolist).TotalHours,2);
                 var FechamentoResultValidacao = _fechamentoNegocio.ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(lancamentolist, Convert.ToDecimal(totalHoraDecimalLancamanetoPorDia), jornadaTrabalho);
 
                 if (FechamentoResultValidacao.Descricao != null)
