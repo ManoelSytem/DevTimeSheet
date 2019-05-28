@@ -33,7 +33,7 @@ namespace TimeSheet.Controllers
         {
             if (ModelState.IsValid)
             {
-                var disco = await DiscoveryClient.GetAsync("http://localhost:8081");
+                var disco = await DiscoveryClient.GetAsync("http://localhost:8080");
                 var tokenClient = new TokenClient(disco.TokenEndpoint, "Timesheet.Client", "timesheetSecret");
                 var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(login.Username, login.Password, string.Join(" ", Scopes));
 
