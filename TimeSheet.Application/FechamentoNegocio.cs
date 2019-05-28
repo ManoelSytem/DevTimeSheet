@@ -475,8 +475,7 @@ namespace TimeSheet.Application
         public Fechamento ValidaPrimeiroLancamento(Lancamento lancamento, List<Apontamento> apontamentolist)
         {
             Fechamento FechamentoRetorno = new Fechamento();
-            if (!VerificaImpar(apontamentolist))
-            {
+
                 for (int i = 0; i < apontamentolist.Count; i = i + 2)
                 {
                     if ((lancamento.HoraInicio < TimeSpan.Parse(Convert.ToString(apontamentolist[i].apontamento)) | lancamento.HoraInicio > TimeSpan.Parse(Convert.ToString(apontamentolist[i].apontamento))) && lancamento.CodDivergencia == 0)
@@ -498,7 +497,6 @@ namespace TimeSheet.Application
                     }
                     break;
                 }
-            }
             return FechamentoRetorno;
         }
 
