@@ -506,7 +506,7 @@ namespace TimeSheet.Application
             var mensagem = "Dia com diferença entre a última batida do relógio e o último lançamento no sistema.";
             if (apontamentolist.Count > 0)
             {
-                if ((lancamento.HoraFim > apontamentolist.LastOrDefault().horaFim | lancamento.HoraFim < apontamentolist.LastOrDefault().horaFim) && lancamento.CodDivergencia == 0)
+                if ((lancamento.HoraFim > apontamentolist.LastOrDefault().apontamento | lancamento.HoraFim < apontamentolist.LastOrDefault().apontamento) && lancamento.CodDivergencia == 0)
                 {
                     mensagem = "Dia com diferença entre a última batida do relógio e o último lançamento no sistema.";
 
@@ -518,7 +518,7 @@ namespace TimeSheet.Application
                     };
 
                 }
-                else if ((lancamento.HoraFim > apontamentolist.LastOrDefault().horaFim | lancamento.HoraFim < apontamentolist.LastOrDefault().horaFim) && lancamento.CodDivergencia != 0)
+                else if ((lancamento.HoraFim > apontamentolist.LastOrDefault().apontamento | lancamento.HoraFim < apontamentolist.LastOrDefault().apontamento) && lancamento.CodDivergencia != 0)
                 {
                     return new Fechamento()
                     {
