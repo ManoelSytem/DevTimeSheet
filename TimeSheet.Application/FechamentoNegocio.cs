@@ -735,7 +735,7 @@ namespace TimeSheet.Application
                     novo.DataLancamento = LancamentoResult.DateLancamento;
                     novo.CodigoProjeto = "00000";
                     novo.CodigoMarcacao = codmarcacao;
-                    novo.TotalHora = totalLancamento.TotalHours;
+                    novo.TotalHora = Math.Round(totalLancamento.TotalHours, 2);
                     novo.Fase = "0";
                     if (ValidaEferiado(LancamentoResult.DateLancamento, filial) | ESabadoOuDomingo(Convert.ToDateTime(LancamentoResult.DateLancamento.ToDateProtheusReverseformate())))
                     {

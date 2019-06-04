@@ -136,19 +136,19 @@
 
                         <tr>
                             <th scope="row">@item.DataLancamento.ToDateProtheusReverseformate()</th>
-                            <td>@item.TotalHoraExedente</td>
-                            <td>@item.TotalFaltaAtraso</td>
-                            <td>@item.TotalAbono</td>
-                            <td>@item.TotalHora</td>
+                            <td>@string.Format("{0:n2}", item.TotalHoraExedente)</td>
+                            <td>@string.Format("{0:n2}", item.TotalFaltaAtraso)</td>
+                            <td>@string.Format("{0:n2}", item.TotalAbono)</td>
+                            <td>@string.Format("{0:n2}", item.TotalHora)</td>
                         </tr>
                     }
 
                         <tr>
                             <th scope="row">Total Geral</th>
-                            <td>@Model.totalExcedente</td>
-                            <td>@Model.totalNaoTrabalhada</td>
-                            <td>@Model.totalAbono</td>
-                            <td>@Model.totalGeral</td>
+                            <td>@string.Format("{0:n2}", Model.totalExcedente)</td>
+                            <td>@string.Format("{0:n2}", Model.totalNaoTrabalhada)</td>
+                            <td>@string.Format("{0:n2}", Model.totalAbono)</td>
+                            <td>@string.Format("{0:n2}",Model.totalGeral)</td>
                         </tr>
 
                 }
