@@ -39,8 +39,8 @@ namespace TimeSheet.Application
                 CardData = new string[][] {
                     new[] { "txtGrupoGerencia", grupoGerencia},
                     new[] { "hddFilial", filial },
-                    new[] { "txtGrupoCoord", grupoGerencia},
-                    new[] { "hddCodigo",  coordenacao}, 
+                    new[] { "txtGrupoCoord", coordenacao},
+                    new[] { "hddCodigo",  codmarcacao}, 
                     new[] { "hddDivergencia", ""},
                     new[] { "hddAprovCoord",  "" },
                     new[] { "hddAprovGerencia",  "" },
@@ -60,14 +60,14 @@ namespace TimeSheet.Application
             {
                 Username = Configuration.GetSection("Fluig")["UserName"],
                 Password = Configuration.GetSection("Fluig")["Password"],
-                UserCordFluig = Configuration.GetSection("Fluig")["UserName"],
+                UserCordFluig = userCodFluig,
                 CompanyId = Convert.ToInt32(Configuration.GetSection("Fluig")["CompanyId"]),
                 IdProcesso = codigoProcessoFluig,
                 Atividade = 12,
                 Completatarefa = true,
                 Gestor = false,
                 ColleagueId = new string[] { },
-                Comment = "",
+                Comment = "Movimentação automática realizada pelo fechamento do TimeSheet!",
                 CardData = new string[][] { }
             };
 
