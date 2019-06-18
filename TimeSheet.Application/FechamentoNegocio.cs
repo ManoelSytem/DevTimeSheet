@@ -310,7 +310,7 @@ namespace TimeSheet.Application
                 novoFechamento.Divergencia = "Divergência justificada";
                 novoFechamento.DataLancamento = fechamento.DataLancamento;
                 novoFechamento.Descricao = "Dia com quantidade de batidas do relógio impar.";
-            }
+            }   
             return novoFechamento;
         }
 

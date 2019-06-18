@@ -270,7 +270,6 @@ namespace TimeSheet.Controllers
                         listFechamento.Add(novoFechamento);
                     }
                 }
-
             }
             //Mit Validação 8.4.1
             foreach (Fechamento fechamentolist in listSemLancamento.OrderBy(x => x.DataLancamento))
