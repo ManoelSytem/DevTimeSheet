@@ -15,6 +15,7 @@ namespace TimeSheet.Domain.Interface
         Marcacao ObterMarcacao(string codigo);
         void UpdateStatusFechamento(string codigo);
         void SalvarCodigoFluig(string codigoMarcacao, string CodFluig);
+        void UpdateFerias(string codigoMarcacao, string ferias);
         Marcacao ObterCodigoFluig(string codigoMarcacao);
         
     }

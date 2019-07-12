@@ -60,5 +60,10 @@ namespace TimeSheet.Infrastructure.ServiceRepository
         {
            return __marcacaoRepository.ObterCodigoFluig(codigoMarcacao);
         }
+
+        public void UpdateFerias(string codigoMarcacao, string ferias)
+        {
+            __marcacaoRepository.UpdateFerias(codigoMarcacao, ferias);
+        }
     }
 }

@@ -9,7 +9,8 @@ namespace TimeSheet.Infrastructure.Repository
 {
     public class MarcacaoRepository
     {
-        private const string ConnectionString = "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=stark.intranet.bahiagas.com.br)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=ap12hml)));User Id=ap6;Password=ap6;";
+        //private const string ConnectionString = "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=stark.intranet.bahiagas.com.br)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=ap12hml)));User Id=ap6;Password=ap6;";
+        private const string ConnectionString = "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=bgasha-scan.intranet.bahiagas.com.br)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=BAHIAGAS)));User Id=ap6;Password=msbd106";
 
         public MarcacaoRepository()
         {
@@ -153,6 +154,19 @@ namespace TimeSheet.Infrastructure.Repository
                 dbConnection.Open();
                 string sQuery = $@"UPDATE ZYZ010 
                                    SET ZYZ_STATUS = '2'
+                                   WHERE ZYZ_CODIGO = '{codigo}'";
+                dbConnection.Execute(sQuery);
+            }
+        }
+
+        public void UpdateFerias(string codigo, string ferias)
+        {
+
+            using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
+            {
+                dbConnection.Open();
+                string sQuery = $@"UPDATE ZYZ010 
+                                   SET ZYZ_FER = '{ferias}'
                                    WHERE ZYZ_CODIGO = '{codigo}'";
                 dbConnection.Execute(sQuery);
             }

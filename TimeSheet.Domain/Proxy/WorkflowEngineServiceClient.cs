@@ -8977,7 +8977,7 @@
         {
             if ((endpointConfiguration == EndpointConfiguration.WorkflowEngineServicePort))
             {
-                return new System.ServiceModel.EndpointAddress("http://192.168.0.148:8080/webdesk/ECMWorkflowEngineService");
+                return new System.ServiceModel.EndpointAddress("http://192.168.0.59:80/webdesk/ECMWorkflowEngineService");
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }

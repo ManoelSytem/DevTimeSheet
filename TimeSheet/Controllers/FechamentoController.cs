@@ -109,9 +109,63 @@ namespace TimeSheet.Controllers
                         if (fechamentoResult.Divergencia == "Divergência a justificar")
                         {
                             ViewBag.FechamentoBloqueado = "B";
+                            
                         }
                     }
                 }
+                ViewBag.CodigoMarcacao = id;
+                ViewBag.Ferias = " ";
+                return View("ValidarFechamento", _mapper.Map<List<ViewModelFechamento>>(ResultFechamento.OrderBy(c => c.DataLancamento)));
+            }
+            catch (Exception e)
+            {
+                TempData["Createfalse"] = e.Message;
+                return View();
+            }
+
+        }
+
+
+        public IActionResult ConfirmacaoFerias(string id)
+        {
+            try
+            {
+                matricula = User.GetDados("Matricula");
+                filial = User.GetDados("Filial");
+                centrocusto = User.GetDados("Centro de Custo");
+
+
+                TempData["Createfalse"] = null;
+                Marcacao marcacao = new Marcacao();
+                Fechamento fechamento = new Fechamento();
+
+                var ResultFechamento = ValidacaoFechamento(id);
+
+
+                if (ResultFechamento.Count > 0)
+                {
+                    foreach (Fechamento fechamentoResult in ResultFechamento)
+                    {
+                        if (fechamentoResult.Descricao == "Dia útil sem marcação.")
+                        {
+                            fechamentoResult.Divergencia = "Divergência justificada";
+                            ViewBag.Ferias = "S";
+                        }
+                    }
+                }
+
+                if (ResultFechamento.Count > 0)
+                {
+                    foreach (Fechamento fechamentoResult in ResultFechamento)
+                    {
+                        if (fechamentoResult.Divergencia == "Divergência a justificar")
+                        {
+                            ViewBag.FechamentoBloqueado = "B";
+                        }
+                    }
+                }
+
+                
                 ViewBag.CodigoMarcacao = id;
                 return View("ValidarFechamento", _mapper.Map<List<ViewModelFechamento>>(ResultFechamento.OrderBy(c => c.DataLancamento)));
             }
@@ -123,7 +177,24 @@ namespace TimeSheet.Controllers
 
         }
 
-        public IActionResult ValidarFechamentoVisaoGerencia(string id)
+        [HttpPost]
+        public IActionResult SalvarFerias(string CodMarcacao, string ConfirmacaoFerias)
+        {
+            try
+            {
+                if(ConfirmacaoFerias != null) {
+                _marcacao.UpdateFerias(CodMarcacao, ConfirmacaoFerias);
+                }
+                return Json(new { erro = false });
+            }
+            catch (Exception e)
+            {
+                return Json(new { msg = e.Message, erro = true });
+            }
+
+        }
+
+            public IActionResult ValidarFechamentoVisaoGerencia(string id)
         {
             try
 

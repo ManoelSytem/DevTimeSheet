@@ -951,6 +951,9 @@ namespace TimeSheet.Application
                 {
                     if (CodDivergencia.Constant != Constantes.NAOTRABALHADA)
                         totallancamento += Math.Round((lancamento.HoraFim - lancamento.HoraInicio).TotalHours, 2);
+                }else if(lancamento.CodDivergencia == 0)
+                {
+                    totallancamento += Math.Round((lancamento.HoraFim - lancamento.HoraInicio).TotalHours, 2);
                 }
             }
             return totallancamento;

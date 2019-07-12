@@ -13167,11 +13167,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet\\TimeSheet.csproj",
+      "projectUniqueName": "C:\\Users\\manoelneto\\Desktop\\TimeSheetTeste\\DevTimeSheet\\TimeSheet\\TimeSheet.csproj",
       "projectName": "TimeSheet",
-      "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet\\TimeSheet.csproj",
+      "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheetTeste\\DevTimeSheet\\TimeSheet\\TimeSheet.csproj",
       "packagesPath": "C:\\Users\\manoelneto\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet\\obj\\",
+      "outputPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheetTeste\\DevTimeSheet\\TimeSheet\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -13190,14 +13190,14 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Application\\TimeSheet.Application.csproj": {
-              "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Application\\TimeSheet.Application.csproj"
+            "C:\\Users\\manoelneto\\Desktop\\TimeSheetTeste\\DevTimeSheet\\TimeSheet.Application\\TimeSheet.Application.csproj": {
+              "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheetTeste\\DevTimeSheet\\TimeSheet.Application\\TimeSheet.Application.csproj"
             },
-            "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj": {
-              "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj"
+            "C:\\Users\\manoelneto\\Desktop\\TimeSheetTeste\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj": {
+              "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheetTeste\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj"
             },
-            "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Infrastructure\\TimeSheet.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Infrastructure\\TimeSheet.Infrastructure.csproj"
+            "C:\\Users\\manoelneto\\Desktop\\TimeSheetTeste\\DevTimeSheet\\TimeSheet.Infrastructure\\TimeSheet.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheetTeste\\DevTimeSheet\\TimeSheet.Infrastructure\\TimeSheet.Infrastructure.csproj"
             }
           }
         }

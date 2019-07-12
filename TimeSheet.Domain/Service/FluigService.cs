@@ -15,11 +15,11 @@ namespace TimeSheet.Domain.Service
         private readonly IProtheus _prothuesSevicoRepository;
 
 
-        public FluigService(IMarcacao marcacaoServiceRepository, IFluig fluigAppServiceRepository, IProtheus prothuesSevicoRepository) {
+        public FluigService(IMarcacao marcacaoServiceRepository, IFluig fluigAppServiceRepository, IProtheus protheusServicoRepository) {
             WSFluig = new WorkflowEngineServiceClient();
             _marcacaoServiceRepository = marcacaoServiceRepository;
             _fluigAppServiceRepository = fluigAppServiceRepository;
-            _prothuesSevicoRepository = prothuesSevicoRepository;
+            _prothuesSevicoRepository = protheusServicoRepository;
         }
 
         // 

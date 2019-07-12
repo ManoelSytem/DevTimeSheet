@@ -871,7 +871,7 @@
       ]
     },
     "System.Security.Principal.Windows/4.5.0": {
-      "sha512": "WA9ETb/pY3BjnxKjBUHEgO59B7d/nnmjHFsqjJ2eDT780nD769CT1/bw2ia0Z6W7NqlcqokE6sKGKa6uw88XGA==",
+      "sha512": "hs2zF4tOQ3V4iQttVnLrnR/i8AOrrAgu2Gmp4/jNaE/+5hiZWDj20FK/m/OW3Itdi9XDvqf55WzHkiWYtOSUNg==",
       "type": "package",
       "path": "system.security.principal.windows/4.5.0",
       "files": [
@@ -1154,11 +1154,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj",
+      "projectUniqueName": "C:\\Users\\manoelneto\\Desktop\\TimeSheetTeste\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj",
       "projectName": "TimeSheet.Domain",
-      "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj",
+      "projectPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheetTeste\\DevTimeSheet\\TimeSheet.Domain\\TimeSheet.Domain.csproj",
       "packagesPath": "C:\\Users\\manoelneto\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheet\\DevTimeSheet\\TimeSheet.Domain\\obj\\",
+      "outputPath": "C:\\Users\\manoelneto\\Desktop\\TimeSheetTeste\\DevTimeSheet\\TimeSheet.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

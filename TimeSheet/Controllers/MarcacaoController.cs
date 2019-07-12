@@ -58,9 +58,12 @@ namespace TimeSheet.Controllers
                         var ano = lista.AnoMes.ToString().Substring(0, 4);
                         string month = new CultureInfo("pt-BR").DateTimeFormat.GetMonthName(Convert.ToInt32(mes));
                         lista.AnoMesDescricao = char.ToUpper(month[0]) + month.Substring(1) + "/" + ano;
+                        lista.DataDialancamento = Convert.ToDateTime(lista.DataInicio.ToDateProtheusReverseformate());
                     }
                 }
-                return View(list);
+
+                var listOrdenada = list.OrderByDescending(d => d.DataDialancamento).ToList();
+                return View(listOrdenada);
             }
             catch (Exception e)
             {
