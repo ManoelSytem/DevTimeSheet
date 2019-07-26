@@ -4,16 +4,7 @@
     ViewData["Title"] = "Configurações";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@if (TempData["CreateSucesso"] != null)
-{
-    <div class="card">
-        <div class="body">
-            <div class="alert alert-success">
-                <strong>Configuração realizada com sucesso!</strong>
-            </div>
-        </div>
-    </div>
-}@if (TempData["Createfalse"] != null)
+@if (TempData["Createfalse"] != null)
 {
     <div class="card">
         <div class="alert alert-danger">

@@ -18,6 +18,7 @@ namespace TimeSheet.Infrastructure.Repository
         {
             try
             {
+                if (matricula == null) matricula = "NULL";
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
                     string sQuery = $@"INSERT INTO ZYX010 (ZYX_CODIGO, ZYX_DLIFEC,  ZYX_FEMAIL, ZYX_DEMAIL, ZYX_INIMAR, ZYX_FINMAR, ZYX_CODDIV,ZYX_MATUSU,ZYX_AEMAIL, R_E_C_N_O_,  R_E_C_D_E_L_)"
@@ -31,7 +32,10 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 throw ex;
             }
-          
+            finally
+            {
+                
+            }
         }
 
         public override Configuracao Find()
@@ -95,6 +99,7 @@ namespace TimeSheet.Infrastructure.Repository
         {
             try
             {
+                if (item.MatriculaUsuario == null) item.MatriculaUsuario = "NULL";
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
                     string sQuery = $@"UPDATE ZYX010 

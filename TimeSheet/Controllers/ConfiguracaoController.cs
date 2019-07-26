@@ -53,6 +53,7 @@ namespace TimeSheet.Controllers
         {
             try
             {
+
                 List<ViewModelConfiguracao> listaConfig = new List<ViewModelConfiguracao>();
                 var viewModelConfiguracao = _mapper.Map<ViewModelConfiguracao>(_config.ObterConfiguracao());
                 foreach (string value in _config.ObterTextoEmail())
@@ -72,6 +73,7 @@ namespace TimeSheet.Controllers
         // GET: Configuracao/Create
         public ActionResult Create()
         {
+            TempData["CreateSucesso"] = null;
             return View();
         }
 
@@ -85,6 +87,8 @@ namespace TimeSheet.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    var viewModelConfiguracao = _mapper.Map<ViewModelConfiguracao>(_config.ObterConfiguracao());
+                    if(viewModelConfiguracao == null) { 
 
                     viewConfiguracao.ValidarDiaInicioFim();
                     viewConfiguracao.ValidarDatalimiteEntrePeriodo();
@@ -96,7 +100,12 @@ namespace TimeSheet.Controllers
                     var configuracao = _mapper.Map<Configuracao>(viewConfiguracao);
                     _config.SalvarConfiguracao(configuracao, User.GetDados("Filial")?.Split(',').First(), User.GetDados("Matricula")?.Split(',').First());
                     _config.SalvarTextoEmail(viewConfiguracao.TextoEmail);
-                    TempData["CreateSucesso"] = true;
+                    TempData["Configuracao"] = true;
+                    }
+                    else
+                    {
+                        TempData["Createfalse"] = "Já existe configuração cadastrada!";
+                    }
                     return RedirectToAction("Index", "Configuracao");
                 }
                 return View(viewConfiguracao);
@@ -176,6 +185,7 @@ namespace TimeSheet.Controllers
         {
             try
             {
+                TempData["CreateSucesso"] = null;
                 List<ViewModelConfiguracao> listaConfig = new List<ViewModelConfiguracao>();
                 var viewModelConfiguracao = _mapper.Map<ViewModelConfiguracao>(_config.ObterConfiguracao());
                 foreach (string value in _config.ObterTextoEmail())
@@ -200,7 +210,7 @@ namespace TimeSheet.Controllers
             try
             {
                 _config.DeleteConfiguracao(Convert.ToString(viewConfiguracao.Codigo));
-                TempData["CreateSucesso"] = true;
+                TempData["CreateSucesso"] =  true;
                 return RedirectToAction("Index","Configuracao");
             }
             catch (Exception e)

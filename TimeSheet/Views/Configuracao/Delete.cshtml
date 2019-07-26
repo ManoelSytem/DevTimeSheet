@@ -4,16 +4,7 @@
     ViewData["Title"] = "Configurações";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@if (TempData["CreateSucesso"] != null)
-{
-    <div class="card">
-        <div class="body">
-            <div class="alert alert-success">
-                <strong>Configuração excluída!</strong>
-            </div>
-        </div>
-    </div>
-}@if (TempData["Createfalse"] != null)
+@if (TempData["Createfalse"] != null)
 {
     <div class="card">
         <div class="alert alert-danger">
@@ -42,6 +33,7 @@
                                 Dia do mês limite fechamento
                                 <span data-toggle="tooltip" data-placement="right"><i title="Último dia do mês para os colaboradores realizarem o fechamento das marcações." class='fas fa-info-circle'></i></span>
                             </label>
+                            @Html.HiddenFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control", @placeholder = "", } })
                             @Html.EditorFor(model => model.DiaMesLimiteFecha, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled", @placeholder = "Dia do Mês" } })
                             <span asp-validation-for="DiaMesLimiteFecha" class="text-danger"></span>
                         </div>
@@ -137,13 +129,14 @@ Ex.: Dia do mês fechamento for 10, Frequência de envio de e-mail = Semanal, Di
         console.error(error);
     });
 </script>
-
+<div id="myModal" role="dialog">
+</div>
 <div class="btn-ft">
     <input type="checkbox" href="#" class="btn-ft-open" name="btn-ft-open" id="btn-ft-open" />
     <label class="btn-ft-item-open" for="btn-ft-open">
         <span><i class="fas fa-plus"></i></span>
     </label>
-    <a href="#" onclick="$('form').submit();" class="btn-ft-item" tooltip="Excluir"><i class="fas fa-trash"></i></a>
+    <a href="#" onclick="ConfirmaExclusaoConfiguracao();" class="btn-ft-item" tooltip="Excluir"><i class="fas fa-trash"></i></a>
     <a href="@Url.Action("Index", "Configuracao")" class="btn-ft-item" tooltip="Voltar"><i class="fas fa-arrow-left"></i></a>
 </div>
 <script>
@@ -168,4 +161,27 @@ Ex.: Dia do mês fechamento for 10, Frequência de envio de e-mail = Semanal, Di
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
+
+    function ConfirmaExclusaoConfiguracao() {
+        $("#myModal").dialog({
+            resizable: false,
+            height: 200,
+            title: "Confirmação de exclusão!",
+            modal: true,
+            open: function () {
+                $(this).html("Deseja realizar a exclusão? ");
+            },
+            buttons: {
+                "Confirmar": function () {
+                    $('form').submit();
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            },
+
+        });
+    }
+
 </script>

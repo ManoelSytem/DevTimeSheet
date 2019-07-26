@@ -66,7 +66,7 @@ namespace TimeSheet.Controllers
 
                     var JornadaTrb = _mapper.Map<JornadaTrabalho>(viewModelCadastroHora);
                     _jornadaTrbServiceRepository.SalvarJornada(JornadaTrb);
-                    TempData["CreateSucesso"] = true;
+                    TempData["JornadaCadastrada"] = true;
                     return RedirectToAction("Index", "JornadaTrabalho");
                 }
                 return View(viewModelCadastroHora);
@@ -140,6 +140,7 @@ namespace TimeSheet.Controllers
         {
             try
             {
+                TempData["exclusao"] = null;
                 var viewMJrtb = _mapper.Map<ViewModelCadastroHora>(_jornadaTrbServiceRepository.ObterJornadaPorCodigo(Convert.ToString(id)));
                 return View(viewMJrtb);
             }
@@ -156,7 +157,9 @@ namespace TimeSheet.Controllers
         {
             try
             {
+                TempData["exclusao"] = null;
                 _jornadaTrbServiceRepository.DeleteJornada(id);
+                TempData["exclusao"] = true;
                 return RedirectToAction("Index", "JornadaTrabalho");
             }
             catch (Exception e)

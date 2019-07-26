@@ -5,6 +5,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["JornadaCadastrada"] != null)
+{
+    <div class="card">
+        <div class="body">
+            <div class="alert alert-success">
+                <strong>Cadastro realizado com sucesso!</strong>
+            </div>
+        </div>
+    </div>
+}
+@if (TempData["exclusao"] != null)
+{
+    <div class="card">
+        <div class="body">
+            <div class="alert alert-success">
+                <strong>Jornada excluída com sucesso!</strong>
+            </div>
+        </div>
+    </div>
+}
 @if (TempData["Createfalse"] != null)
 {
     <div class="card">

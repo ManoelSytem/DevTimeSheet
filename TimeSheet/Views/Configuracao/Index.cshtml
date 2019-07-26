@@ -5,6 +5,27 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["Configuracao"] != null)
+{
+    <div class="card">
+        <div class="body">
+            <div class="alert alert-success">
+                <strong>Configuração realizada com sucesso!</strong>
+            </div>
+        </div>
+    </div>
+}
+
+@if (TempData["CreateSucesso"] != null)
+{
+    <div class="card">
+        <div class="body">
+            <div class="alert alert-success">
+                <strong>Configuração excluída!</strong>
+            </div>
+        </div>
+    </div>
+}
 @if (TempData["Createfalse"] != null)
 {
     <div class="card">

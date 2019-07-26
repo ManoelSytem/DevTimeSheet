@@ -25,9 +25,9 @@ namespace TimeSheet.Infrastructure.Repository
             {
                 using (OracleConnection dbConnection = new OracleConnection(ConnectionString))
                 {
-                    string sQuery = $@"INSERT INTO ZYV010 (ZYV_FILIAL,ZYV_DESCR, ZYV_DTINI, ZYV_DTFIN, ZYV_JORNAD, ZYV_HRINI, ZYV_HRIFIN,ZYV_HFINAL, ZYV_INTINI,ZYV_INTFIN, ZYV_INTMIN,ZYV_INTMAX,ZYV_JORMAX, ZYV_JORMIN, R_E_C_N_O_)
+                    string sQuery = $@"INSERT INTO ZYV010 (ZYV_FILIAL,ZYV_DESCR, ZYV_DTINI, ZYV_DTFIN, ZYV_JORNAD, ZYV_HRINI, ZYV_HRIFIN,ZYV_HFINAL, ZYV_INTINI,ZYV_INTFIN, ZYV_INTMIN,ZYV_INTMAX,ZYV_JORMAX, ZYV_JORMIN, R_E_C_N_O_, R_E_C_D_E_L_)
                                     VALUES('{item.Filial}','{item.DescJornada}', '{Convert.ToString(item.DataInicio).ToDateProtheusConvert()}', '{Convert.ToString(item.DataFim).ToDateProtheusConvert()}', '{item.JornadaDiaria}', '{item.HoraInicioDe}','{item.HoraInicioAte}',
-                                               '{item.HoraFinal}','{item.InterInicio}', '{item.InterFim}','{item.InterMin}', '{item.InterMax}','{item.JornadaMax}','{item.JornadaMin}',(SELECT MAX(X.R_E_C_N_O_)+1 FROM ZYV010 X))";
+                                               '{item.HoraFinal}','{item.InterInicio}', '{item.InterFim}','{item.InterMin}', '{item.InterMax}','{item.JornadaMax}','{item.JornadaMin}',(SELECT NVL(MAX(X.R_E_C_N_O_),0)+1 FROM ZYV010 X),0)";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
                 }
@@ -177,11 +177,15 @@ namespace TimeSheet.Infrastructure.Repository
                 {
                     string sQuery = $@"UPDATE ZYV010 
                                    SET D_E_L_E_T_ = '*',
-                                   R_E_C_D_E_L_ = (SELECT MAX(X.R_E_C_D_E_L_)+1 FROM ZYX010 X)
+                                   R_E_C_D_E_L_ = (SELECT MAX(X.R_E_C_D_E_L_)+1 FROM ZYV010 X)
                                    WHERE ZYV_CODIGO = '{id}'";
                     dbConnection.Open();
                     dbConnection.Execute(sQuery);
-                }
+                  string uQuery = $@"UPDATE ZYV010 
+                                   SET R_E_C_N_O_ = (SELECT X.R_E_C_D_E_L_ FROM ZYV010 X WHERE  ZYV_CODIGO = '{id}')
+                                   WHERE ZYV_CODIGO = '{id}'";
+                   dbConnection.Execute(uQuery);
+            }
         }
 
     }
