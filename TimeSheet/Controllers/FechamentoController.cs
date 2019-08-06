@@ -32,6 +32,8 @@ namespace TimeSheet.Controllers
         private readonly IFluigAppService _fluigAppService;
         private readonly ILancamentoNegocio _lancamentoNegocio;
         private readonly IFechamentoNegocio _fechamentoNegocio;
+        private readonly IJornadaTrabalhoNegocio _jornadaTrbNegocio;
+
         private string filial;
         private string matricula;
         private string centrocusto;
@@ -45,7 +47,7 @@ namespace TimeSheet.Controllers
             ILancamento lancamento,
             IJornadaTrabalho jornada,
             INotificacao notificacao,
-            IFluigAppService fluigAppService, ILancamentoNegocio lancamentoNegocio, IFechamentoNegocio fechamentoNegocio)
+            IFluigAppService fluigAppService, ILancamentoNegocio lancamentoNegocio, IFechamentoNegocio fechamentoNegocio, IJornadaTrabalhoNegocio jornadaTrbNegocio)
         {
             _prothuesService = prothuesService;
             _marcacaoServiceRepository = marcacaoServiceRepository;
@@ -59,6 +61,7 @@ namespace TimeSheet.Controllers
             _fluigAppService = fluigAppService;
             _lancamentoNegocio = lancamentoNegocio;
             _fechamentoNegocio = fechamentoNegocio;
+            _jornadaTrbNegocio = jornadaTrbNegocio;
         }
 
         public IActionResult Index()
@@ -651,8 +654,7 @@ namespace TimeSheet.Controllers
 
             Marcacao marcacao = new Marcacao();
             marcacao = _marcacao.ObterMarcacao(id);
-            var jornadaTrabalho = _jornadaTrbServiceRepository.ObterJornadaPorCodigo(marcacao.codigojornada);
-
+           
             var listLancamento = _lancamentoerviceRepository.ObterListaLancamentoPorCodMarcacoEMatricula(id, matricula).Distinct(new LancamentoComparer());
 
             foreach (Lancamento lancamento in listLancamento)
@@ -660,6 +662,7 @@ namespace TimeSheet.Controllers
                 var listApontamento = _prothuesService.ObterBatidasDePonto(matricula, filial, lancamento.DateLancamento);
                 var lancamentolist = _lancamentoerviceRepository.ObterLancamento(lancamento.DateLancamento, matricula);
                 var totalHoraDecimalLancamanetoPorDia = Math.Round(_fechamentoNegocio.CalcularTotalHoraLancamentoPorDia(lancamentolist).TotalHours,2);
+                var jornadaTrabalho = _jornadaTrbNegocio.ObterListaJornadaPorData(lancamento.DateLancamento);
                 var FechamentoResultValidacao = _fechamentoNegocio.ValidaDiferencaEntreJornadaDiariaETotalLancamentoDiario(lancamentolist, Convert.ToDecimal(totalHoraDecimalLancamanetoPorDia), jornadaTrabalho);
 
                 if (FechamentoResultValidacao.Descricao != null)
